@@ -9,6 +9,19 @@ import tailwindcss from '@tailwindcss/vite';
  */
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      output: {
+        /*
+         * 지도 엔진은 크고(≈250KB gz) 거의 바뀌지 않는다. 앱 코드와 분리해 두면
+         * 사이트를 배포해도 지도 청크는 브라우저 캐시에 그대로 남는다.
+         */
+        manualChunks: {
+          map: ['maplibre-gl', 'pmtiles'],
+        },
+      },
+    },
+  },
   server: {
     proxy: {
       '/api/udo': {

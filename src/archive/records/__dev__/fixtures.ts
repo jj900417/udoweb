@@ -1,5 +1,6 @@
 import type {
   Artist,
+  SoundRecording,
   Collection,
   Exhibition,
   HistoryEntry,
@@ -390,6 +391,43 @@ const clips: VoiceClip[] = [
   },
 ];
 
+const sounds: SoundRecording[] = [
+  {
+    ...base,
+    id: 'sound-dev-0001',
+    kind: 'sound',
+    slug: 'dev-sound-1',
+    title: '[예시] 검멀레 파도',
+    summary: '[예시] 지도 핀과 재생, 날씨 표시를 확인하기 위한 항목입니다.',
+    recordedAt: { value: '2026-05-02', precision: 'exact' },
+    lat: 33.4936,
+    lon: 126.9722,
+    kinds: ['wave', 'wind'],
+    season: 'spring',
+    timeOfDay: 'morning',
+    weather: { tempC: 17, windMs: 4.2, waveM: 0.8, sky: '[예시] 맑음' },
+    durationSec: 48,
+    audioMediaId: 'media-dev-audio',
+    relatedIds: [],
+  },
+  {
+    ...base,
+    id: 'sound-dev-0002',
+    kind: 'sound',
+    slug: 'dev-sound-2',
+    title: '[예시] 하고수동 밤바다',
+    recordedAt: { value: '2026-05-02', precision: 'exact' },
+    lat: 33.5128,
+    lon: 126.9655,
+    kinds: ['night', 'wave'],
+    season: 'spring',
+    timeOfDay: 'night',
+    weather: { tempC: 13, sky: '[예시] 흐림' },
+    durationSec: 90,
+    relatedIds: [],
+  },
+];
+
 export const devFixtures: ArchiveDataset = {
   artists,
   works,
@@ -401,6 +439,6 @@ export const devFixtures: ArchiveDataset = {
   people: voicePeople,
   sessions,
   clips,
-  sounds: [],
+  sounds,
   media,
 };

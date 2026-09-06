@@ -9,7 +9,13 @@ import VoiceClipPlayer from './VoiceClipPlayer';
  * 날씨는 녹음 시점의 관측값을 그대로 보여준다. 지금 날씨를 불러와 채우지 않는다 —
  * 그러면 기록이 아니라 장식이 된다.
  */
-export default function SoundCard({ sound }: { sound: SoundRecording }) {
+export default function SoundCard({
+  sound,
+  highlighted = false,
+}: {
+  sound: SoundRecording;
+  highlighted?: boolean;
+}) {
   const { archive } = useContent();
   const audio = useArchive().getMedia(sound.audioMediaId);
   const w = sound.weather;
@@ -21,7 +27,13 @@ export default function SoundCard({ sound }: { sound: SoundRecording }) {
   ].filter(Boolean);
 
   return (
-    <article className="rule py-8 first:border-t-0 first:pt-0">
+    <article
+      className={[
+        'rule py-8 first:border-t-0 first:pt-0 transition-colors',
+        /* 지도에서 핀을 누르면 해당 녹음이 목록에서도 표시된다(색만이 아니라 테두리로도). */
+        highlighted ? '-mx-3 border-l-2 border-l-brand bg-brand-soft/40 px-3' : '',
+      ].join(' ')}
+    >
       <p className="credit">{sound.kinds.map((k) => archive.sound.kinds[k]).join(' · ')}</p>
       <h3 className="display mt-1 t-section font-semibold text-ink">{sound.title}</h3>
 

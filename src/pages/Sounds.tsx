@@ -4,7 +4,9 @@ import PageMeta from '../components/PageMeta';
 import ArchiveSection from '../components/archive/ArchiveSection';
 import SoundCard from '../components/archive/SoundCard';
 import EmptyArchiveState from '../components/archive/EmptyArchiveState';
+import UdoMap, { type MapPin } from '../components/archive/UdoMap';
 import { useSoundList } from '../archive';
+import { useMemo, useState } from 'react';
 
 /*
  * 우도의 소리 — 사운드맵.
@@ -21,6 +23,22 @@ export default function Sounds() {
 
   /* 실제로 녹음이 있는 종류만 필터로 보여준다(빈 필터를 만들지 않는다). */
   const kinds = [...new Set(all.flatMap((s) => s.kinds))];
+
+  /* 지도 핀 — 좌표가 있는 녹음만. 좌표가 없으면 목록에는 남고 지도에서만 빠진다. */
+  const pins: MapPin[] = useMemo(
+    () =>
+      sounds
+        .filter((s) => s.lat != null && s.lon != null)
+        .map((s) => ({
+          id: s.id,
+          lat: s.lat as number,
+          lon: s.lon as number,
+          label: s.title,
+          sub: s.kinds.map((k) => archive.sound.kinds[k]).join(' · '),
+        })),
+    [sounds, archive.sound.kinds],
+  );
+  const [activeId, setActiveId] = useState<string | undefined>();
 
   const select = (value: string | undefined) => {
     const next = new URLSearchParams(params);
@@ -40,9 +58,15 @@ export default function Sounds() {
       </header>
 
       <ArchiveSection title={archive.sound.mapTitle} desc={archive.sound.mapLead}>
-        <div className="rounded-xl border border-dashed border-line px-6 py-16 text-center">
-          <p className="caption">{archive.sound.mapPending}</p>
-        </div>
+        <UdoMap
+          pins={pins}
+          activeId={activeId}
+          onSelect={(id) => {
+            setActiveId(id);
+            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }}
+        />
+        {pins.length === 0 && <p className="caption mt-3">{archive.sound.mapPending}</p>}
       </ArchiveSection>
 
       <ArchiveSection title={archive.sound.title}>
@@ -75,7 +99,9 @@ export default function Sounds() {
         ) : (
           <div>
             {sounds.map((sound) => (
-              <SoundCard key={sound.id} sound={sound} />
+              <div key={sound.id} id={sound.id}>
+                <SoundCard sound={sound} highlighted={sound.id === activeId} />
+              </div>
             ))}
           </div>
         )}
