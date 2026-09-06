@@ -1,28 +1,37 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as maplibregl from 'maplibre-gl';
-import type { Map as MapLibreMap, Marker as MapLibreMarker } from 'maplibre-gl';
-import { Protocol } from 'pmtiles';
+import type {
+  ExpressionSpecification,
+  Map as MapLibreMap,
+  Marker as MapLibreMarker,
+} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useLocale } from '../../i18n';
 
 /*
- * 우도 지도 — 우도나우가 직접 만들어 운영하는 벡터 지도를 그대로 쓴다.
+ * 우도 지도.
  *
- * 앱(MapLibre Native)과 **같은 스타일·같은 타일**이라 앱과 웹의 지도가 한 제품으로 보인다.
- * 앱과 마찬가지로 이 컴포넌트는 스타일 URL 을 **매니페스트 한 곳에서만** 얻는다 —
- * 타일 소스·PMTiles·zoom 라우팅은 서버(스타일 JSON)가 소유하고 화면은 해석하지 않는다.
- * 그래서 서버에서 지도를 교체해도 이 코드를 고칠 일이 없다.
+ * 타일은 **OpenFreeMap**(OpenStreetMap 기반 벡터 타일, 키 없이 공개·CORS 허용)을 쓴다.
+ * myweb 의 제주 지도와 같은 방식이다.
  *
- * 신뢰경계: 매니페스트는 **데이터이지 지시가 아니다.** 앱의 isAllowedMapUrl 과 같은 이유로
- * https + 허용 host 안의 URL 만 받아들이고, 아니면 지도를 그리지 않는다(fail-closed).
+ * 우도나우 자체 지도(maps.junghwanyoon.dev)를 붙여봤지만 되돌렸다 — R2 응답이
+ * `Vary: Origin` 없이 캐시돼서, 앱(Origin 을 안 보냄)이 타일을 받는 순간 CORS 헤더가
+ * 없는 응답이 캐시에 남고 웹이 깨진다. 그 서버에 Transform Rule 을 걸면 해결되지만,
+ * 사이트 쪽에서 통제할 수 없는 의존을 안고 갈 이유가 없다. 자체 지도를 다시 쓰고 싶으면
+ * 그 규칙을 건 뒤 STYLE 만 매니페스트에서 받아오게 바꾸면 된다.
  */
-const MANIFEST_URL = 'https://maps.junghwanyoon.dev/manifest/production.json';
-const ALLOWED_HOSTS = new Set(['maps.junghwanyoon.dev', 'tiles.junghwanyoon.dev']);
-/* 지도 위에 늘 보이는 짧은 출처 — 앱과 같은 문구를 쓴다. */
-const ATTRIBUTION = '© 우도나우 · © OpenStreetMap contributors';
+const STYLE = 'https://tiles.openfreemap.org/styles/liberty';
+const ATTRIBUTION = '© OpenStreetMap contributors · OpenFreeMap';
 
 /** 우도 전역이 한 화면에 들어오는 범위. */
 const UDO_BOUNDS: [number, number, number, number] = [126.936, 33.488, 126.98, 33.522];
+
+/* 라벨을 화면 언어에 맞춘다. 한국어는 지도 원본 라벨(name)이 이미 한국어다. */
+const NAME_KEYS: Record<string, string[]> = {
+  en: ['name:en', 'name:latin'],
+  ja: ['name:ja', 'name:latin'],
+  zh: ['name:zh', 'name:zh-Hans', 'name:latin'],
+};
 
 export type MapPin = {
   readonly id: string;
@@ -32,26 +41,23 @@ export type MapPin = {
   readonly sub?: string;
 };
 
-function isAllowed(url: string | undefined): url is string {
-  if (!url) return false;
-  try {
-    const u = new URL(url);
-    return u.protocol === 'https:' && ALLOWED_HOSTS.has(u.host);
-  } catch {
-    return false;
+function localizeLabels(map: MapLibreMap, locale: string) {
+  const keys = NAME_KEYS[locale];
+  if (!keys) return; // 한국어 등 — 원본 라벨 그대로
+  /*
+   * maplibre 의 표현식 타입은 고정 길이 튜플이라 이런 동적 조립과 맞지 않는다.
+   * 값 자체는 스펙에 맞는 coalesce 표현식이므로 여기서 한 번만 단언한다.
+   */
+  const expr = ['coalesce', ...keys.map((k) => ['get', k]), ['get', 'name']] as unknown as ExpressionSpecification;
+  for (const layer of map.getStyle().layers ?? []) {
+    if (layer.type === 'symbol' && layer.layout && 'text-field' in layer.layout) {
+      try {
+        map.setLayoutProperty(layer.id, 'text-field', expr);
+      } catch {
+        /* 이 레이어는 건너뛴다 — 라벨 하나 때문에 지도를 못 그리게 하지 않는다 */
+      }
+    }
   }
-}
-
-/** 매니페스트의 localizedStyles 에서 현재 언어에 맞는 스타일을 고른다. */
-function pickStyle(manifest: unknown, locale: string): string | null {
-  if (typeof manifest !== 'object' || manifest === null) return null;
-  const m = manifest as {
-    style?: { light?: string };
-    localizedStyles?: Record<string, string>;
-  };
-  const key = locale === 'zh' ? 'zh-Hans' : locale;
-  const candidate = m.localizedStyles?.[key] ?? m.localizedStyles?.ko ?? m.style?.light;
-  return isAllowed(candidate) ? candidate : null;
 }
 
 export default function UdoMap({
@@ -69,74 +75,53 @@ export default function UdoMap({
   const container = useRef<HTMLDivElement | null>(null);
   const map = useRef<MapLibreMap | null>(null);
   const markers = useRef<MapLibreMarker[]>([]);
-  const [failed, setFailed] = useState(false);
-  /*
-   * 타일 소스가 막혔을 때(예: CORS) maplibre 는 조용히 배경색만 그린다.
-   * 그러면 "지도가 안 나온다"는 사실만 남고 이유가 안 보이므로, 오류를 잡아 알린다.
-   */
-  const [tileError, setTileError] = useState(false);
-  /*
-   * 지도는 매니페스트를 받아온 뒤 비동기로 만들어진다. ready 를 state 로 두지 않으면
-   * 핀을 붙이는 효과가 지도보다 먼저 지나가 버리고, 다시 실행될 계기가 없어 핀이 영영 안 붙는다.
-   */
   const [ready, setReady] = useState(false);
-
-  /* pmtiles:// 프로토콜은 한 번만 등록한다(앱에서는 네이티브가 담당하는 일). */
-  useEffect(() => {
-    const protocol = new Protocol();
-    maplibregl.addProtocol('pmtiles', protocol.tile);
-    return () => maplibregl.removeProtocol('pmtiles');
-  }, []);
+  const [tileError, setTileError] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
     const el = container.current;
     if (!el) return;
+    let cancelled = false;
 
-    (async () => {
-      try {
-        const res = await fetch(MANIFEST_URL, { cache: 'no-cache' });
-        if (!res.ok) throw new Error(`manifest ${res.status}`);
-        const style = pickStyle(await res.json(), locale);
-        if (!style) throw new Error('허용되지 않은 스타일 URL');
-        if (cancelled) return;
+    const instance = new maplibregl.Map({
+      container: el,
+      style: STYLE,
+      bounds: UDO_BOUNDS,
+      fitBoundsOptions: { padding: 24 },
+      attributionControl: false,
+    });
+    instance.addControl(
+      new maplibregl.AttributionControl({ compact: true, customAttribution: ATTRIBUTION }),
+    );
+    instance.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+    instance.scrollZoom.disable(); // 페이지 스크롤을 가로채지 않는다(모바일 배려)
 
-        const instance = new maplibregl.Map({
-          container: el,
-          style,
-          bounds: UDO_BOUNDS,
-          fitBoundsOptions: { padding: 24 },
-          attributionControl: false,
-        });
-        instance.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: ATTRIBUTION }));
-        instance.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
-        instance.on('error', (event) => {
-          // 타일·소스 로딩 실패만 본다(라벨 폰트 경고 등은 무시).
-          const message = String((event as unknown as { error?: { message?: string } }).error?.message ?? '');
-          if (/fetch|load|source|tile/i.test(message) && !cancelled) setTileError(true);
-        });
-        instance.scrollZoom.disable(); // 페이지 스크롤을 가로채지 않는다(모바일 배려)
-        map.current = instance;
-        /*
-         * 핀은 지도 위에 얹는 DOM 요소라 스타일 로딩을 기다릴 필요가 없다.
-         * 'load' 이벤트를 기다렸더니 (스프라이트·글리프 사정에 따라) 끝내 오지 않는
-         * 경우가 있어 핀이 영영 안 붙었다 — 인스턴스가 생긴 시점에 바로 알린다.
-         */
-        if (!cancelled) setReady(true);
-      } catch {
-        if (!cancelled) setFailed(true);
-      }
-    })();
+    instance.on('load', () => {
+      if (cancelled) return;
+      localizeLabels(instance, locale);
+    });
+    /* 타일이 막히면 maplibre 는 조용히 배경만 그린다 — 이유가 보이게 잡아둔다. */
+    instance.on('error', (event) => {
+      const message = String((event as unknown as { error?: { message?: string } }).error?.message ?? '');
+      if (/fetch|load|source|tile/i.test(message) && !cancelled) setTileError(true);
+    });
+
+    map.current = instance;
+    setReady(true);
+    /* 개발 중 지도 상태를 콘솔에서 들여다보기 위한 손잡이(프로덕션 빌드에서 제거된다). */
+    if (import.meta.env.DEV) {
+      (window as unknown as { __udoMap?: MapLibreMap }).__udoMap = instance;
+    }
 
     return () => {
       cancelled = true;
       setReady(false);
-      map.current?.remove();
+      instance.remove();
       map.current = null;
     };
   }, [locale]);
 
-  /* 핀 갱신 — 지도 인스턴스와 분리해 두어 녹음이 늘어도 지도를 다시 만들지 않는다. */
+  /* 핀은 지도 위에 얹는 DOM 이라 스타일 로딩을 기다릴 필요가 없다. */
   useEffect(() => {
     const instance = map.current;
     if (!instance || !ready) return;
@@ -159,21 +144,16 @@ export default function UdoMap({
         )
         .addTo(instance);
     });
+    return () => markers.current.forEach((m) => m.remove());
   }, [pins, activeId, onSelect, ready]);
 
-  if (failed) return null;
+  const style = useMemo(() => ({ height }), [height]);
 
   return (
     <>
-      <div
-        ref={container}
-        style={{ height }}
-        className="w-full overflow-hidden rounded-xl border border-line"
-      />
+      <div ref={container} style={style} className="w-full overflow-hidden rounded-xl border border-line" />
       {tileError && (
-        <p className="caption mt-2">
-          지도 타일을 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.
-        </p>
+        <p className="caption mt-2">지도 타일을 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.</p>
       )}
     </>
   );

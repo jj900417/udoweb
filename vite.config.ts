@@ -17,7 +17,7 @@ export default defineConfig({
          * 사이트를 배포해도 지도 청크는 브라우저 캐시에 그대로 남는다.
          */
         manualChunks: {
-          map: ['maplibre-gl', 'pmtiles'],
+          map: ['maplibre-gl'],
         },
       },
     },
