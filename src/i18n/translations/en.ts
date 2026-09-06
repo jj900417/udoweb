@@ -81,8 +81,6 @@ export const en: Overlay = {
     cctv: { title: 'Live CCTV', note: 'Public CCTV links from Jeju City' },
     footer: {
       madeBy: 'Made to show what Udo actually looks like.',
-      dataSource: 'Data sources',
-      verifyNote: 'Something wrong? Tell us — the island changes.',
     },
     nav: { menu: 'Menu', close: 'Close' },
     theme: { light: 'Light', dark: 'Dark' },

@@ -1,10 +1,11 @@
 import { useContent } from '../i18n';
 import SectionHeader from '../components/SectionHeader';
 import FerryStatusCard from '../components/FerryStatusCard';
+import InstallButton from '../components/InstallButton';
 
 /* 우도 나우 앱 안내 — 이 사이트의 실시간 정보가 어디서 오는지도 함께 밝힌다. */
 export default function AppPage() {
-  const { site, ui } = useContent();
+  const { site } = useContent();
 
   const features = [
     { icon: '🚦', title: '운항 신호등', desc: '오늘·내일 배가 뜨는지 한 눈에. 결항 시 푸시 알림.' },
@@ -40,20 +41,13 @@ export default function AppPage() {
         </div>
       </div>
 
-      <div className="mt-10 flex flex-wrap gap-3">
-        <a href={site.app.web} target="_blank" rel="noopener noreferrer" className="btn-primary">
-          웹으로 열기 ↗
-        </a>
-        {site.app.android && (
-          <a href={site.app.android} target="_blank" rel="noopener noreferrer" className="btn-ghost">
-            Google Play ↗
-          </a>
-        )}
+      <div className="mt-10 flex flex-wrap items-center gap-3">
+        <InstallButton />
       </div>
 
       <p className="mt-8 max-w-3xl text-sm text-faint">
-        이 홈페이지의 운항 상태·시간표·가게·축제·사진은 모두 {site.app.name} 서버에서 받아옵니다.
-        섬에서 바뀐 정보가 앱에 반영되면 이 사이트도 함께 바뀝니다. {ui.footer.verifyNote}
+        이 홈페이지의 운항 상태·시간표·가게·축제는 모두 {site.app.name} 서버에서 받아옵니다.
+        섬에서 바뀐 정보가 앱에 반영되면 이 사이트도 함께 바뀝니다.
       </p>
     </>
   );

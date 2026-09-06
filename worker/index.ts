@@ -24,6 +24,7 @@ const ENDPOINTS: Record<string, number> = {
   tide: 900,
   'tide/day': 900,
   cctv: 900,
+  'v1/app/requirements': 3600,
   spots: 300,
   festivals: 300,
   shops: 300,

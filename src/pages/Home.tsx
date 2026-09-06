@@ -3,6 +3,7 @@ import { useContent } from '../i18n';
 import PageMeta from '../components/PageMeta';
 import SectionHeader from '../components/SectionHeader';
 import FerryStatusCard from '../components/FerryStatusCard';
+import InstallButton from '../components/InstallButton';
 import ArtworkGrid from '../components/archive/ArtworkGrid';
 import { useCounts, useWorkList } from '../archive';
 
@@ -112,16 +113,12 @@ export default function Home() {
 
       <section className="mt-20 rounded-2xl border border-line bg-surface-soft p-6 sm:p-8">
         <h2 className="text-xl font-bold text-ink">{home.sections.app.title}</h2>
-        <p className="measure mt-1.5 text-sm leading-relaxed text-ink-soft">
-          {site.app.desc} — {home.sections.app.desc}
-        </p>
-        <div className="mt-5 flex flex-wrap gap-3">
+        <p className="measure mt-1.5 text-sm leading-relaxed text-ink-soft">{site.app.desc}</p>
+        <div className="mt-5 flex flex-wrap items-center gap-3">
           <Link to="/app" className="btn-primary">
-            {site.app.name} {ui.actions.more}
+            {ui.app.about}
           </Link>
-          <a href={site.app.web} target="_blank" rel="noopener noreferrer" className="btn-ghost">
-            {ui.actions.openLink} ↗
-          </a>
+          <InstallButton />
         </div>
       </section>
     </>

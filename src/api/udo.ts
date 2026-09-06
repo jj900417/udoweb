@@ -116,6 +116,13 @@ export type Photo = {
   tags: { name: string; category: string }[];
 };
 
+/** 앱 스토어 주소 — 서버가 단일 소스(iOS 등재 시 서버 설정만 바뀌면 웹도 따라간다). */
+export type AppRequirements = {
+  min_build: number;
+  store_url_android: string;
+  store_url_ios: string;
+};
+
 export type Cam = {
   id: string;
   name: string;
@@ -139,6 +146,7 @@ export const udoApi = {
   gallery: (limit = 12, signal?: AbortSignal) =>
     get<{ items: Photo[] }>(`gallery?limit=${limit}`, signal),
   cctv: (signal?: AbortSignal) => get<{ cams: Cam[]; source: string }>('cctv', signal),
+  appRequirements: (signal?: AbortSignal) => get<AppRequirements>('v1/app/requirements', signal),
 };
 
 /** 앱 서버가 주는 상대 경로(/media/...)를 이 사이트에서 열 수 있는 URL 로. */

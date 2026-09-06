@@ -94,10 +94,14 @@ export const ui = {
   cctv: { title: '실시간 CCTV', note: '제주시 공개 CCTV 링크' },
   footer: {
     madeBy: '우도의 모습을 알리기 위해 만들었습니다.',
-    dataSource: '데이터 출처',
-    verifyNote: '정보가 다르면 알려주세요 — 섬에서 바뀐 것을 반영합니다.',
   },
   nav: { menu: '메뉴', close: '닫기' },
+  app: {
+    about: '우도나우란',
+    install: '설치하기',
+    openWeb: '웹으로 열기',
+    comingSoon: '앱 출시 준비 중',
+  },
   notFound: {
     title: '여기는 아직 물이 안 빠졌습니다',
     body: '찾는 페이지가 없습니다.',

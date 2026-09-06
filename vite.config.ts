@@ -24,6 +24,8 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      // /api/udo/* 전체를 넘긴다. 단, 프로덕션은 worker/index.ts 의 ENDPOINTS
+      // allowlist 를 지나므로 새 엔드포인트를 쓸 때는 거기에도 추가해야 한다.
       '/api/udo': {
         target: 'https://udo-info.fly.dev',
         changeOrigin: true,
