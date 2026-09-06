@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/* Class-based dark variant: <html data-theme="dark"> (set pre-paint in index.html). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * Design tokens — single source of truth for the visual language.
+ * Brand cyan #00A5CD is inherited from the Udo Now app (docs/design-system.md
+ * in the app repo) so the site and the app read as one product. Everything
+ * else is a sea/sand palette. Components must use these semantic tokens —
+ * no raw hex, no raw grays, anywhere in src/components or src/pages.
+ */
+@theme {
+  --color-paper: #fbfbf9;        /* page background (app "soft") */
+  --color-surface: #ffffff;      /* cards, bars */
+  --color-surface-soft: #f6f6f3; /* insets, table heads (app "card") */
+  --color-ink: #1a1a17;          /* headlines */
+  --color-ink-soft: #4a4a44;     /* body */
+  --color-faint: #7b7b74;        /* meta, captions */
+  --color-line: #dadad3;         /* hairline */
+  --color-brand: #00a5cd;        /* CTA / links (Pantone 311 C) */
+  --color-brand-strong: #0084a4; /* hover / pressed */
+  --color-brand-soft: #e6f6fb;   /* tinted backgrounds */
+  --color-on-brand: #ffffff;
+  --color-sand: #f3ead8;         /* 서빈백사 — warm accent surface */
+  --color-coral: #e8735a;        /* 소라·성게 — secondary accent */
+
+  /* Ferry traffic light — MEANING colors, never used for CTAs (app rule). */
+  --color-go: #16a34a;
+  --color-caution: #e08a00;
+  --color-stop: #dc2626;
+  --color-unknown: #9ca3af;
+
+  --font-sans:
+    "Pretendard", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: #0e1417;
+  --color-surface: #151d21;
+  --color-surface-soft: #1c262b;
+  --color-ink: #e8eaea;
+  --color-ink-soft: #b3bcbf;
+  --color-faint: #7d8a8e;
+  --color-line: #27343a;
+  --color-brand: #4cc9e8;
+  --color-brand-strong: #7fdcf3;
+  --color-brand-soft: #0d2a33;
+  --color-on-brand: #05191f;
+  --color-sand: #2a2418;
+  --color-coral: #f08a72;
+}
+
+@layer base {
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Flat cards — depth comes from the border, not a shadow (app rule #3). */
+  .card {
+    @apply rounded-xl border border-line bg-surface p-5 transition-colors;
+  }
+  .card-hover {
+    @apply hover:border-brand/50;
+  }
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-sm
+      font-semibold text-on-brand transition-colors hover:bg-brand-strong;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-lg border border-line px-4 py-2.5
+      text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand;
+  }
+  .chip {
+    @apply inline-flex items-center rounded-full border border-line bg-surface-soft
+      px-2.5 py-0.5 text-xs font-medium text-ink-soft;
+  }
+  .prose-body {
+    @apply leading-relaxed text-ink-soft;
+  }
+}

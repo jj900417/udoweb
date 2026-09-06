@@ -1,0 +1,31 @@
+/*
+ * 콘텐츠 단일 소스. 한국어가 canonical 이고, 다른 언어는 src/i18n/translations/
+ * 의 오버레이가 이 구조 위에 index-wise 로 덮인다(구조·배열 순서를 맞출 것).
+ * 컴포넌트는 useContent() 로만 읽는다 — 직접 import 금지(번역이 안 걸린다).
+ */
+import { site } from './site';
+import { nav } from './nav';
+import { home } from './home';
+import { about } from './about';
+import { eightViews, places } from './spots';
+import { access } from './access';
+import { experiences } from './experiences';
+import { food } from './food';
+import { tips } from './tips';
+import { ui } from './ui';
+
+export const content = {
+  site,
+  nav,
+  home,
+  about,
+  eightViews,
+  places,
+  access,
+  experiences,
+  food,
+  tips,
+  ui,
+};
+
+export type Content = typeof content;

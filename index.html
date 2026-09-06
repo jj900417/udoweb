@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>우도 — 제주 바다 위의 작은 섬</title>
+    <meta
+      name="description"
+      content="제주 우도의 풍경·문화·먹거리와 오늘 배가 뜨는지까지. 우도 공식 안내 홈페이지."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="우도 — 제주 바다 위의 작은 섬" />
+    <meta
+      property="og:description"
+      content="우도8경, 해녀의 바다, 땅콩과 소라. 그리고 오늘 배가 뜨는지."
+    />
+    <meta property="og:image" content="/og.png" />
+    <meta property="og:url" content="https://udonow.ac.kr" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      /* Theme applied before first paint (no flash). Mirrors src/theme.tsx. */
+      (function () {
+        try {
+          var saved = localStorage.getItem('udoweb-theme');
+          var dark =
+            saved === 'dark' ||
+            (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
