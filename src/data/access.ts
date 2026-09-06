@@ -7,6 +7,10 @@
 export const access = {
   title: '가는 길',
   subtitle: '성산포에서 배로 15분 — 그리고 섬 안에서는 천천히',
+  routeMapTitle: '뱃길',
+  routeMapNote: '항구와 항로. 배 위치가 있으면 함께 표시됩니다 — 배가 안 보이는 것은 위치 정보가 없다는 뜻이고, 운항 여부는 운항 상태가 말합니다.',
+  mainlandPort: '제주 본섬',
+  islandPort: '우도',
   stepsTitle: '순서',
   transportTitle: '섬 안에서 이동',
   safetyTitle: '안전',

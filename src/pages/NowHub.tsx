@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { useContent } from '../i18n';
 import PageMeta from '../components/PageMeta';
 import SectionHeader from '../components/SectionHeader';
@@ -13,7 +12,6 @@ import CctvList from '../components/CctvList';
  */
 export default function NowHub() {
   const { hubs, site } = useContent();
-  const links = Object.values(hubs.now.links);
 
   return (
     <>
@@ -43,14 +41,6 @@ export default function NowHub() {
         <CctvList />
       </div>
 
-      <div className="mt-12 grid gap-4 sm:grid-cols-3">
-        {links.map((link) => (
-          <Link key={link.to} to={link.to} className="card card-hover">
-            <h2 className="font-bold text-ink">{link.title}</h2>
-            <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{link.desc}</p>
-          </Link>
-        ))}
-      </div>
 
       <p className="caption mt-8">
         {site.app.name} 서버에서 받아온 정보입니다. 최종 확인은 선사·가게 전화가 가장 정확합니다.

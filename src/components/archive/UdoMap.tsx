@@ -33,6 +33,12 @@ const NAME_KEYS: Record<string, string[]> = {
   zh: ['name:zh', 'name:zh-Hans', 'name:latin'],
 };
 
+/** 지도에 그릴 선(항로 등). 좌표는 [경도, 위도] 순서 — GeoJSON 규약. */
+export type MapLine = {
+  readonly id: string;
+  readonly coordinates: readonly [number, number][];
+};
+
 export type MapPin = {
   readonly id: string;
   readonly lat: number;
@@ -62,14 +68,20 @@ function localizeLabels(map: MapLibreMap, locale: string) {
 
 export default function UdoMap({
   pins,
+  lines = [],
   onSelect,
   activeId,
   height = 420,
+  bounds,
 }: {
   pins: readonly MapPin[];
+  /** 항로 폴리라인 — 스타일이 로드된 뒤 GeoJSON 레이어로 그린다. */
+  lines?: readonly MapLine[];
   onSelect?: (id: string) => void;
   activeId?: string;
   height?: number;
+  /** [서, 남, 동, 북]. 없으면 우도 전역. */
+  bounds?: readonly [number, number, number, number];
 }) {
   const { locale } = useLocale();
   const container = useRef<HTMLDivElement | null>(null);
@@ -86,7 +98,7 @@ export default function UdoMap({
     const instance = new maplibregl.Map({
       container: el,
       style: STYLE,
-      bounds: UDO_BOUNDS,
+      bounds: (bounds ?? UDO_BOUNDS) as [number, number, number, number],
       fitBoundsOptions: { padding: 24 },
       attributionControl: false,
     });
@@ -119,7 +131,49 @@ export default function UdoMap({
       instance.remove();
       map.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locale]);
+
+  /*
+   * 항로 — 스타일이 다 로드된 뒤에만 소스·레이어를 붙일 수 있다.
+   * 라벨 위가 아니라 아래에 깔아 지명을 가리지 않는다.
+   */
+  useEffect(() => {
+    const instance = map.current;
+    if (!instance || lines.length === 0) return;
+
+    const draw = () => {
+      const data = {
+        type: 'FeatureCollection' as const,
+        features: lines.map((line) => ({
+          type: 'Feature' as const,
+          properties: { id: line.id },
+          geometry: { type: 'LineString' as const, coordinates: line.coordinates as [number, number][] },
+        })),
+      };
+      const existing = instance.getSource('ferry-routes');
+      if (existing && 'setData' in existing) {
+        (existing as maplibregl.GeoJSONSource).setData(data);
+        return;
+      }
+      instance.addSource('ferry-routes', { type: 'geojson', data });
+      instance.addLayer({
+        id: 'ferry-routes-line',
+        type: 'line',
+        source: 'ferry-routes',
+        layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: {
+          'line-color': '#00a5cd',
+          'line-width': 3,
+          'line-dasharray': [2, 1.5],
+          'line-opacity': 0.9,
+        },
+      });
+    };
+
+    if (instance.isStyleLoaded()) draw();
+    else instance.once('load', draw);
+  }, [lines, ready]);
 
   /* 핀은 지도 위에 얹는 DOM 이라 스타일 로딩을 기다릴 필요가 없다. */
   useEffect(() => {

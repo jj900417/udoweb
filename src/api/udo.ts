@@ -135,12 +135,48 @@ export type Banner = {
   link_value: string;
 };
 
-export type Cam = {
-  id: string;
+/** 운항도(노선도) — 항구·항로·운항 중 선박. ferry-server 공개 API 를 앱 서버가 중계한다. */
+export type FerryPort = {
+  port_id: string;
   name: string;
+  lat: number;
+  lon: number;
+  is_mainland_port?: boolean;
+};
+
+export type FerryRoute = {
+  route_id: string;
+  public_name: string;
+  path: { lat: number; lon: number }[];
+};
+
+export type FerryVessel = {
+  vessel_id: string;
+  name?: string;
+  lat: number;
+  lon: number;
+};
+
+export type FerryBoard = {
+  realtime_status: string;
+  map_config?: { center_lat: number; center_lon: number; min_lat: number; max_lat: number; min_lon: number; max_lon: number };
+  ports: FerryPort[];
+  routes: FerryRoute[];
+  vessels: FerryVessel[];
+};
+
+/**
+ * 항구 CCTV 항목. 콘솔에서 운영자가 관리하므로 **필드가 없을 수 있다** —
+ * 지금 서버는 id·active 없이 name/url/desc 만 주는 항목도 내려준다.
+ * 화면은 있는 것만 쓰고 없는 것에 기대지 않는다.
+ */
+export type Cam = {
+  id?: string;
+  name: string;
+  desc?: string;
   url: string;
-  viewer_type: string;
-  active: boolean;
+  viewer_type?: string;
+  active?: boolean;
 };
 
 async function get<T>(path: string, signal?: AbortSignal): Promise<T> {
@@ -159,6 +195,8 @@ export const udoApi = {
     get<{ items: Photo[] }>(`gallery?limit=${limit}`, signal),
   cctv: (signal?: AbortSignal) => get<{ cams: Cam[]; source: string }>('cctv', signal),
   appRequirements: (signal?: AbortSignal) => get<AppRequirements>('v1/app/requirements', signal),
+  ferryBoard: (signal?: AbortSignal) =>
+    get<FerryBoard>('v1/destinations/udo/transport/vessels', signal),
   banners: (lang: string, signal?: AbortSignal) =>
     get<{ banners: Banner[] }>(`v1/destinations/udo/banners?lang=${lang}`, signal),
 };

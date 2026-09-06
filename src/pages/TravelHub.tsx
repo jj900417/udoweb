@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { useContent } from '../i18n';
 import PageMeta from '../components/PageMeta';
 import SectionHeader from '../components/SectionHeader';
-import FerryStatusCard from '../components/FerryStatusCard';
 
 /*
  * 여행 허브. 기존 여행 페이지(/spots·/access·/experience·/food·/tips)는 그대로 있고
@@ -31,11 +30,6 @@ export default function TravelHub() {
         ))}
       </div>
 
-      {/* 여행 계획의 첫 단계는 언제나 "배가 뜨는가" 다. */}
-      <div className="mt-12">
-        <SectionHeader title={ui.ferry.title} />
-        <FerryStatusCard />
-      </div>
     </>
   );
 }

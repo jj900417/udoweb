@@ -1,17 +1,19 @@
 import { useContent } from '../i18n';
 import SectionHeader from '../components/SectionHeader';
-import FerryStatusCard from '../components/FerryStatusCard';
-import TimetableCard from '../components/TimetableCard';
-import CctvList from '../components/CctvList';
+import FerryRouteMap from '../components/FerryRouteMap';
 
 export default function Access() {
-  const { access, ui } = useContent();
+  const { access } = useContent();
 
   return (
     <>
       <SectionHeader title={access.title} subtitle={access.subtitle} level={1} />
 
-      <FerryStatusCard />
+      {/* 뱃길부터 — 어디서 어디로 가는지가 먼저다. 운항 상태·시간표는 '지금 우도'가 맡는다. */}
+      <div className="mt-2">
+        <SectionHeader title={access.routeMapTitle} />
+        <FerryRouteMap />
+      </div>
 
       <div className="mt-14">
         <SectionHeader title={access.stepsTitle} />
@@ -26,10 +28,6 @@ export default function Access() {
         </ol>
       </div>
 
-      <div className="mt-14">
-        <SectionHeader title={ui.timetable.title} />
-        <TimetableCard />
-      </div>
 
       <div className="mt-14">
         <SectionHeader title={access.transportTitle} />
@@ -51,22 +49,7 @@ export default function Access() {
         </div>
       </div>
 
-      <div className="mt-14">
-        <SectionHeader title={access.safetyTitle} />
-        <ul className="space-y-2">
-          {access.safety.map((s) => (
-            <li key={s} className="flex gap-2 text-sm text-ink-soft">
-              <span aria-hidden>·</span>
-              {s}
-            </li>
-          ))}
-        </ul>
-      </div>
 
-      <div className="mt-14">
-        <SectionHeader title={ui.cctv.title} subtitle={access.cctvSubtitle} />
-        <CctvList />
-      </div>
     </>
   );
 }

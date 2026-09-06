@@ -91,7 +91,14 @@ export const ui = {
   },
   timetable: { title: '운항 시간표', note: '시간은 계절·기상에 따라 바뀝니다.' },
   shops: { title: '가게', category: '업종', hours: '영업시간' },
-  cctv: { title: '실시간 CCTV', note: '제주시 공개 CCTV 링크' },
+  cctv: {
+    title: '항구 CCTV',
+    note: '출처: 제주특별자치도 제주시',
+    open: '실시간 영상 열기',
+    whyExternal:
+      '영상은 새 탭에서 열립니다. 제주시가 제공하는 스트림이 http 전용이라 ' +
+      '보안 연결(https)인 이 페이지 안에서는 브라우저가 재생을 막습니다.',
+  },
   footer: {
     madeBy: '우도의 모습을 알리기 위해 만들었습니다.',
   },
