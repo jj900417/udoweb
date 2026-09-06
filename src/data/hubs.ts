@@ -2,10 +2,10 @@
 export const hubs = {
   travel: {
     title: '여행',
-    subtitle: '섬은 배 시간과 물때로 돌아갑니다',
-    lead: '우도를 처음 오신다면 가는 길부터, 이미 아신다면 8경과 먹거리부터 보세요.',
+    subtitle: '',
+    lead: '우도를 처음 오신다면 오시는 길부터, 이미 아신다면 가게를 확인해 주세요.',
     links: {
-      access: { to: '/access', title: '가는 길', desc: '배편·시간표·섬 안 이동·안전' },
+      access: { to: '/access', title: '오시는 길', desc: '뱃길·오는 순서·섬 안 이동' },
       tips: { to: '/tips', title: '여행 팁', desc: '자주 묻는 것과 떠나기 전 체크리스트' },
       food: { to: '/food', title: '먹거리·가게', desc: '땅콩과 소라, 그리고 지금 문 연 곳' },
     },

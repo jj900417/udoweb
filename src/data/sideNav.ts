@@ -54,7 +54,7 @@ export const sideNav = {
          * 방문자가 실제로 찾는 순서(어떻게 가나 → 무엇을 알아야 하나 → 무엇을 먹나)로 둔다.
          */
         items: [
-          { path: '/access', label: '가는 길', count: '' },
+          { path: '/access', label: '오시는 길', count: '' },
           { path: '/tips', label: '여행 팁', count: '' },
           { path: '/food', label: '먹거리·가게', count: '' },
         ],

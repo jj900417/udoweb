@@ -25,7 +25,7 @@ export const home = {
     featured: { title: '오늘의 기록', desc: '아카이브에서 꺼내 온 한 장' },
     ferry: { title: '지금의 우도', desc: '오늘 배가 뜨는지' },
     gallery: { title: '현재의 우도', desc: '방문자와 현지 엠버서더가 남긴 최근 사진' },
-    travel: { title: '여행 정보', desc: '가는 길·여행 팁·먹거리' },
+    travel: { title: '여행 정보', desc: '오시는 길·여행 팁·먹거리' },
     app: { title: '섬에서는 앱으로 — 우도 나우', desc: '' },
   },
 } as const;

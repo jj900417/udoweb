@@ -14,7 +14,7 @@ export default function TravelHub() {
   return (
     <>
       <PageMeta title={hubs.travel.title} description={hubs.travel.lead} />
-      <SectionHeader title={hubs.travel.title} subtitle={hubs.travel.subtitle} level={1} />
+      <SectionHeader title={hubs.travel.title} subtitle={hubs.travel.subtitle || undefined} level={1} />
 
       <p className="measure prose-body">{hubs.travel.lead}</p>
 
