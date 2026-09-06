@@ -29,8 +29,22 @@ export const archive = {
     collections: { title: '컬렉션', sub: 'Collections', desc: '주제로 묶어 읽는 자료' },
     exhibitions: { title: '기획전', sub: 'Exhibitions', desc: '온라인으로 여는 전시' },
     library: { title: '우도 서재', sub: 'Library', desc: '우도를 다룬 책·향토지·논문·기사' },
-    history: { title: '우도의 시간', sub: 'History', desc: '출처를 밝힌 우도의 역사' },
-    voices: { title: '우도의 목소리', sub: 'Voices of Udo', desc: '섬에서 살아온 분들의 말과 기억' },
+    history: {
+      title: '우도의 시간',
+      sub: 'History',
+      desc: '출처를 밝힌 우도의 역사',
+      lead:
+        '우도에 사람이 들어와 살기 시작한 때부터 지금까지를, 출처를 밝히며 정리합니다. ' +
+        '연도가 분명하지 않은 일은 분명하지 않은 채로 적습니다.',
+    },
+    voices: {
+      title: '우도의 목소리',
+      sub: 'Voices of Udo',
+      desc: '섬에서 살아온 분들의 말과 기억',
+      lead:
+        '우도에서 살아온 분들의 목소리를 그대로 남깁니다. 말투와 억양, 그 말에 담긴 기억까지가 ' +
+        '기록입니다. 공개는 본인(또는 유족)의 동의 범위 안에서만 합니다.',
+    },
     selectedWorks: { title: '주요 작품', sub: '', desc: '' },
     biography: { title: '생애', sub: '', desc: '' },
     statement: { title: '작가의 말', sub: '', desc: '' },
@@ -39,6 +53,9 @@ export const archive = {
     timeline: { title: '연표', sub: '', desc: '' },
     sessions: { title: '인터뷰 기록', sub: '', desc: '' },
     clips: { title: '들어보기', sub: '', desc: '' },
+    people: { title: '이야기해 주신 분들', sub: 'People', desc: '' },
+    more: { title: '더 보기', sub: 'Elsewhere in the archive', desc: '' },
+    publications: { title: '관련 자료', sub: 'Books & Sources', desc: '' },
   },
 
   /* 자료가 아직 없을 때. 가짜 자료 대신 이 상태를 보여준다. */
@@ -48,6 +65,12 @@ export const archive = {
     notFound: '찾는 기록이 없습니다',
     notFoundBody: '주소가 바뀌었거나 아직 공개되지 않은 기록입니다.',
     backToArchive: '기록으로 돌아가기',
+    structureOnly:
+      '지금은 구조만 있고 자료가 없습니다. 사진·기록·구술 자료는 권리와 동의 확인이 끝난 것부터 올라갑니다.',
+    peopleNote: '인터뷰와 동의 절차가 끝난 분부터 이 자리에 모십니다. 동의 없이는 이름도 목소리도 올리지 않습니다.',
+    historyNote: '『우도지』와 공공기록을 확인하며 항목을 하나씩 올립니다. 확인되지 않은 연도·사건은 싣지 않습니다.',
+    libraryNote:
+      '『우도지』를 비롯한 자료의 서지정보부터 정리해 올립니다. 원문 공개 권리가 없는 책은 소개와 소장처만 싣습니다.',
   },
 
   labels: {
@@ -118,15 +141,80 @@ export const archive = {
     repeatBody: '한 문장씩 듣고 소리 내어 따라 읽어보세요. 녹음 기능은 준비 중입니다.',
     noAudio: '음성 파일이 아직 없습니다.',
     anonymous: '실명 비공개',
+    /* 전사 전문은 기본으로 접어 둔다 — 먼저 듣게 하고, 읽고 싶은 사람만 편다. */
+    transcript: '전사 읽기',
+    transcriptNote: '들리는 대로 옮긴 것이라 표기가 표준어와 다를 수 있습니다.',
+    seek: '재생 위치',
+    playing: '재생 중',
+    paused: '멈춤',
+    recordedOn: '기록된 날',
+    /* 구술 기록은 분량과 공개 범위를 수치·문장으로 밝힌다(보존 기록의 관례). */
+    extent: '녹음 {min}분',
+    hasTranscript: '전사 있음',
+    consentPublic: '웹 공개 동의',
+    speakers: '이야기해 주신 분',
   },
 
+  /*
+   * 작품 기록 라벨. 순서는 한국 미술관 기록 관례(작가명→작품명→제작연도→재료→규격→
+   * 부문→관리번호→수집경위→전시상태)를 사진 아카이브로 옮긴 것이다.
+   * 라벨과 값은 크기·색을 다르게 둔다 — 같은 굵기로 나열하면 아무것도 스캔되지 않는다.
+   */
   work: {
-    credit: 'Credit',
-    medium: '재료·형식',
-    dimensions: '크기',
-    date: '제작 시기',
-    place: '장소',
+    credit: '저작권',
+    photographer: '촬영자',
+    title: '제목',
+    date: '촬영연도',
+    medium: '매체·기법',
+    dimensions: '규격',
+    classification: '분류',
+    accession: '자료번호',
+    acquisition: '수집경위',
+    visibility: '공개상태',
+    place: '촬영장소',
+    collection: '컬렉션',
     unknownArtist: '작자 미상',
+    publicLabel: '공개',
     rightsNote: '이 사진의 저작권은 권리자에게 있습니다. 무단 복제·배포를 금합니다.',
+    /* 사진이 없는 기록도 숨기지 않는다 — 없다고 적고 페이지는 유지한다. */
+    noImage: '이 자료의 사진은 아직 없습니다.',
+    groups: {
+      identity: '자료',
+      creation: '촬영',
+      material: '형태',
+      provenance: '수집·공개',
+    },
+  },
+
+  /* 아카이브 2차 내비 — /archive 안에서만 보인다. */
+  nav: {
+    artists: '사람',
+    works: '작품',
+    collections: '컬렉션',
+    exhibitions: '기획전',
+    library: '서재',
+  },
+
+  /* 브라우즈(시대·주제·장소). 축의 값이 2개 미만이면 화면에서 사라진다. */
+  browse: {
+    title: '찾아보기',
+    decades: '시대',
+    tags: '주제',
+    places: '장소',
+    all: '전체',
+    resultCount: '{n}건',
+  },
+
+  /*
+   * 기록에 대한 정직한 각주. 아카이브는 완결된 사실의 집합이 아니라
+   * 확인된 만큼의 기록이라는 것을 화면에서도 밝힌다.
+   */
+  recordNote: {
+    title: '이 기록에 대하여',
+    body:
+      '이 기록은 확인된 만큼만 적혀 있습니다. 빠진 것도, 나중에 고쳐질 것도 있습니다. ' +
+      '다르게 알고 계신 것이 있으면 알려주세요.',
+    updated: '갱신',
+    sourceCount: '출처 {n}건',
   },
 } as const;

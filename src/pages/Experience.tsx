@@ -23,12 +23,12 @@ export default function Experience() {
       </div>
 
       <div className="mt-14">
-        <SectionHeader title="축제·행사" subtitle="지금 열리거나 곧 열리는 것" />
+        <SectionHeader title={experiences.festivalsTitle} subtitle={experiences.festivalsSubtitle} />
         <FestivalList />
       </div>
 
       <div className="mt-14 rounded-2xl border border-line bg-sand/60 p-6 sm:p-8">
-        <h2 className="text-xl font-bold text-ink">섬에서 지켜주세요</h2>
+        <h2 className="text-xl font-bold text-ink">{experiences.etiquetteTitle}</h2>
         <ul className="mt-4 space-y-2">
           {experiences.etiquette.map((e) => (
             <li key={e} className="flex gap-2 text-sm text-ink-soft">

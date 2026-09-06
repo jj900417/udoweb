@@ -70,6 +70,8 @@ export type SortKey = 'default' | 'dateAsc' | 'dateDesc' | 'title';
 export type ListOptions<T> = {
   readonly tag?: string;
   readonly placeId?: PlaceRefId;
+  /** '1970' 처럼 연대의 시작 연도. facets() 가 주는 key 와 같은 값. */
+  readonly decade?: string;
   readonly sort?: SortKey;
   readonly limit?: number;
   readonly filter?: (item: T) => boolean;
@@ -124,6 +126,47 @@ function isVisible(entity: ArchiveEntity, v: Visibility, data: ArchiveDataset): 
   return consentClear(entity, data);
 }
 
+/* ─── 브라우즈(facet) ───────────────────────────────────────────────── */
+
+export type Facet = {
+  readonly key: string;
+  readonly label: string;
+  readonly count: number;
+};
+
+export type Facets = {
+  readonly decades: readonly Facet[];
+  readonly tags: readonly Facet[];
+  readonly places: readonly Facet[];
+};
+
+/**
+ * 브라우즈는 **자료가 있을 때만** 나타난다. 값이 하나뿐인 축은 탐색이 아니라
+ * 장식이므로 빈 배열로 돌려 UI 가 스스로 사라지게 한다.
+ */
+const MIN_FACET_VALUES = 2;
+
+/** ArchiveDate → '1970'(연대 시작). 연도를 모르면 null — 억지로 넣지 않는다. */
+export function decadeOf(d: ArchiveDate | undefined): string | null {
+  if (!d || d.precision === 'unknown' || !d.value) return null;
+  const year = Number(d.value.slice(0, 4));
+  if (Number.isNaN(year)) return null;
+  return String(Math.floor(year / 10) * 10);
+}
+
+function tally(values: readonly (readonly [string, string])[]): readonly Facet[] {
+  const counts = new Map<string, { label: string; count: number }>();
+  for (const [key, label] of values) {
+    const found = counts.get(key);
+    if (found) found.count += 1;
+    else counts.set(key, { label, count: 1 });
+  }
+  if (counts.size < MIN_FACET_VALUES) return EMPTY;
+  return [...counts.entries()]
+    .map(([key, v]) => ({ key, label: v.label, count: v.count }))
+    .sort((a, b) => a.key.localeCompare(b.key));
+}
+
 /* ─── 정렬 ──────────────────────────────────────────────────────────── */
 
 /** 연대('1930')는 중간값으로, 모르는 날짜는 가장 뒤로. */
@@ -162,6 +205,7 @@ function applyOptions<T extends ArchiveEntity>(items: readonly T[], opts?: ListO
   let out = items.slice();
   if (opts?.tag) out = out.filter((i) => i.tags.includes(opts.tag as string));
   if (opts?.placeId) out = out.filter((i) => i.places.some((p) => p.placeId === opts.placeId));
+  if (opts?.decade) out = out.filter((i) => decadeOf(entityDate(i)) === opts.decade);
   if (opts?.filter) out = out.filter(opts.filter);
   const sort = opts?.sort ?? 'default';
   if (sort !== 'default') out.sort((a, b) => compare(a, b, sort));
@@ -203,6 +247,11 @@ export type Archive = {
 
   getMedia(id: MediaId | undefined): MediaRef | null;
   getMediaList(ids: readonly MediaId[]): readonly MediaRef[];
+
+  /** 브라우즈 축. 값이 2개 미만인 축은 빈 배열(= 화면에서 사라짐). */
+  facets(kind?: EntityKind): Facets;
+  /** 종류별 공개 레코드 수 — 목록·내비에 개수를 붙이는 데 쓴다. */
+  countOf(kind: EntityKind): number;
 
   readonly index: ArchiveIndex;
   readonly stats: ArchiveStats;
@@ -366,6 +415,22 @@ export function createArchive(
       }
       return out.length > 0 ? out : EMPTY;
     },
+
+    facets: (kind) => {
+      const scope = kind ? (byKind.get(kind) ?? EMPTY) : [...byId.values()];
+      const decades: [string, string][] = [];
+      const tags: [string, string][] = [];
+      const places: [string, string][] = [];
+      for (const e of scope) {
+        const decade = decadeOf(entityDate(e));
+        if (decade) decades.push([decade, `${decade}년대`]);
+        for (const tag of e.tags) tags.push([tag, tag]);
+        // 장소 이름은 화면에서 usePlaceResolver 로 붙인다 — 여기서는 id 만 센다.
+        for (const link of e.places) places.push([link.placeId, link.placeId]);
+      }
+      return { decades: tally(decades), tags: tally(tags), places: tally(places) };
+    },
+    countOf: (kind) => (byKind.get(kind) ?? EMPTY).length,
 
     index,
     stats: { total: byId.size, hidden, droppedRefs: dropped.length },

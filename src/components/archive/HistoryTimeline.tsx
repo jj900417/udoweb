@@ -28,7 +28,7 @@ export default function HistoryTimeline({ entries }: { entries: readonly History
             />
             <p className="credit">{archive.labels.categories[entry.category]}</p>
             <h3 className="display mt-1 text-lg font-semibold text-ink">
-              <Link to={entityPath('history', entry.slug)} className="hover:text-brand">
+              <Link to={entityPath('history', entry.slug)} className="hover:text-link">
                 {entry.title}
               </Link>
             </h3>

@@ -24,7 +24,7 @@ export default function RelatedRecords({ entity }: { entity: ArchiveEntity }) {
                 <li key={item.id}>
                   <Link
                     to={entityPath(item.kind, item.slug)}
-                    className="text-sm text-ink-soft hover:text-brand"
+                    className="text-sm text-ink-soft hover:text-link"
                   >
                     → {item.title}
                   </Link>

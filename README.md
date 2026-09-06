@@ -62,11 +62,19 @@ npm run preview    # 빌드 결과 미리보기 (API 프록시 없음 — dev �
 상단 메뉴는 이 축을 따라 6개 허브다: 우도 · 기록 · 역사 · 목소리 · 여행 · 지금 우도.
 기존 URL(`/spots` `/access` `/experience` `/food` `/tips` `/gallery` `/app`)은 그대로 살아 있다.
 
+아카이브 화면 설계의 근거(미술관·아카이브 레퍼런스에서 무엇을 배우고 무엇을 배우지
+않았는지)는 [design-references](docs/design-references.md) 에 있다.
+
 아카이브 구조·권리·구술사 절차는 `docs/` 에 있다:
 [archive-architecture](docs/archive-architecture.md) ·
 [archive-rights](docs/archive-rights.md) ·
 [oral-history-workflow](docs/oral-history-workflow.md) ·
-[media-storage](docs/media-storage.md).
+[media-storage](docs/media-storage.md) ·
+[design-references](docs/design-references.md).
+
+**개발 서버에서만 보이는 예시 데이터**가 있다(`src/archive/records/__dev__/`). 자료가 0건일 때
+레이아웃을 확인하기 위한 것이고 제목에 `[예시]` 가 붙는다. 프로덕션 빌드에는 들어가지 않는다 —
+`npm run build && grep -r "[예시]" dist/` 가 아무것도 찾지 못해야 한다.
 
 ## 폴더
 

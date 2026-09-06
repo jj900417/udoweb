@@ -156,6 +156,12 @@ export type Work = EntityBase<WorkId, 'work'> & {
   readonly medium?: string;
   readonly dimensions?: string;
   readonly accessionNumber?: string;
+  /**
+   * 수집경위 — 이 자료가 어디서 어떻게 들어왔는가(기증·이관·구술 동의 등).
+   * 한국 미술관 기록의 표준 항목이고, 아카이브에서 가장 자주 빠지면서 가장 중요한 칸이다.
+   * 계약서 번호·연락처 같은 내부 정보는 여기 적지 않는다. 번역 대상.
+   */
+  readonly acquisition?: string;
   readonly collectionIds: readonly CollectionId[];
   readonly exhibitionIds: readonly ExhibitionId[];
   /** 순서 있음 — [0] 이 대표 이미지. */

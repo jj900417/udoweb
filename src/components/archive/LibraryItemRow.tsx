@@ -27,7 +27,7 @@ export default function LibraryItemRow({ item }: { item: LibraryItem }) {
           href={item.externalUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-block text-sm font-semibold text-brand hover:text-brand-strong"
+          className="mt-2 inline-block text-sm font-semibold text-link hover:text-cta-strong"
         >
           {ui.actions.openLink} ↗
         </a>

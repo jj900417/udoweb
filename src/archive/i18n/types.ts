@@ -23,6 +23,7 @@ export type ArchivePatch = {
   readonly era?: string;
   readonly medium?: string;
   readonly dimensions?: string;
+  readonly acquisition?: string;
   readonly venue?: string;
   readonly citation?: string;
   readonly holdingNote?: string;

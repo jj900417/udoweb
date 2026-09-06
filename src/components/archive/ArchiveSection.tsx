@@ -22,20 +22,20 @@ export default function ArchiveSection({
 }) {
   const Heading = level === 1 ? 'h1' : 'h2';
   return (
-    <section className="mt-16 first:mt-0">
+    <section className="mt-20 first:mt-0">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           {sub && <p className="credit mb-1">{sub}</p>}
           <Heading
             className={
               level === 1
-                ? 'display text-3xl font-bold text-ink sm:text-4xl'
-                : 'display text-2xl font-bold text-ink'
+                ? 'display t-display font-bold text-ink'
+                : 'display t-section font-bold text-ink'
             }
           >
             {title}
           </Heading>
-          {desc && <p className="mt-1.5 text-sm text-faint">{desc}</p>}
+          {desc && <p className="mt-2 t-meta text-faint">{desc}</p>}
         </div>
         {action}
       </div>

@@ -16,7 +16,11 @@ import HistoryDetail from './pages/HistoryDetail';
 import Voices from './pages/Voices';
 import VoicePersonDetail from './pages/VoicePersonDetail';
 import ArchiveHome from './pages/archive/ArchiveHome';
+import ArchiveLayout from './pages/archive/ArchiveLayout';
 import ArtistIndex from './pages/archive/ArtistIndex';
+import WorkIndex from './pages/archive/WorkIndex';
+import CollectionIndex from './pages/archive/CollectionIndex';
+import ExhibitionIndex from './pages/archive/ExhibitionIndex';
 import ArtistDetail from './pages/archive/ArtistDetail';
 import WorkDetail from './pages/archive/WorkDetail';
 import CollectionDetail from './pages/archive/CollectionDetail';
@@ -43,14 +47,20 @@ export default function App() {
         <Route path="about" element={<About />} />
 
         {/* 기록 — 아카이브 */}
+        {/* 랜딩은 '입구'라 2차 내비 없이, 나머지 아카이브 화면은 ArchiveLayout 아래로. */}
         <Route path="archive" element={<ArchiveHome />} />
-        <Route path="archive/artists" element={<ArtistIndex />} />
-        <Route path="archive/artists/:slug" element={<ArtistDetail />} />
-        <Route path="archive/works/:slug" element={<WorkDetail />} />
-        <Route path="archive/collections/:slug" element={<CollectionDetail />} />
-        <Route path="archive/exhibitions/:slug" element={<ExhibitionDetail />} />
-        <Route path="archive/library" element={<LibraryIndex />} />
-        <Route path="archive/*" element={<ArchiveNotFound />} />
+        <Route path="archive" element={<ArchiveLayout />}>
+          <Route path="artists" element={<ArtistIndex />} />
+          <Route path="artists/:slug" element={<ArtistDetail />} />
+          <Route path="works" element={<WorkIndex />} />
+          <Route path="works/:slug" element={<WorkDetail />} />
+          <Route path="collections" element={<CollectionIndex />} />
+          <Route path="collections/:slug" element={<CollectionDetail />} />
+          <Route path="exhibitions" element={<ExhibitionIndex />} />
+          <Route path="exhibitions/:slug" element={<ExhibitionDetail />} />
+          <Route path="library" element={<LibraryIndex />} />
+          <Route path="*" element={<ArchiveNotFound />} />
+        </Route>
 
         {/* 역사 */}
         <Route path="history" element={<History />} />

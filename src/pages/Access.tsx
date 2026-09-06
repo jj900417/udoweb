@@ -14,11 +14,11 @@ export default function Access() {
       <FerryStatusCard />
 
       <div className="mt-14">
-        <SectionHeader title="순서" />
+        <SectionHeader title={access.stepsTitle} />
         <ol className="grid gap-4 sm:grid-cols-2">
           {access.steps.map((s) => (
             <li key={s.step} className="card">
-              <span className="text-xs font-bold text-brand">STEP {s.step}</span>
+              <span className="text-xs font-bold text-link">STEP {s.step}</span>
               <h3 className="mt-1 font-bold text-ink">{s.title}</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{s.desc}</p>
             </li>
@@ -32,7 +32,7 @@ export default function Access() {
       </div>
 
       <div className="mt-14">
-        <SectionHeader title="섬 안에서 이동" />
+        <SectionHeader title={access.transportTitle} />
         <div className="grid gap-4 sm:grid-cols-3">
           {access.transport.map((t) => (
             <article key={t.title} className="card">
@@ -52,7 +52,7 @@ export default function Access() {
       </div>
 
       <div className="mt-14">
-        <SectionHeader title="안전" />
+        <SectionHeader title={access.safetyTitle} />
         <ul className="space-y-2">
           {access.safety.map((s) => (
             <li key={s} className="flex gap-2 text-sm text-ink-soft">
@@ -64,7 +64,7 @@ export default function Access() {
       </div>
 
       <div className="mt-14">
-        <SectionHeader title={ui.cctv.title} subtitle="지금 항구가 어떤지 직접 보기" />
+        <SectionHeader title={ui.cctv.title} subtitle={access.cctvSubtitle} />
         <CctvList />
       </div>
     </>

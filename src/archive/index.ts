@@ -9,8 +9,8 @@ export { entityPath, kindOfId } from './ids';
 export { mediaUrl, aspectRatio } from './media';
 export { usePlaceResolver, toPlaceRefId, toSitePlaceId } from './places';
 export type { ArchivePlace } from './places';
-export type { Archive, ListOptions, Visibility } from './repository';
-export { createArchive, getArchive, dateSortKey } from './repository';
+export type { Archive, Facet, Facets, ListOptions, Visibility } from './repository';
+export { createArchive, getArchive, dateSortKey, decadeOf } from './repository';
 export type { RelatedGroup, ArchiveIndex, DroppedRef } from './relations';
 export type { ArchiveDataset } from './records';
 

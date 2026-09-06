@@ -13,7 +13,7 @@ export default function VoicePersonCard({ person }: { person: VoicePerson }) {
         {src && portrait && (
           <img src={src} alt={portrait.alt} loading="lazy" className="mb-3 h-auto w-full object-contain" />
         )}
-        <h3 className="display text-lg font-bold text-ink group-hover:text-brand">
+        <h3 className="display text-lg font-bold text-ink group-hover:text-link">
           {person.displayName}
         </h3>
         <p className="caption mt-1">

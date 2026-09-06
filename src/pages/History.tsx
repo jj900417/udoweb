@@ -3,7 +3,9 @@ import PageMeta from '../components/PageMeta';
 import ArchiveSection from '../components/archive/ArchiveSection';
 import HistoryTimeline from '../components/archive/HistoryTimeline';
 import EmptyArchiveState from '../components/archive/EmptyArchiveState';
-import { useHistoryList } from '../archive';
+import BrowseChips from '../components/archive/BrowseChips';
+import { useFacets, useHistoryList } from '../archive';
+import { useSearchParams } from 'react-router-dom';
 
 /*
  * 우도의 시간. 『우도지』 같은 자료를 그대로 옮기는 곳이 아니라, 출처를 밝히면서
@@ -11,7 +13,17 @@ import { useHistoryList } from '../archive';
  */
 export default function History() {
   const { archive } = useContent();
-  const entries = useHistoryList({ sort: 'dateAsc' }).data ?? [];
+  const [params, setParams] = useSearchParams();
+  const decade = params.get('decade') ?? undefined;
+  const facets = useFacets('history');
+  const entries = useHistoryList({ sort: 'dateAsc', decade }).data ?? [];
+
+  const selectDecade = (value: string | undefined) => {
+    const next = new URLSearchParams(params);
+    if (value) next.set('decade', value);
+    else next.delete('decade');
+    setParams(next, { replace: true });
+  };
 
   return (
     <>
@@ -19,18 +31,16 @@ export default function History() {
 
       <header className="measure">
         <p className="credit">{archive.sections.history.sub}</p>
-        <h1 className="display mt-2 text-3xl font-bold text-ink sm:text-4xl">
+        <h1 className="display t-section mt-2 font-bold text-ink">
           {archive.sections.history.title}
         </h1>
-        <p className="mt-4 leading-relaxed text-ink-soft">
-          우도에 사람이 들어와 살기 시작한 때부터 지금까지를, 출처를 밝히며 정리합니다.
-          연도가 분명하지 않은 일은 분명하지 않은 채로 적습니다.
-        </p>
+        <p className="prose-archive mt-4">{archive.sections.history.lead}</p>
       </header>
 
       <ArchiveSection title={archive.sections.timeline.title}>
+        <BrowseChips facets={facets.decades} active={decade} onSelect={selectDecade} kind="decades" />
         {entries.length === 0 ? (
-          <EmptyArchiveState note="『우도지』와 공공기록을 확인하며 항목을 하나씩 올립니다. 확인되지 않은 연도·사건은 싣지 않습니다." />
+          <EmptyArchiveState note={archive.empty.historyNote} />
         ) : (
           <HistoryTimeline entries={entries} />
         )}

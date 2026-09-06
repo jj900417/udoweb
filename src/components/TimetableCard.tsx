@@ -20,7 +20,7 @@ export default function TimetableCard() {
         <div key={route.name} className="card">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h3 className="text-lg font-bold text-ink">{route.name}</h3>
-            <a href={`tel:${route.phone}`} className="text-sm font-semibold text-brand">
+            <a href={`tel:${route.phone}`} className="text-sm font-semibold text-link">
               {route.operator} ☎ {route.phone}
             </a>
           </div>

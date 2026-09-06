@@ -11,14 +11,14 @@ export default function Navbar() {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     [
       'rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors',
-      isActive ? 'bg-brand-soft text-brand' : 'text-ink-soft hover:text-brand',
+      isActive ? 'bg-brand-soft text-link' : 'text-ink-soft hover:text-link',
     ].join(' ');
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
         <Link to="/" className="flex items-baseline gap-2" onClick={() => setOpen(false)}>
-          <span className="text-lg font-extrabold tracking-tight text-brand">{ui.brand.name}</span>
+          <span className="text-lg font-extrabold tracking-tight text-link">{ui.brand.name}</span>
           <span className="text-[0.65rem] font-semibold uppercase tracking-widest text-faint">
             {ui.brand.sub}
           </span>

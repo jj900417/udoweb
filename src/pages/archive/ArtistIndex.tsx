@@ -21,9 +21,10 @@ export default function ArtistIndex() {
         {artists.length === 0 ? (
           <EmptyArchiveState />
         ) : (
-          <ul className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          /* 촘촘한 격자 대신 한 명씩 쌓는다 — 모바일이 곧 기본형이라 재배치가 없다. */
+          <ul className="divide-y divide-line border-y border-line">
             {artists.map((artist) => (
-              <li key={artist.id}>
+              <li key={artist.id} className="py-10">
                 <ArtistCard artist={artist} />
               </li>
             ))}

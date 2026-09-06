@@ -8,8 +8,22 @@
 import { useMemo } from 'react';
 import type { AsyncState } from '../api/useAsync';
 import { useLocale } from '../i18n';
-import { getArchive, type Archive, type ListOptions, type RelatedGroup } from './repository';
-import type { SourceId, ArtistId, CollectionId, ExhibitionId, SessionId, VoicePersonId } from './ids';
+import {
+  getArchive,
+  type Archive,
+  type Facets,
+  type ListOptions,
+  type RelatedGroup,
+} from './repository';
+import type {
+  SourceId,
+  ArtistId,
+  CollectionId,
+  EntityKind,
+  ExhibitionId,
+  SessionId,
+  VoicePersonId,
+} from './ids';
 import type {
   ArchiveEntity,
   Artist,
@@ -168,4 +182,22 @@ export function useSources(ids: readonly SourceId[]): ArchiveState<readonly Sour
   const archive = useArchive();
   const key = ids.join(',');
   return ready(useMemo(() => archive.listSources(ids), [archive, key])); // eslint-disable-line react-hooks/exhaustive-deps
+}
+
+/** 브라우즈 축(시대·주제·장소). 값이 2개 미만인 축은 빈 배열로 온다. */
+export function useFacets(kind?: EntityKind): Facets {
+  const archive = useArchive();
+  return useMemo(() => archive.facets(kind), [archive, kind]);
+}
+
+/** 종류별 공개 레코드 수 — 내비·섹션 제목 옆 개수. */
+export function useCounts(kinds: readonly EntityKind[]): Readonly<Record<string, number>> {
+  const archive = useArchive();
+  const key = kinds.join(',');
+  return useMemo(() => {
+    const out: Record<string, number> = {};
+    for (const kind of kinds) out[kind] = archive.countOf(kind);
+    return out;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [archive, key]);
 }

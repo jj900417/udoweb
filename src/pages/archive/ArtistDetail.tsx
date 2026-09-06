@@ -6,6 +6,7 @@ import ArtworkGrid from '../../components/archive/ArtworkGrid';
 import ArtworkFigure from '../../components/archive/ArtworkFigure';
 import SourceList from '../../components/archive/SourceList';
 import RelatedRecords from '../../components/archive/RelatedRecords';
+import RecordNote from '../../components/archive/RecordNote';
 import ArchiveDate from '../../components/archive/ArchiveDate';
 import ArchiveNotFound from './ArchiveNotFound';
 import { useArchive, useArtist, useSources, useWorksByArtist } from '../../archive';
@@ -50,9 +51,9 @@ export default function ArtistDetail() {
 
       {artist.body && artist.body.length > 0 && (
         <ArchiveSection title={archive.sections.biography.title}>
-          <div className="measure space-y-4">
+          <div className="measure space-y-5">
             {artist.body.map((p) => (
-              <p key={p} className="leading-relaxed text-ink-soft">
+              <p key={p} className="prose-archive">
                 {p}
               </p>
             ))}
@@ -78,8 +79,13 @@ export default function ArtistDetail() {
         </ArchiveSection>
       )}
 
-      <SourceList sources={sources} />
+      <div className="measure">
+        <SourceList sources={sources} />
+      </div>
       <RelatedRecords entity={artist} />
+      <div className="measure">
+        <RecordNote entity={artist} />
+      </div>
     </>
   );
 }

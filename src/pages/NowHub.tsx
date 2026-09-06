@@ -42,7 +42,7 @@ export default function NowHub() {
         <SectionHeader
           title={hubs.now.sections.photos}
           action={
-            <Link to="/gallery" className="text-sm font-semibold text-brand">
+            <Link to="/gallery" className="text-sm font-semibold text-link">
               {ui.actions.viewAll} →
             </Link>
           }

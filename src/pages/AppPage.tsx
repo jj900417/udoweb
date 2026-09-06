@@ -26,7 +26,7 @@ export default function AppPage() {
       <FerryStatusCard />
 
       <div className="mt-12">
-        <SectionHeader title="앱에서 되는 것" />
+        <SectionHeader title={site.appFeaturesTitle} />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (
             <article key={f.title} className="card">

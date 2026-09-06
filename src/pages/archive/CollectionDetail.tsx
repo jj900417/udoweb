@@ -42,7 +42,7 @@ export default function CollectionDetail() {
           <ul className="space-y-3">
             {members.map((m) => (
               <li key={m.id}>
-                <Link to={entityPath(m.kind, m.slug)} className="display text-lg text-ink hover:text-brand">
+                <Link to={entityPath(m.kind, m.slug)} className="display text-lg text-ink hover:text-link">
                   {m.title}
                 </Link>
                 <span className="caption ml-2">{archive.labels.kinds[m.kind]}</span>

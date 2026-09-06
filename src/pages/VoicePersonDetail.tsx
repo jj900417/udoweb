@@ -6,6 +6,7 @@ import ArtworkFigure from '../components/archive/ArtworkFigure';
 import VoiceQuote from '../components/archive/VoiceQuote';
 import ArchiveDate from '../components/archive/ArchiveDate';
 import EmptyArchiveState from '../components/archive/EmptyArchiveState';
+import RecordNote from '../components/archive/RecordNote';
 import ArchiveNotFound from './archive/ArchiveNotFound';
 import { useArchive, useClipsByPerson, useSessionsByPerson, useVoicePerson } from '../archive';
 
@@ -52,7 +53,7 @@ export default function VoicePersonDetail() {
       {person.body && person.body.length > 0 && (
         <div className="measure mt-8 space-y-4">
           {person.body.map((p) => (
-            <p key={p} className="leading-relaxed text-ink-soft">
+            <p key={p} className="prose-archive">
               {p}
             </p>
           ))}
@@ -65,7 +66,12 @@ export default function VoicePersonDetail() {
         ) : (
           <div>
             {clips.map((clip) => (
-              <VoiceQuote key={clip.id} clip={clip} personName={person.displayName} />
+              <VoiceQuote
+                key={clip.id}
+                clip={clip}
+                personName={person.displayName}
+                village={person.village}
+              />
             ))}
           </div>
         )}
@@ -73,17 +79,38 @@ export default function VoicePersonDetail() {
 
       {sessions.length > 0 && (
         <ArchiveSection title={archive.sections.sessions.title}>
-          <ul className="space-y-2 text-sm text-ink-soft">
+          {/*
+            * 보존 기록의 관례: 인터뷰를 설명하는 대신 **분량과 공개 범위를 수치·문장으로**
+            * 밝힌다. 공개 동의가 없는 자료는 애초에 이 목록에 오지 않는다(repository 가 거른다).
+            */}
+          <ul className="divide-y divide-line border-y border-line">
             {sessions.map((s) => (
-              <li key={s.id}>
-                <ArchiveDate date={s.recordedOn} />
-                {s.location ? ` · ${s.location}` : ''}
-                {s.themes.length > 0 ? ` · ${s.themes.join(' · ')}` : ''}
+              <li key={s.id} className="py-4">
+                <p className="t-meta text-ink">
+                  <ArchiveDate date={s.recordedOn} />
+                  {s.location ? ` · ${s.location}` : ''}
+                </p>
+                <p className="caption mt-1">
+                  {[
+                    s.durationSec
+                      ? archive.voice.extent.replace('{min}', String(Math.round(s.durationSec / 60)))
+                      : null,
+                    s.clipIds.length > 0 ? archive.voice.hasTranscript : null,
+                    archive.voice.consentPublic,
+                  ]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </p>
+                {s.themes.length > 0 && <p className="caption mt-0.5">{s.themes.join(' · ')}</p>}
               </li>
             ))}
           </ul>
         </ArchiveSection>
       )}
+
+      <div className="measure">
+        <RecordNote entity={person} />
+      </div>
     </>
   );
 }

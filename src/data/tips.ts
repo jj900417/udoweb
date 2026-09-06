@@ -29,6 +29,7 @@ export const tips = {
         '출발 전 그날의 물때를 확인하세요.',
     },
   ],
+  checklistTitle: '떠나기 전 확인',
   checklist: [
     '신분증 (승선 신고에 필요)',
     '오늘·내일 운항 상태 확인',

@@ -24,7 +24,7 @@ export default function TravelHub() {
           <Link key={link.to} to={link.to} className="card card-hover">
             <h2 className="font-bold text-ink">{link.title}</h2>
             <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{link.desc}</p>
-            <span className="mt-3 inline-block text-sm font-semibold text-brand">
+            <span className="mt-3 inline-block text-sm font-semibold text-link">
               {ui.actions.more} →
             </span>
           </Link>

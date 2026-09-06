@@ -5,7 +5,7 @@ import SectionHeader from '../components/SectionHeader';
 import FerryStatusCard from '../components/FerryStatusCard';
 import GalleryGrid from '../components/GalleryGrid';
 import ArtworkGrid from '../components/archive/ArtworkGrid';
-import { useWorkList } from '../archive';
+import { useCounts, useWorkList } from '../archive';
 
 /*
  * 홈 = 기록 + 지금 + 여행.
@@ -15,7 +15,13 @@ import { useWorkList } from '../archive';
 export default function Home() {
   const { home, hubs, site, ui, archive, eightViews } = useContent();
   const featured = useWorkList({ sort: 'dateDesc', limit: 3 }).data ?? [];
-  const records = [home.records.artists, home.records.history, home.records.voices];
+  const counts = useCounts(['artist', 'work', 'history', 'voiceClip']);
+  /* 기록의 세 갈래 — 각 줄에 실제 보유량을 함께 보여준다(없으면 표시하지 않는다). */
+  const records = [
+    { ...home.records.artists, count: counts.artist + counts.work },
+    { ...home.records.history, count: counts.history },
+    { ...home.records.voices, count: counts.voiceClip },
+  ];
 
   return (
     <>
@@ -24,7 +30,7 @@ export default function Home() {
       {/* 히어로 — 아카이브 사진이 준비되면 배경으로 교체(지금은 바다색 그라데이션). */}
       <section className="relative overflow-hidden rounded-2xl border border-line bg-gradient-to-br from-brand-soft via-surface to-sand px-6 py-16 sm:px-10 sm:py-24">
         <p className="credit">{home.hero.eyebrow}</p>
-        <h1 className="display mt-3 max-w-2xl text-4xl font-extrabold leading-tight text-ink sm:text-6xl">
+        <h1 className="display t-display mt-3 max-w-3xl font-extrabold text-ink">
           {home.hero.title}
         </h1>
         <p className="measure mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
@@ -48,12 +54,15 @@ export default function Home() {
             <li key={item.to}>
               <Link
                 to={item.to}
-                className="group flex flex-wrap items-baseline justify-between gap-2 py-7 transition-colors hover:text-brand"
+                className="group flex flex-wrap items-baseline justify-between gap-2 py-8 transition-colors hover:text-link"
               >
-                <span className="display text-2xl font-bold text-ink group-hover:text-brand sm:text-3xl">
+                <span className="display t-section font-bold text-ink group-hover:text-link">
                   {item.title}
                 </span>
-                <span className="credit">{item.sub} →</span>
+                <span className="credit">
+                  {item.count > 0 ? `${item.count} · ` : ''}
+                  {item.sub} →
+                </span>
               </Link>
             </li>
           ))}
@@ -76,7 +85,7 @@ export default function Home() {
           title={home.sections.ferry.title}
           subtitle={home.sections.ferry.desc}
           action={
-            <Link to="/now" className="text-sm font-semibold text-brand">
+            <Link to="/now" className="text-sm font-semibold text-link">
               {ui.actions.more} →
             </Link>
           }
@@ -90,7 +99,7 @@ export default function Home() {
           title={home.sections.gallery.title}
           subtitle={home.sections.gallery.desc}
           action={
-            <Link to="/gallery" className="text-sm font-semibold text-brand">
+            <Link to="/gallery" className="text-sm font-semibold text-link">
               {ui.actions.viewAll} →
             </Link>
           }
@@ -104,7 +113,7 @@ export default function Home() {
           title={home.sections.travel.title}
           subtitle={home.sections.travel.desc}
           action={
-            <Link to="/travel" className="text-sm font-semibold text-brand">
+            <Link to="/travel" className="text-sm font-semibold text-link">
               {ui.actions.viewAll} →
             </Link>
           }

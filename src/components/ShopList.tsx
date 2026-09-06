@@ -27,7 +27,7 @@ export default function ShopList() {
           <button
             type="button"
             onClick={() => setCategory('')}
-            className={`chip ${category === '' ? 'border-brand text-brand' : ''}`}
+            className={`chip ${category === '' ? 'border-brand text-link' : ''}`}
           >
             {ui.actions.viewAll}
           </button>
@@ -36,7 +36,7 @@ export default function ShopList() {
               key={c}
               type="button"
               onClick={() => setCategory(c)}
-              className={`chip ${category === c ? 'border-brand text-brand' : ''}`}
+              className={`chip ${category === c ? 'border-brand text-link' : ''}`}
             >
               {c}
             </button>
@@ -61,7 +61,7 @@ export default function ShopList() {
             )}
             <div className="mt-3 flex flex-wrap gap-2">
               {shop.phone && (
-                <a href={`tel:${shop.phone}`} className="chip hover:border-brand hover:text-brand">
+                <a href={`tel:${shop.phone}`} className="chip hover:border-brand hover:text-link">
                   ☎ {ui.actions.call}
                 </a>
               )}
@@ -70,7 +70,7 @@ export default function ShopList() {
                   href={shop.kakao_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="chip hover:border-brand hover:text-brand"
+                  className="chip hover:border-brand hover:text-link"
                 >
                   {ui.actions.openMap} ↗
                 </a>

@@ -27,7 +27,7 @@ export default function CctvList() {
             className="card card-hover flex items-center justify-between gap-3"
           >
             <span className="font-semibold text-ink">{c.name}</span>
-            <span className="text-sm text-brand">{ui.actions.openLink} ↗</span>
+            <span className="text-sm text-link">{ui.actions.openLink} ↗</span>
           </a>
         ))}
       </div>

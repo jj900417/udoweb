@@ -23,7 +23,7 @@ export default function LibraryIndex() {
         desc={archive.sections.library.desc}
       >
         {items.length === 0 ? (
-          <EmptyArchiveState note="『우도지』를 비롯한 자료의 서지정보부터 정리해 올립니다. 원문 공개 권리가 없는 책은 소개와 소장처만 싣습니다." />
+          <EmptyArchiveState note={archive.empty.libraryNote} />
         ) : (
           <ul>
             {items.map((item) => (

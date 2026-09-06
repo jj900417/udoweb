@@ -21,7 +21,7 @@ export default function Tips() {
         </div>
 
         <aside className="card h-fit">
-          <h2 className="font-bold text-ink">떠나기 전 확인</h2>
+          <h2 className="font-bold text-ink">{tips.checklistTitle}</h2>
           <ul className="mt-3 space-y-2">
             {tips.checklist.map((c) => (
               <li key={c} className="flex gap-2 text-sm text-ink-soft">

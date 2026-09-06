@@ -6,6 +6,14 @@
  *   server/app/photo.py 의 UDO_SPOTS 좌표(근사)와 같은 값을 쓴다.
  * 사진은 아직 없다 — image 를 채우면 카드가 사진 카드로 바뀐다(SpotCard).
  */
+/* 8경·명소 화면 문안(제목·부제) — 컴포넌트에 문장을 두지 않기 위해 여기 둔다. */
+export const spotsPage = {
+  eightTitle: '우도8경',
+  eightSubtitle: '섬 사람들이 오래 꼽아온 여덟 풍경 — 시간과 물때가 맞아야 보이는 것들',
+  placesTitle: '주요 명소',
+  placesSubtitle: '실제로 찾아가는 자리',
+} as const;
+
 export type EightView = {
   id: string;
   name: string;

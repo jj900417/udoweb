@@ -80,7 +80,7 @@ export default function FerryStatusCard() {
       {data.terminals?.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {data.terminals.map((t) => (
-            <a key={t.name} href={`tel:${t.phone}`} className="chip hover:border-brand hover:text-brand">
+            <a key={t.name} href={`tel:${t.phone}`} className="chip hover:border-brand hover:text-link">
               ☎ {t.name} {t.phone}
             </a>
           ))}

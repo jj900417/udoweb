@@ -26,6 +26,8 @@ export function isRightsClear(rights: Rights, today: string): boolean {
  */
 export function mediaUrl(ref: MediaRef | null | undefined, variant: MediaVariant = 'display'): string | null {
   if (!ref) return null;
+  /* 이미 완전한 URL(외부 호스팅, 또는 개발용 data URI)이면 그대로 쓴다. */
+  if (ref.key.startsWith('data:') || ref.key.startsWith('http')) return ref.key;
   if (!ref.variants.includes(variant)) {
     // 요청한 크기가 없으면 원본 성격의 것으로 대체하되, full 을 임의로 노출하지 않는다.
     if (ref.variants.includes('display')) return `${MEDIA_BASE}/${ref.key}`;

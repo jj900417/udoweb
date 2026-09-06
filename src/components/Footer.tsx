@@ -30,7 +30,7 @@ export default function Footer() {
                     href={l.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-brand hover:text-brand-strong"
+                    className="text-link hover:text-cta-strong"
                   >
                     {l.label} ↗
                   </a>

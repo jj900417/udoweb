@@ -7,7 +7,7 @@ import { site } from './site';
 import { nav } from './nav';
 import { home } from './home';
 import { about } from './about';
-import { eightViews, places } from './spots';
+import { eightViews, places, spotsPage } from './spots';
 import { access } from './access';
 import { experiences } from './experiences';
 import { food } from './food';
@@ -23,6 +23,7 @@ export const content = {
   about,
   eightViews,
   places,
+  spotsPage,
   access,
   experiences,
   food,

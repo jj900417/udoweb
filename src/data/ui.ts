@@ -48,5 +48,10 @@ export const ui = {
     verifyNote: '정보가 다르면 알려주세요 — 섬에서 바뀐 것을 반영합니다.',
   },
   nav: { menu: '메뉴', close: '닫기' },
+  notFound: {
+    title: '여기는 아직 물이 안 빠졌습니다',
+    body: '찾는 페이지가 없습니다.',
+    home: '홈으로',
+  },
   theme: { light: '라이트', dark: '다크' },
 } as const;

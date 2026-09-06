@@ -26,7 +26,7 @@ export default function Gallery() {
       </p>
       <p className="mt-2 text-sm text-faint">
         {ui.gallery.note}{' '}
-        <Link to="/archive" className="font-semibold text-brand hover:text-brand-strong">
+        <Link to="/archive" className="font-semibold text-link hover:text-cta-strong">
           {archive.sections.works.title} →
         </Link>
       </p>

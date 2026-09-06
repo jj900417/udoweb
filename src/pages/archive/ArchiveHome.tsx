@@ -4,7 +4,13 @@ import PageMeta from '../../components/PageMeta';
 import ArchiveSection from '../../components/archive/ArchiveSection';
 import ArtworkGrid from '../../components/archive/ArtworkGrid';
 import EmptyArchiveState from '../../components/archive/EmptyArchiveState';
-import { useArtistList, useWorkList, useCollectionList, useExhibitionList } from '../../archive';
+import {
+  useArtistList,
+  useCollectionList,
+  useCounts,
+  useExhibitionList,
+  useWorkList,
+} from '../../archive';
 
 /*
  * 기록 허브. 이미지 목록이 아니라 **아카이브가 무엇을 하려는 곳인지** 를 먼저 말한다.
@@ -17,6 +23,8 @@ export default function ArchiveHome() {
   const collections = useCollectionList({ limit: 4 }).data ?? [];
   const exhibitions = useExhibitionList({ sort: 'dateDesc', limit: 4 }).data ?? [];
   const nothingYet = artists.length + works.length + collections.length + exhibitions.length === 0;
+  /* 개수는 이 아카이브가 실제로 가진 것의 지도다 — 없으면 없는 대로 보여준다. */
+  const counts = useCounts(['artist', 'work', 'history', 'voiceClip', 'library']);
 
   return (
     <>
@@ -45,8 +53,9 @@ export default function ArchiveHome() {
         sub={archive.sections.artists.sub}
         desc={archive.sections.artists.desc}
         action={
-          <Link to="/archive/artists" className="text-sm font-semibold text-brand">
-            {ui.actions.viewAll} →
+          <Link to="/archive/artists" className="t-meta font-semibold text-link">
+            {ui.actions.viewAll}
+            {counts.artist > 0 ? ` ${counts.artist}` : ''} →
           </Link>
         }
       >
@@ -56,7 +65,7 @@ export default function ArchiveHome() {
           <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {artists.map((a) => (
               <li key={a.id}>
-                <Link to={`/archive/artists/${a.slug}`} className="display text-lg text-ink hover:text-brand">
+                <Link to={`/archive/artists/${a.slug}`} className="display text-lg text-ink hover:text-link">
                   {a.displayName}
                 </Link>
               </li>
@@ -73,7 +82,7 @@ export default function ArchiveHome() {
           <ul className="space-y-3">
             {collections.map((c) => (
               <li key={c.id}>
-                <Link to={`/archive/collections/${c.slug}`} className="display text-lg text-ink hover:text-brand">
+                <Link to={`/archive/collections/${c.slug}`} className="display text-lg text-ink hover:text-link">
                   {c.title}
                 </Link>
                 {c.summary && <p className="caption mt-1">{c.summary}</p>}
@@ -88,7 +97,7 @@ export default function ArchiveHome() {
           <ul className="space-y-3">
             {exhibitions.map((e) => (
               <li key={e.id}>
-                <Link to={`/archive/exhibitions/${e.slug}`} className="display text-lg text-ink hover:text-brand">
+                <Link to={`/archive/exhibitions/${e.slug}`} className="display text-lg text-ink hover:text-link">
                   {e.title}
                 </Link>
               </li>
@@ -97,30 +106,27 @@ export default function ArchiveHome() {
         </ArchiveSection>
       )}
 
-      <ArchiveSection title="더 보기" sub="Elsewhere in the archive">
+      <ArchiveSection title={archive.sections.more.title} sub={archive.sections.more.sub}>
         <div className="grid gap-4 sm:grid-cols-3">
-          <Link to="/history" className="rule pt-4 hover:text-brand">
-            <p className="credit">{archive.sections.history.sub}</p>
-            <p className="display mt-1 text-lg text-ink">{archive.sections.history.title}</p>
-            <p className="caption mt-1">{archive.sections.history.desc}</p>
-          </Link>
-          <Link to="/voices" className="rule pt-4 hover:text-brand">
-            <p className="credit">{archive.sections.voices.sub}</p>
-            <p className="display mt-1 text-lg text-ink">{archive.sections.voices.title}</p>
-            <p className="caption mt-1">{archive.sections.voices.desc}</p>
-          </Link>
-          <Link to="/archive/library" className="rule pt-4 hover:text-brand">
-            <p className="credit">{archive.sections.library.sub}</p>
-            <p className="display mt-1 text-lg text-ink">{archive.sections.library.title}</p>
-            <p className="caption mt-1">{archive.sections.library.desc}</p>
-          </Link>
+          {[
+            { to: '/history', s: archive.sections.history, n: counts.history },
+            { to: '/voices', s: archive.sections.voices, n: counts.voiceClip },
+            { to: '/archive/library', s: archive.sections.library, n: counts.library },
+          ].map((item) => (
+            <Link key={item.to} to={item.to} className="rule pt-4 hover:text-link">
+              <p className="credit">{item.s.sub}</p>
+              <p className="display mt-1 t-meta text-lg text-ink">{item.s.title}</p>
+              <p className="caption mt-1">
+                {item.s.desc}
+                {item.n > 0 ? ` · ${item.n}` : ''}
+              </p>
+            </Link>
+          ))}
         </div>
       </ArchiveSection>
 
       {nothingYet && (
-        <p className="caption mt-14">
-          지금은 구조만 있고 자료가 없습니다. 사진·기록·구술 자료는 권리와 동의 확인이 끝난 것부터 올라갑니다.
-        </p>
+        <p className="caption mt-14">{archive.empty.structureOnly}</p>
       )}
     </>
   );

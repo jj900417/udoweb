@@ -43,6 +43,9 @@ export const experiences = {
       season: '간조 전후',
     },
   ],
+  festivalsTitle: '축제·행사',
+  festivalsSubtitle: '지금 열리거나 곧 열리는 것',
+  etiquetteTitle: '섬에서 지켜주세요',
   /* 지키면 좋은 것 — 관광지 소비가 아니라 사는 섬으로 남기 위해 */
   etiquette: [
     '해녀·어촌계 작업 구역에 들어가지 않는다.',

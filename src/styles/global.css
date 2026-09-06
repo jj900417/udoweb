@@ -16,12 +16,21 @@
   --color-surface-soft: #f6f6f3; /* insets, table heads (app "card") */
   --color-ink: #1a1a17;          /* headlines */
   --color-ink-soft: #4a4a44;     /* body */
-  --color-faint: #7b7b74;        /* meta, captions */
+  --color-faint: #66665f;        /* meta, captions — on paper 5.58:1 */
   --color-line: #dadad3;         /* hairline */
-  --color-brand: #00a5cd;        /* CTA / links (Pantone 311 C) */
-  --color-brand-strong: #0084a4; /* hover / pressed */
-  --color-brand-soft: #e6f6fb;   /* tinted backgrounds */
+  /*
+   * 브랜드 시안은 **정체성 색**이다 — 테두리·인디케이터·작은 악센트·틴트 배경.
+   * 라이트모드에서 #00a5cd 는 종이 위 대비가 2.79:1(AA 4.5 미달)이라
+   * **글자를 담는 자리**(링크·버튼 배경)에는 같은 계열의 진한 값을 쓴다.
+   */
+  --color-brand: #00a5cd;        /* 브랜드 아이덴티티 (Pantone 311 C) */
+  --color-brand-strong: #0084a4; /* 테두리 hover */
+  --color-brand-soft: #e6f6fb;   /* 틴트 배경 */
   --color-on-brand: #ffffff;
+  --color-link: #00728c;         /* 링크·텍스트 — on paper 5.35:1 */
+  --color-cta: #00728c;          /* 버튼 배경 — 흰 글자 5.55:1 */
+  --color-cta-strong: #005f73;   /* 버튼 hover */
+  --color-on-cta: #ffffff;
   --color-sand: #f3ead8;         /* 서빈백사 — warm accent surface */
   --color-coral: #e8735a;        /* 소라·성게 — secondary accent */
 
@@ -59,6 +68,11 @@
   --color-brand-strong: #7fdcf3;
   --color-brand-soft: #0d2a33;
   --color-on-brand: #05191f;
+  /* 어두운 배경에서는 밝은 시안이 9.57:1 로 충분하다 — 링크·버튼에 그대로 쓴다. */
+  --color-link: #4cc9e8;
+  --color-cta: #4cc9e8;
+  --color-cta-strong: #7fdcf3;
+  --color-on-cta: #05191f;
   --color-sand: #2a2418;
   --color-coral: #f08a72;
 }
@@ -66,6 +80,8 @@
 @layer base {
   body {
     @apply bg-paper font-sans text-ink antialiased;
+    /* .bleed 가 100vw 를 쓰므로 세로 스크롤바 폭 때문에 가로 스크롤이 생기지 않게 막는다. */
+    overflow-x: hidden;
   }
   :focus-visible {
     outline: 2px solid var(--color-brand);
@@ -92,17 +108,18 @@
   .card-hover {
     @apply hover:border-brand/50;
   }
+  /* 글자를 담는 버튼은 brand 가 아니라 cta(진한 시안) — 대비 때문. */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-sm
-      font-semibold text-on-brand transition-colors hover:bg-brand-strong;
+    @apply inline-flex items-center gap-2 rounded-lg bg-cta px-4 py-2.5 text-sm
+      font-semibold text-on-cta transition-colors hover:bg-cta-strong;
   }
   .btn-ghost {
     @apply inline-flex items-center gap-2 rounded-lg border border-line px-4 py-2.5
-      text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand;
+      text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-link;
   }
   .chip {
     @apply inline-flex items-center rounded-full border border-line bg-surface-soft
-      px-2.5 py-0.5 text-xs font-medium text-ink-soft;
+      px-2.5 py-0.5 text-[0.8125rem] font-medium text-ink-soft;
   }
   .prose-body {
     @apply leading-relaxed text-ink-soft;
@@ -123,11 +140,53 @@
   .measure {
     @apply max-w-[46rem];
   }
-  .caption {
-    @apply text-xs leading-relaxed text-faint;
+
+  /*
+   * 타입 스케일 — 페이지마다 다른 숫자를 쓰지 않기 위한 고정 계단.
+   * meta 15px 는 우도 나우 앱의 '출처 칩·메타 15px' 와 맞춘 값이다
+   * (앱과 한 제품으로 읽히고, 고령 가독성 규칙과도 어긋나지 않는다).
+   */
+  .t-display {
+    @apply text-[2.75rem] leading-[1.1] sm:text-[4rem];
   }
+  .t-section {
+    @apply text-[1.75rem] leading-snug sm:text-[2.25rem];
+  }
+  .t-body {
+    @apply text-base leading-relaxed sm:text-[1.125rem];
+  }
+  .t-meta {
+    @apply text-[0.9375rem] leading-relaxed;
+  }
+  .t-caption {
+    @apply text-[0.8125rem] leading-relaxed;
+  }
+
+  .caption {
+    @apply text-[0.8125rem] leading-relaxed text-faint;
+  }
+  /* 12px 아래로 내리지 않는다 — 작아도 읽을 수 있어야 한다. */
   .credit {
-    @apply text-[0.7rem] uppercase tracking-wide text-faint;
+    @apply text-[0.75rem] uppercase tracking-wide text-faint;
+  }
+
+  /*
+   * 역사·구술 본문 — 읽는 글이므로 명조에 넉넉한 줄간.
+   * (네비·버튼·메타데이터·실시간 정보는 계속 고딕.)
+   */
+  .prose-archive {
+    font-family: var(--font-display);
+    @apply text-[1.0625rem] leading-[1.85] text-ink-soft sm:text-[1.125rem];
+  }
+
+  /*
+   * 컨테이너(max-w-6xl)를 뚫고 화면 전폭을 쓰는 이미지 자리.
+   * 작품 상세의 주 이미지처럼 "사진이 화면을 차지해야" 하는 곳에만 쓴다.
+   */
+  .bleed {
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
   }
   /* 작품 아래 얇은 구분선 하나 — 카드 테두리 대신 쓰는 최소 장치. */
   .rule {

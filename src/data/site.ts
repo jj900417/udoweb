@@ -14,6 +14,7 @@ export const site = {
     email: '',
     phone: '',
   },
+  appFeaturesTitle: '앱에서 되는 것',
   /* 관련 서비스 링크 */
   app: {
     name: '우도 나우',

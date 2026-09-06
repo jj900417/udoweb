@@ -20,6 +20,7 @@ import { historyEntries } from './history';
 import { sources } from './sources';
 import { voicePeople, sessions, clips } from './voices';
 import { mediaRefs } from './media';
+import { devFixtures } from './__dev__/fixtures';
 
 /** 아카이브 원자료 묶음. Phase 2 에서 API 응답이 이 모양으로 들어온다. */
 export type ArchiveDataset = {
@@ -36,7 +37,7 @@ export type ArchiveDataset = {
   readonly media: readonly MediaRef[];
 };
 
-export const dataset: ArchiveDataset = {
+const production: ArchiveDataset = {
   artists,
   works,
   collections,
@@ -49,3 +50,29 @@ export const dataset: ArchiveDataset = {
   clips,
   media: mediaRefs,
 };
+
+/*
+ * 개발 서버에서만 예시 레코드를 섞는다 — 자료가 0건일 때 레이아웃을 볼 수 없기 때문이다.
+ * `import.meta.env.DEV` 는 프로덕션 빌드에서 false 로 치환되고, 그러면 devFixtures 참조가
+ * 사라지면서 이 모듈 전체가 번들에서 제거된다.
+ * 검증: `npm run build && grep -r "[예시]" dist/` → 결과가 없어야 한다.
+ */
+function merge(a: ArchiveDataset, b: ArchiveDataset): ArchiveDataset {
+  return {
+    artists: [...a.artists, ...b.artists],
+    works: [...a.works, ...b.works],
+    collections: [...a.collections, ...b.collections],
+    exhibitions: [...a.exhibitions, ...b.exhibitions],
+    library: [...a.library, ...b.library],
+    history: [...a.history, ...b.history],
+    sources: [...a.sources, ...b.sources],
+    people: [...a.people, ...b.people],
+    sessions: [...a.sessions, ...b.sessions],
+    clips: [...a.clips, ...b.clips],
+    media: [...a.media, ...b.media],
+  };
+}
+
+export const dataset: ArchiveDataset = import.meta.env.DEV
+  ? merge(production, devFixtures)
+  : production;

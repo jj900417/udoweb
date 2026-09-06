@@ -23,7 +23,7 @@ export default function SourceList({ sources }: { sources: readonly Source[] }) 
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-brand hover:text-brand-strong"
+                  className="text-link hover:text-cta-strong"
                 >
                   ↗
                 </a>

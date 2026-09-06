@@ -50,6 +50,7 @@ export function localizeEntity<T extends ArchiveEntity>(entity: T, patch: Archiv
   if (filled(patch.era)) set('era', patch.era);
   if (filled(patch.medium)) set('medium', patch.medium);
   if (filled(patch.dimensions)) set('dimensions', patch.dimensions);
+  if (filled(patch.acquisition)) set('acquisition', patch.acquisition);
   if (filled(patch.venue)) set('venue', patch.venue);
   if (filled(patch.citation)) set('citation', patch.citation);
   if (filled(patch.holdingNote)) set('holdingNote', patch.holdingNote);

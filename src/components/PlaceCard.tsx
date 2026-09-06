@@ -18,7 +18,7 @@ export default function PlaceCard({ place }: { place: Place }) {
         href={mapUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-3 inline-block text-sm font-semibold text-brand hover:text-brand-strong"
+        className="mt-3 inline-block text-sm font-semibold text-link hover:text-cta-strong"
       >
         {ui.actions.openMap} ↗
       </a>
