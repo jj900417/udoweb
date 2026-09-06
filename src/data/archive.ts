@@ -55,10 +55,7 @@ export const archive = {
       title: '우도의 목소리',
       sub: 'Voices of Udo',
       desc: '섬에서 살아온 분들의 말과 기억',
-      lead:
-        '우도에서 살아온 분들의 목소리를 그대로 남깁니다. 말투와 억양, 그 말에 담긴 기억까지가 ' +
-        '기록입니다. 공개는 본인(또는 유족)의 동의 범위 안에서만 합니다.',
-      siblingNote: '사람의 말이 아닌 섬의 소리는 「소리」에 있습니다.',
+      lead: '우도에서 살아온 분들의 목소리를 그대로 전합니다. 말투와 억양, 그 말에 담긴 기억까지.',
     },
     selectedWorks: { title: '주요 작품', sub: '', desc: '' },
     biography: { title: '생애', sub: '', desc: '' },
