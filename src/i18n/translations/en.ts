@@ -88,13 +88,9 @@ export const en: Overlay = {
   nav: [{ label: 'Home' }, { label: 'Udo' }, { label: 'Udo Now' }],
   home: {
     hero: {
-      eyebrow: 'Udo, Jeju',
       title: 'Recording Udo',
       lead:
-        'The time people lived here, the words that are disappearing, the landscapes someone left behind. ' +
-        'And whether the ferry is running today.',
-      ctaPrimary: { label: 'Enter the archive' },
-      ctaSecondary: { label: 'Travel information' },
+        'The time people lived here, the words that are disappearing, the landscapes someone left behind.',
     },
     records: {
       title: 'What we record',

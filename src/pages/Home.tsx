@@ -25,21 +25,12 @@ export default function Home() {
 
       {/* 히어로 — 아카이브 사진이 준비되면 배경으로 교체(지금은 바다색 그라데이션). */}
       <section className="relative overflow-hidden rounded-2xl border border-line bg-gradient-to-br from-brand-soft via-surface to-sand px-6 py-16 sm:px-10 sm:py-24">
-        <p className="credit">{home.hero.eyebrow}</p>
-        <h1 className="display t-display mt-3 max-w-3xl font-extrabold text-ink">
+        <h1 className="display t-display max-w-3xl font-extrabold text-ink">
           {home.hero.title}
         </h1>
         <p className="measure mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
           {home.hero.lead}
         </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link to={home.hero.ctaPrimary.to} className="btn-primary">
-            {home.hero.ctaPrimary.label}
-          </Link>
-          <Link to={home.hero.ctaSecondary.to} className="btn-ghost">
-            {home.hero.ctaSecondary.label}
-          </Link>
-        </div>
       </section>
 
       {/* 세 갈래 기록 */}
