@@ -45,30 +45,35 @@ export const ui = {
      * **code + params 로 여기서 조립한다.** 앱(app/lib/i18n/labels.dart)과 같은 방식이라
      * 앱과 웹이 같은 말을 하고, 언어를 바꿔도 한국어가 새지 않는다.
      * 문안은 앱의 app_ko.arb 와 글자까지 맞췄다.
+     *
+     * ★ **이 블록(headlines·reasons)만 '-합니다'체를 유지한다.** 사이트의 나머지 문안은
+     *   해요체지만, 운항 판정은 앱과 웹이 한 글자도 다르면 안 되는 안전 정보라
+     *   앱 문안이 단일 소스다. 문체를 손질할 때 여기는 건드리지 않는다 —
+     *   바꾸려면 앱 app_ko.arb 를 먼저 바꾸고 같이 옮긴다.
      */
     headlines: {
-      manual_red_today: '오늘 운항이 중단됐어요',
-      manual_red_range: '{month}월 {day}일까지 운항이 중단돼요',
-      manual_yellow: '지금 일시적으로 운항을 멈췄어요',
-      manual_green: '오늘 정상 운항해요',
-      notice_red: '오늘 운항이 중단됐어요 (선사 공지)',
-      warning_red: '기상특보로 결항 가능성이 커요',
-      auto_green: '정상 운항 중이에요',
-      gray_unknown: '현재 정보를 확인할 수 없어요. 전화로 확인해 주세요',
-      closed_before_first: '아직 운항 시간 전이에요',
-      closed_after_last: '오늘 운항이 끝났어요',
+      manual_red_today: '오늘 운항이 중단되었습니다',
+      manual_red_range: '{month}월 {day}일까지 운항이 중단됩니다',
+      manual_yellow: '지금 일시적으로 운항을 멈췄습니다',
+      manual_green: '오늘 정상 운항합니다',
+      notice_red: '오늘 운항이 중단되었습니다 (선사 공지)',
+      warning_red: '기상특보로 결항 가능성이 큽니다',
+      auto_green: '정상 운항 중입니다',
+      gray_unknown: '현재 정보를 확인할 수 없습니다. 전화로 확인하세요',
+      closed_before_first: '아직 운항 시간 전입니다',
+      closed_after_last: '오늘 운항이 끝났습니다',
     },
     reasons: {
       manual_reason: '사유: {reason}',
-      resume_when_clear: '상황이 풀리면 운항을 재개해요',
+      resume_when_clear: '상황이 풀리면 운항을 재개합니다',
       closed_until: '{month}월 {day}일까지 결항 예정',
       notice_detected: '우도해운 휴항 공지 감지',
       warning_active: '제주도동부앞바다 {kind} 발효 중',
-      warning_minor: '{kind} 발효 중 · 운항 영향은 크지 않아요',
+      warning_minor: '{kind} 발효 중 · 운항 영향은 크지 않습니다',
       no_warning_no_notice: '기상특보 없음, 휴항 공지 없음',
       collect_failed: '기상·공지 정보 수집 실패',
-      before_first_boat: '오늘 첫 배가 아직 출발하지 않았어요',
-      after_last_boat: '운영 시간이 종료됐어요',
+      before_first_boat: '오늘 첫 배가 아직 출발하지 않았습니다',
+      after_last_boat: '운영 시간이 종료되었습니다',
     },
     warningKinds: {
       typhoon: '태풍',
