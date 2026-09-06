@@ -6,7 +6,7 @@ export default function Tips() {
 
   return (
     <>
-      <SectionHeader title={tips.title} subtitle={tips.subtitle} level={1} />
+      <SectionHeader title={tips.title} subtitle={tips.subtitle || undefined} level={1} />
 
       <div className="grid gap-8 lg:grid-cols-[2fr_1fr]">
         <div className="space-y-4">
