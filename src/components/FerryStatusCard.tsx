@@ -1,4 +1,5 @@
 import { udoApi, type Light } from '../api/udo';
+import { statusHeadline, statusReasons } from '../api/ferryText';
 import { useAsync } from '../api/useAsync';
 import { useContent } from '../i18n';
 import StateBlock from './StateBlock';
@@ -35,6 +36,9 @@ export default function FerryStatusCard() {
   const light = (data.status?.light ?? 'gray') as Light;
   const style = LIGHT_STYLE[light] ?? LIGHT_STYLE.gray;
   const cur = data.current;
+  /* 서버가 준 완성 문장 대신 code+params 로 조립한다(앱과 같은 문안·같은 규칙). */
+  const headline = statusHeadline(data.status, ui.ferry);
+  const reasons = statusReasons(data.status, ui.ferry);
 
   return (
     <div className={`rounded-xl border ${style.border} ${style.tint} p-5`}>
@@ -46,10 +50,10 @@ export default function FerryStatusCard() {
         {data.stale && <span className="chip">stale</span>}
       </div>
 
-      <p className="mt-2 text-lg font-bold text-ink">{data.status.headline}</p>
-      {data.status.reasons?.length > 0 && (
+      <p className="mt-2 text-lg font-bold text-ink">{headline}</p>
+      {reasons.length > 0 && (
         <ul className="mt-1.5 space-y-0.5 text-sm text-ink-soft">
-          {data.status.reasons.map((r) => (
+          {reasons.map((r) => (
             <li key={r}>· {r}</li>
           ))}
         </ul>

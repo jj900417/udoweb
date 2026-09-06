@@ -15,12 +15,21 @@ export const API_BASE = '/api/udo';
 
 export type Light = 'green' | 'yellow' | 'red' | 'gray';
 
+export type StatusReasonItem = {
+  code: string;
+  params?: Record<string, string | number>;
+};
+
 export type FerryStatus = {
   status: {
     light: Light;
     certainty: string;
+    /** 서버가 조립한 한국어 문장. **폴백용**이다 — 화면은 code+params 로 직접 만든다. */
     headline: string;
+    headline_code?: string;
+    headline_params?: Record<string, string | number>;
     reasons: string[];
+    reason_items?: StatusReasonItem[];
     as_of: string;
   };
   updated_at: string;
