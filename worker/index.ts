@@ -132,13 +132,31 @@ function harden(response: Response): Response {
  *  - m3u8 은 본문을 다시 써서 세그먼트도 이 릴레이를 타게 한다(상대 경로 → 절대 URL).
  *  - 세그먼트는 엣지에 캐시한다 → 뷰어가 늘어도 **상류 부하는 카메라 수에 비례**한다.
  */
+/*
+ * 원본은 제주시 스트림 서버(211.114.96.121:1935, http 전용)다.
+ * 그런데 Workers 는 **비표준 포트(1935)로 나갈 수 없다.** 그래서 같은 존에
+ * 프록시된 호스트 `cctv-o.udonow.co.kr` 을 두고(Origin Rule: 목적지 포트 1935,
+ * Configuration Rule: 그 호스트만 SSL Flexible) 워커는 443 으로 그 호스트를 부른다.
+ * Cloudflare 엣지가 뒤에서 1935 로 연결한다.
+ */
 const CCTV_ORIGIN = 'http://211.114.96.121:1935/';
+const CCTV_PROXY_ORIGIN = 'https://cctv-o.udonow.co.kr/';
 
 function isAllowedCctvUrl(raw: string): boolean {
-  if (!raw.startsWith(CCTV_ORIGIN)) return false;
-  const path = raw.slice(CCTV_ORIGIN.length);
+  const base = raw.startsWith(CCTV_ORIGIN)
+    ? CCTV_ORIGIN
+    : raw.startsWith(CCTV_PROXY_ORIGIN)
+      ? CCTV_PROXY_ORIGIN
+      : null;
+  if (!base) return false;
+  const path = raw.slice(base.length);
   if (path.includes('..') || path.includes('@')) return false;
   return /\.(m3u8|ts)(\?.*)?$/.test(path);
+}
+
+/** 앱 서버가 주는 http 원본 주소를 실제로 받아올 수 있는 프록시 호스트로 바꾼다. */
+function toFetchable(raw: string): string {
+  return raw.startsWith(CCTV_ORIGIN) ? CCTV_PROXY_ORIGIN + raw.slice(CCTV_ORIGIN.length) : raw;
 }
 
 async function relayCctv(url: URL, request: Request): Promise<Response> {
@@ -146,7 +164,8 @@ async function relayCctv(url: URL, request: Request): Promise<Response> {
   if (!isAllowedCctvUrl(target)) return json({ error: 'not-allowed' }, 400);
 
   const isPlaylist = target.includes('.m3u8');
-  const upstream = await fetch(target, {
+  const fetchUrl = toFetchable(target);
+  const upstream = await fetch(fetchUrl, {
     headers: { 'user-agent': request.headers.get('user-agent') ?? 'udonow-web' },
     cf: isPlaylist
       ? { cacheTtl: 2, cacheEverything: true }   // 재생목록은 자주 바뀐다
@@ -169,7 +188,7 @@ async function relayCctv(url: URL, request: Request): Promise<Response> {
 
   /* m3u8 안의 상대 경로를 원본 기준 절대 URL 로 만든 뒤 릴레이 주소로 감싼다. */
   const text = await upstream.text();
-  const dir = target.slice(0, target.lastIndexOf('/') + 1);
+  const dir = fetchUrl.slice(0, fetchUrl.lastIndexOf('/') + 1);
   const rewritten = text
     .split('\n')
     .map((line) => {

@@ -52,7 +52,8 @@ export default function CctvList() {
       <div className="mt-4 rounded-xl border border-line bg-surface-soft p-4 sm:p-6">
         <p className="t-meta font-semibold text-ink">{current.name}</p>
         {current.desc && <p className="caption mt-1">{current.desc}</p>}
-        <p className="caption mt-1">{ui.cctv.note} · {data?.source}</p>
+        {/* 출처는 서버가 주는 값을 쓰고, 없을 때만 기본 문구로 채운다(같은 말을 두 번 쓰지 않게). */}
+        <p className="caption mt-1">출처: {data?.source || ui.cctv.note}</p>
         {current.url.includes('.m3u8') ? (
           <div className="mt-4">
             <CctvPlayer streamUrl={current.url} />
