@@ -11,7 +11,7 @@ import FestivalList from '../components/FestivalList';
  * 데이터는 이 저장소에 복제하지 않는다(앱 서버가 단일 소스).
  */
 export default function NowHub() {
-  const { hubs, site, harbor, ui } = useContent();
+  const { hubs, harbor, ui } = useContent();
 
   return (
     <>
@@ -47,9 +47,6 @@ export default function NowHub() {
       </div>
 
 
-      <p className="caption mt-8">
-        {site.app.name} 서버에서 받아온 정보입니다. 최종 확인은 선사·가게 전화가 가장 정확합니다.
-      </p>
     </>
   );
 }

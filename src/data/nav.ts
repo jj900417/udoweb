@@ -14,7 +14,8 @@
 export const nav = [
   { path: '/', label: '홈', match: ['/'] },
   {
-    path: '/archive',
+    /* 누르면 섬 소개부터 — 처음 오는 사람이 가장 먼저 볼 것이 그것이다. */
+    path: '/about',
     label: '우도',
     match: ['/archive', '/history', '/voices', '/sounds', '/about'],
   },

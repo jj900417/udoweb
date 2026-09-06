@@ -45,10 +45,14 @@ export default function SideNavLayout({ menu }: { menu: 'udo' | 'now' }) {
     [groups, pathname],
   );
 
+  /*
+   * 기본은 **모두 펼침** — 허브에 들어오면 무엇이 있는지 한눈에 보여야 한다.
+   * 사용자가 접은 그룹만 false 로 기억한다(값이 없으면 펼친 것으로 본다).
+   */
   const [open, setOpen] = useState<Record<string, boolean>>({});
-  /* 페이지가 바뀌면 그 페이지가 속한 그룹을 펼친다(사용자가 접은 다른 그룹은 그대로). */
+  /* 다른 곳에서 하위 페이지로 바로 들어왔을 때, 접어 둔 그룹이라도 펼쳐 준다. */
   useEffect(() => {
-    if (activeGroup) setOpen((prev) => (prev[activeGroup] ? prev : { ...prev, [activeGroup]: true }));
+    if (activeGroup) setOpen((prev) => (prev[activeGroup] === false ? { ...prev, [activeGroup]: true } : prev));
   }, [activeGroup]);
 
   const countOf = (key: string) => (key ? counts[key as EntityKind] : 0);
@@ -65,7 +69,7 @@ export default function SideNavLayout({ menu }: { menu: 'udo' | 'now' }) {
   const tree = (variant: string) => (
     <ul className="space-y-0.5">
       {groups.map((g) => {
-        const expanded = open[g.path] ?? false;
+        const expanded = open[g.path] ?? true;
         const hasItems = g.items.length > 0;
         const listId = `${variant}-${g.path.replace(/\//g, '-')}`;
         return (
