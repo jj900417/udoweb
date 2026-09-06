@@ -130,7 +130,7 @@ export const en: Overlay = {
     hero: {
       title: 'Recording Udo',
       lead:
-        'The time people lived here, the words that are disappearing, the landscapes someone left behind.',
+        'The time people lived here, the words that are disappearing, the landscapes photographers left behind.',
     },
     records: {
       title: 'What we record',
