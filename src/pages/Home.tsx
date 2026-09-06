@@ -1,29 +1,36 @@
 import { Link } from 'react-router-dom';
 import { useContent } from '../i18n';
+import PageMeta from '../components/PageMeta';
 import SectionHeader from '../components/SectionHeader';
 import FerryStatusCard from '../components/FerryStatusCard';
-import EightViewCard from '../components/EightViewCard';
-import PlaceCard from '../components/PlaceCard';
-import FestivalList from '../components/FestivalList';
 import GalleryGrid from '../components/GalleryGrid';
+import ArtworkGrid from '../components/archive/ArtworkGrid';
+import { useWorkList } from '../archive';
 
+/*
+ * 홈 = 기록 + 지금 + 여행.
+ * 실시간 운항 카드는 이 사이트의 실용적 차별점이라 홈에서 빼지 않는다.
+ * 아카이브 대표 작품은 **자료가 있을 때만** 나온다(가짜 placeholder 금지).
+ */
 export default function Home() {
-  const { home, eightViews, places, site, ui } = useContent();
+  const { home, hubs, site, ui, archive, eightViews } = useContent();
+  const featured = useWorkList({ sort: 'dateDesc', limit: 3 }).data ?? [];
+  const records = [home.records.artists, home.records.history, home.records.voices];
 
   return (
     <>
-      {/* 히어로 — 사진이 준비되면 배경 이미지로 교체(현재는 바다색 그라데이션). */}
-      <section className="relative overflow-hidden rounded-2xl border border-line bg-gradient-to-br from-brand-soft via-surface to-sand px-6 py-14 sm:px-10 sm:py-20">
-        <p className="text-xs font-bold uppercase tracking-widest text-brand">
-          {home.hero.eyebrow}
-        </p>
-        <h1 className="mt-3 max-w-2xl text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-5xl">
+      <PageMeta description={home.hero.lead} />
+
+      {/* 히어로 — 아카이브 사진이 준비되면 배경으로 교체(지금은 바다색 그라데이션). */}
+      <section className="relative overflow-hidden rounded-2xl border border-line bg-gradient-to-br from-brand-soft via-surface to-sand px-6 py-16 sm:px-10 sm:py-24">
+        <p className="credit">{home.hero.eyebrow}</p>
+        <h1 className="display mt-3 max-w-2xl text-4xl font-extrabold leading-tight text-ink sm:text-6xl">
           {home.hero.title}
         </h1>
-        <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg">
+        <p className="measure mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
           {home.hero.lead}
         </p>
-        <div className="mt-7 flex flex-wrap gap-3">
+        <div className="mt-8 flex flex-wrap gap-3">
           <Link to={home.hero.ctaPrimary.to} className="btn-primary">
             {home.hero.ctaPrimary.label}
           </Link>
@@ -33,13 +40,43 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 오늘 배가 뜨나요 — 이 사이트가 다른 관광 페이지와 다른 지점. */}
-      <section className="mt-14">
+      {/* 세 갈래 기록 */}
+      <section className="mt-20">
+        <p className="credit">{home.records.title}</p>
+        <ul className="mt-6 divide-y divide-line border-y border-line">
+          {records.map((item) => (
+            <li key={item.to}>
+              <Link
+                to={item.to}
+                className="group flex flex-wrap items-baseline justify-between gap-2 py-7 transition-colors hover:text-brand"
+              >
+                <span className="display text-2xl font-bold text-ink group-hover:text-brand sm:text-3xl">
+                  {item.title}
+                </span>
+                <span className="credit">{item.sub} →</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <p className="measure mt-6 text-sm leading-relaxed text-faint">
+          {archive.philosophy.line}
+        </p>
+      </section>
+
+      {featured.length > 0 && (
+        <section className="mt-20">
+          <SectionHeader title={home.sections.featured.title} subtitle={home.sections.featured.desc} />
+          <ArtworkGrid works={featured} />
+        </section>
+      )}
+
+      {/* 지금의 우도 — 실시간 운항 */}
+      <section className="mt-20">
         <SectionHeader
           title={home.sections.ferry.title}
           subtitle={home.sections.ferry.desc}
           action={
-            <Link to="/access" className="text-sm font-semibold text-brand">
+            <Link to="/now" className="text-sm font-semibold text-brand">
               {ui.actions.more} →
             </Link>
           }
@@ -47,41 +84,8 @@ export default function Home() {
         <FerryStatusCard />
       </section>
 
-      <section className="mt-14">
-        <SectionHeader
-          title={home.sections.eight.title}
-          subtitle={home.sections.eight.desc}
-          action={
-            <Link to="/spots" className="text-sm font-semibold text-brand">
-              {ui.actions.viewAll} →
-            </Link>
-          }
-        />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {eightViews.slice(0, 4).map((v, i) => (
-            <EightViewCard key={v.id} view={v} index={i} />
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-14">
-        <SectionHeader title={home.sections.places.title} subtitle={home.sections.places.desc} />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {places.slice(0, 6).map((p) => (
-            <PlaceCard key={p.id} place={p} />
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-14">
-        <SectionHeader
-          title={home.sections.festivals.title}
-          subtitle={home.sections.festivals.desc}
-        />
-        <FestivalList limit={2} />
-      </section>
-
-      <section className="mt-14">
+      {/* 현재의 우도 — 방문자·엠버서더 사진(아카이브 작품과 다른 데이터) */}
+      <section className="mt-20">
         <SectionHeader
           title={home.sections.gallery.title}
           subtitle={home.sections.gallery.desc}
@@ -94,9 +98,33 @@ export default function Home() {
         <GalleryGrid limit={8} />
       </section>
 
-      <section className="mt-14 rounded-2xl border border-line bg-surface-soft p-6 sm:p-8">
+      {/* 여행 정보 — 뒤로 밀되 없애지 않는다 */}
+      <section className="mt-20">
+        <SectionHeader
+          title={home.sections.travel.title}
+          subtitle={home.sections.travel.desc}
+          action={
+            <Link to="/travel" className="text-sm font-semibold text-brand">
+              {ui.actions.viewAll} →
+            </Link>
+          }
+        />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {Object.values(hubs.travel.links).map((link) => (
+            <Link key={link.to} to={link.to} className="card card-hover">
+              <h3 className="font-bold text-ink">{link.title}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{link.desc}</p>
+            </Link>
+          ))}
+        </div>
+        <p className="caption mt-4">
+          우도8경 가운데 첫 풍경은 {eightViews[0].name}({eightViews[0].hanja}) — {eightViews[0].meaning}.
+        </p>
+      </section>
+
+      <section className="mt-20 rounded-2xl border border-line bg-surface-soft p-6 sm:p-8">
         <h2 className="text-xl font-bold text-ink">{home.sections.app.title}</h2>
-        <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-ink-soft">
+        <p className="measure mt-1.5 text-sm leading-relaxed text-ink-soft">
           {site.app.desc} — {home.sections.app.desc}
         </p>
         <div className="mt-5 flex flex-wrap gap-3">

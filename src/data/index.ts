@@ -13,6 +13,8 @@ import { experiences } from './experiences';
 import { food } from './food';
 import { tips } from './tips';
 import { ui } from './ui';
+import { archive } from './archive';
+import { hubs } from './hubs';
 
 export const content = {
   site,
@@ -26,6 +28,8 @@ export const content = {
   food,
   tips,
   ui,
+  archive,
+  hubs,
 };
 
 export type Content = typeof content;

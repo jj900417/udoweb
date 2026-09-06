@@ -34,6 +34,13 @@ export const ui = {
   },
   timetable: { title: '운항 시간표', note: '시간은 계절·기상에 따라 바뀝니다.' },
   shops: { title: '가게', category: '업종', hours: '영업시간' },
+  gallery: {
+    title: '현재의 우도',
+    subtitle: '방문자와 현지 엠버서더가 남긴 사진 — 계절·시간·날씨 태그가 붙어 있습니다',
+    /* /archive 의 큐레이션된 작품과 다른 자료라는 점을 화면에서 분명히 한다. */
+    note: '이 사진들은 지금의 우도입니다. 사진가의 작품과 옛 기록 사진은 기록(아카이브)에 따로 있습니다.',
+    source: '사진은 {app} 앱을 통해 올라오고, 검수를 거친 것만 공개됩니다.',
+  },
   cctv: { title: '실시간 CCTV', note: '제주시 공개 CCTV 링크' },
   footer: {
     madeBy: '우도의 모습을 알리기 위해 만들었습니다.',

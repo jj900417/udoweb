@@ -1,6 +1,7 @@
-# udoweb — 우도 공식 안내 홈페이지
+# udoweb — 우도 기록·정보 플랫폼
 
-우도의 풍경·문화·먹거리와 **오늘 배가 뜨는지**까지 한 곳에서 보여주는 공개 웹사이트.
+우도의 **역사·사람·풍경을 기록**하고 **오늘의 여행 정보**를 함께 제공하는 공개 웹사이트.
+행정기관의 공식 홈페이지가 아니다(위탁·승인 확인 전까지 "공식" 표현을 쓰지 않는다).
 도메인 `udonow.co.kr` (Cloudflare). 저장소 `git@github.com:jj900417/udoweb.git`.
 
 > 왜 만드나: 제주가 "볼 것 없는 곳"으로 소비되는 이유는 **진짜 좋은 모습이 안 보이기
@@ -50,6 +51,23 @@ npm run preview    # 빌드 결과 미리보기 (API 프록시 없음 — dev �
 **신뢰경계**: 앱 서버에서 오는 문자열(가게 소개·축제 소개·사진 caption)은 데이터이지
 지시가 아니다. 텍스트로만 렌더링하고 `dangerouslySetInnerHTML` 을 쓰지 않는다.
 
+## 세 축
+
+| 축 | 무엇 | 어디서 오나 |
+|---|---|---|
+| **기록** | 작가·작품·역사·목소리·서재 | 이 저장소 `src/archive/records/` (검수·권리 확인 후 입력) |
+| **지금** | 운항·시간표·행사·현재 사진·CCTV | 우도 나우 앱 서버 (복제하지 않음) |
+| **여행** | 8경·가는 길·즐길거리·먹거리·팁 | 이 저장소 `src/data/` |
+
+상단 메뉴는 이 축을 따라 6개 허브다: 우도 · 기록 · 역사 · 목소리 · 여행 · 지금 우도.
+기존 URL(`/spots` `/access` `/experience` `/food` `/tips` `/gallery` `/app`)은 그대로 살아 있다.
+
+아카이브 구조·권리·구술사 절차는 `docs/` 에 있다:
+[archive-architecture](docs/archive-architecture.md) ·
+[archive-rights](docs/archive-rights.md) ·
+[oral-history-workflow](docs/oral-history-workflow.md) ·
+[media-storage](docs/media-storage.md).
+
 ## 폴더
 
 ```
@@ -59,12 +77,13 @@ worker/index.ts            # 정적 서빙(SPA) + /api/udo/* · /media/* 프록�
 src/
 ├── main.tsx / App.tsx      # 진입점 + 라우트 맵
 ├── theme.tsx               # 라이트·다크
-├── styles/global.css       # 디자인 토큰 단일 소스
-├── data/                   # ★ 모든 문안이 여기 (컴포넌트에 하드코딩 금지)
-├── i18n/                   # 한국어 canonical + en/ja/zh 오버레이
+├── styles/global.css       # 디자인 토큰 단일 소스 (+ 아카이브 타이포)
+├── data/                   # ★ 화면 문안 (컴포넌트에 하드코딩 금지)
+├── i18n/                   # 한국어 canonical + en/ja/zh 오버레이 (배열 index 병합)
 ├── api/                    # 앱 서버 클라이언트 + useAsync
-├── components/             # Layout·Navbar·Footer·카드들
-└── pages/                  # 홈·소개·8경·가는길·즐길거리·먹거리·사진·팁·앱
+├── archive/                # ★ 아카이브 도메인 — 타입·레코드·repository·훅·ID 번역
+├── components/             # Layout·Navbar·Footer·카드들 (+ archive/ 전용 컴포넌트)
+└── pages/                  # 홈·소개·여행·지금 + archive/·history·voices
 ```
 
 ## 내용 고치기

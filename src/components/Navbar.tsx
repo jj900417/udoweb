@@ -26,7 +26,8 @@ export default function Navbar() {
 
         <nav className="ml-auto hidden items-center gap-0.5 lg:flex">
           {nav.map((item) => (
-            <NavLink key={item.path} to={item.path} end={item.path === '/'} className={linkClass}>
+            /* end 를 쓰지 않는다 — /archive/artists 에서도 '기록'이 활성 표시되어야 한다. */
+            <NavLink key={item.path} to={item.path} className={linkClass}>
               {item.label}
             </NavLink>
           ))}
@@ -53,7 +54,6 @@ export default function Navbar() {
               <li key={item.path}>
                 <NavLink
                   to={item.path}
-                  end={item.path === '/'}
                   className={linkClass}
                   onClick={() => setOpen(false)}
                 >

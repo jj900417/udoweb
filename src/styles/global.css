@@ -34,6 +34,12 @@
   --font-sans:
     "Pretendard", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+
+  /* 아카이브(기록·역사·목소리)의 표제용 명조 계열. 외부 폰트를 내려받지 않는다 —
+     시스템에 있는 것만 쓰고, 없으면 마지막 serif 로 떨어져도 레이아웃이 그대로다. */
+  --font-display:
+    "Noto Serif KR", "Source Han Serif K", "Apple SD Gothic Neo", Batang, Batangche,
+    ui-serif, Georgia, serif;
 }
 
 :root {
@@ -65,6 +71,17 @@
     outline: 2px solid var(--color-brand);
     outline-offset: 2px;
   }
+  /* 모션을 줄이도록 설정한 사용자에게는 전환 효과를 사실상 없앤다. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer components {
@@ -89,5 +106,31 @@
   }
   .prose-body {
     @apply leading-relaxed text-ink-soft;
+  }
+}
+
+@layer components {
+  /*
+   * 아카이브 영역 전용 유틸.
+   * 관광 카드 UI 와 시각적으로 구분한다 — 사진과 텍스트가 주인공이고,
+   * 브랜드색으로 작품을 감싸지 않는다. 그림자·라운드도 쓰지 않는다.
+   */
+  .display {
+    font-family: var(--font-display);
+    @apply tracking-tight;
+  }
+  /* 본문 읽기 폭 — 긴 글이 화면 끝까지 늘어나지 않게. */
+  .measure {
+    @apply max-w-[46rem];
+  }
+  .caption {
+    @apply text-xs leading-relaxed text-faint;
+  }
+  .credit {
+    @apply text-[0.7rem] uppercase tracking-wide text-faint;
+  }
+  /* 작품 아래 얇은 구분선 하나 — 카드 테두리 대신 쓰는 최소 장치. */
+  .rule {
+    @apply border-t border-line;
   }
 }
