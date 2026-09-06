@@ -1,5 +1,5 @@
 /*
- * Cloudflare Worker — udonow.ac.kr
+ * Cloudflare Worker — udonow.co.kr
  *
  * 1) 정적 자산(dist/)을 SPA 폴백으로 서빙 (assets 바인딩; wrangler.jsonc)
  * 2) /api/udo/*  → 우도 나우 앱 서버의 **읽기 전용 공개 엔드포인트** 동일출처 프록시

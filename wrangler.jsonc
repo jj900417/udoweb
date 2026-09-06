@@ -1,5 +1,5 @@
 {
-  // Cloudflare Workers 배포 설정 — udonow.ac.kr (도메인은 Cloudflare 에 연결됨).
+  // Cloudflare Workers 배포 설정 — udonow.co.kr (도메인은 Cloudflare 에 연결됨).
   // Worker 가 dist/ 를 SPA 폴백으로 서빙하고, /api/udo/* · /media/* 는
   // 우도 나우 앱 서버로 프록시한다(worker/index.ts).
   //
@@ -9,8 +9,8 @@
   "compatibility_date": "2026-09-01",
   "main": "worker/index.ts",
   "routes": [
-    { "pattern": "udonow.ac.kr", "custom_domain": true },
-    { "pattern": "www.udonow.ac.kr", "custom_domain": true }
+    { "pattern": "udonow.co.kr", "custom_domain": true },
+    { "pattern": "www.udonow.co.kr", "custom_domain": true }
   ],
   "assets": {
     "directory": "./dist",

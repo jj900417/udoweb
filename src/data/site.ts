@@ -5,8 +5,8 @@
 export const site = {
   name: '우도',
   tagline: '제주 바다 위의 작은 섬',
-  domain: 'udonow.ac.kr',
-  url: 'https://udonow.ac.kr',
+  domain: 'udonow.co.kr',
+  url: 'https://udonow.co.kr',
   /* 사이트를 운영하는 주체. VERIFY: 공식 명칭·연락처 확정 필요. */
   operator: {
     name: '우도나우',

@@ -1,7 +1,7 @@
 # udoweb — 우도 공식 안내 홈페이지
 
 우도의 풍경·문화·먹거리와 **오늘 배가 뜨는지**까지 한 곳에서 보여주는 공개 웹사이트.
-도메인 `udonow.ac.kr` (Cloudflare). 저장소 `git@github.com:jj900417/udoweb.git`.
+도메인 `udonow.co.kr` (Cloudflare). 저장소 `git@github.com:jj900417/udoweb.git`.
 
 > 왜 만드나: 제주가 "볼 것 없는 곳"으로 소비되는 이유는 **진짜 좋은 모습이 안 보이기
 > 때문**이라고 본다. 이 사이트는 우도의 실제 얼굴 — 물때에 따라 열리는 굴, 해녀의 바다,
@@ -54,7 +54,7 @@ npm run preview    # 빌드 결과 미리보기 (API 프록시 없음 — dev �
 
 ```
 index.html                 # 테마 선적용 스크립트 + OG 메타
-wrangler.jsonc             # Cloudflare 배포 설정 (udonow.ac.kr)
+wrangler.jsonc             # Cloudflare 배포 설정 (udonow.co.kr)
 worker/index.ts            # 정적 서빙(SPA) + /api/udo/* · /media/* 프록시
 src/
 ├── main.tsx / App.tsx      # 진입점 + 라우트 맵
@@ -92,7 +92,7 @@ npm run build
 npx wrangler deploy
 ```
 
-`wrangler.jsonc` 의 `routes` 가 `udonow.ac.kr` / `www.udonow.ac.kr` 커스텀 도메인을
+`wrangler.jsonc` 의 `routes` 가 `udonow.co.kr` / `www.udonow.co.kr` 커스텀 도메인을
 잡는다. 자동 배포는 걸지 않았다 — 배포는 사람이 승인해서 실행한다.
 
 ## 아직 없는 것 (다음 작업)
