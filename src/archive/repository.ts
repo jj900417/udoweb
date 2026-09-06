@@ -35,6 +35,7 @@ import type {
   MediaRef,
   OralHistorySession,
   Rights,
+  SoundRecording,
   Source,
   VoiceClip,
   VoicePerson,
@@ -47,6 +48,7 @@ import {
   isHistoryEntry,
   isLibraryItem,
   isSession,
+  isSound,
   isSource,
   isVoiceClip,
   isVoicePerson,
@@ -189,6 +191,7 @@ function entityDate(e: ArchiveEntity): ArchiveDate | undefined {
   if (isSession(e)) return e.recordedOn;
   if (isArtist(e)) return e.activePeriod?.start ?? e.birth;
   if (isVoicePerson(e)) return e.birth;
+  if (isSound(e)) return e.recordedAt;
   return undefined;
 }
 
@@ -224,6 +227,7 @@ export type Archive = {
   listHistory(opts?: ListOptions<HistoryEntry> & { era?: string }): readonly HistoryEntry[];
   listVoicePeople(opts?: ListOptions<VoicePerson>): readonly VoicePerson[];
   listVoiceClips(opts?: ListOptions<VoiceClip>): readonly VoiceClip[];
+  listSounds(opts?: ListOptions<SoundRecording> & { kind?: string }): readonly SoundRecording[];
 
   getArtistBySlug(slug: string | undefined): Artist | null;
   getWorkBySlug(slug: string | undefined): Work | null;
@@ -232,6 +236,7 @@ export type Archive = {
   getLibraryItemBySlug(slug: string | undefined): LibraryItem | null;
   getHistoryBySlug(slug: string | undefined): HistoryEntry | null;
   getVoicePersonBySlug(slug: string | undefined): VoicePerson | null;
+  getSoundBySlug(slug: string | undefined): SoundRecording | null;
   getEntityById(id: string | undefined): ArchiveEntity | null;
 
   listWorksByArtist(id: ArtistId): readonly Work[];
@@ -273,6 +278,7 @@ export function createArchive(
     ...data.people,
     ...data.sessions,
     ...data.clips,
+    ...data.sounds,
   ];
 
   const knownIds = new Set<string>(all.map((e) => e.id));
@@ -364,6 +370,11 @@ export function createArchive(
     },
     listVoicePeople: (opts) => applyOptions(of('voicePerson', isVoicePerson), opts),
     listVoiceClips: (opts) => applyOptions(of('voiceClip', isVoiceClip), opts),
+    listSounds: (opts) => {
+      const items = of('sound', isSound);
+      const byKind = opts?.kind ? items.filter((s) => s.kinds.includes(opts.kind as never)) : items;
+      return applyOptions(byKind, { sort: 'dateDesc', ...opts });
+    },
 
     getArtistBySlug: (slug) => bySlugOf('artist', slug, isArtist),
     getWorkBySlug: (slug) => bySlugOf('work', slug, isWork),
@@ -372,6 +383,7 @@ export function createArchive(
     getLibraryItemBySlug: (slug) => bySlugOf('library', slug, isLibraryItem),
     getHistoryBySlug: (slug) => bySlugOf('history', slug, isHistoryEntry),
     getVoicePersonBySlug: (slug) => bySlugOf('voicePerson', slug, isVoicePerson),
+    getSoundBySlug: (slug) => bySlugOf('sound', slug, isSound),
     getEntityById: (id) => (id ? (byId.get(id) ?? null) : null),
 
     listWorksByArtist: (id) =>

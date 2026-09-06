@@ -4,7 +4,8 @@ import ArchiveSection from '../components/archive/ArchiveSection';
 import HistoryTimeline from '../components/archive/HistoryTimeline';
 import EmptyArchiveState from '../components/archive/EmptyArchiveState';
 import BrowseChips from '../components/archive/BrowseChips';
-import { useFacets, useHistoryList } from '../archive';
+import LibraryItemRow from '../components/archive/LibraryItemRow';
+import { useFacets, useHistoryList, useLibraryList } from '../archive';
 import { useSearchParams } from 'react-router-dom';
 
 /*
@@ -17,6 +18,9 @@ export default function History() {
   const decade = params.get('decade') ?? undefined;
   const facets = useFacets('history');
   const entries = useHistoryList({ sort: 'dateAsc', decade }).data ?? [];
+  /* 서재(책·향토지)를 여기로 합쳤다 — 연표와 그 근거가 한 화면에 있어야
+     '확인된 만큼의 기록'이라는 성격이 드러난다. /archive/library URL 은 그대로 살아 있다. */
+  const library = useLibraryList({ sort: 'dateDesc' }).data ?? [];
 
   const selectDecade = (value: string | undefined) => {
     const next = new URLSearchParams(params);
@@ -43,6 +47,22 @@ export default function History() {
           <EmptyArchiveState note={archive.empty.historyNote} />
         ) : (
           <HistoryTimeline entries={entries} />
+        )}
+      </ArchiveSection>
+
+      <ArchiveSection
+        title={archive.sections.library.title}
+        sub={archive.sections.library.sub}
+        desc={archive.sections.library.desc}
+      >
+        {library.length === 0 ? (
+          <EmptyArchiveState note={archive.empty.libraryNote} />
+        ) : (
+          <ul>
+            {library.map((item) => (
+              <LibraryItemRow key={item.id} item={item} />
+            ))}
+          </ul>
         )}
       </ArchiveSection>
     </>

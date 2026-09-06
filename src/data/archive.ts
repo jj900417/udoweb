@@ -29,14 +29,23 @@ export const archive = {
     works: { title: '사진과 기록', sub: 'Works', desc: '남겨진 작품과 기록물' },
     collections: { title: '컬렉션', sub: 'Collections', desc: '주제로 묶어 읽는 자료' },
     exhibitions: { title: '기획전', sub: 'Exhibitions', desc: '온라인으로 여는 전시' },
-    library: { title: '우도 서재', sub: 'Library', desc: '우도를 다룬 책·향토지·논문·기사' },
+    library: {
+      title: '이 시간을 뒷받침하는 자료',
+      sub: 'Library',
+      desc: '우도를 다룬 책·향토지·논문·기사',
+    },
     history: {
       title: '우도의 시간',
       sub: 'History',
-      desc: '출처를 밝힌 우도의 역사',
+      desc: '출처를 밝힌 우도의 역사와, 그 근거가 된 자료',
       lead:
         '우도에 사람이 들어와 살기 시작한 때부터 지금까지를, 출처를 밝히며 정리합니다. ' +
         '연도가 분명하지 않은 일은 분명하지 않은 채로 적습니다.',
+    },
+    sounds: {
+      title: '우도의 소리',
+      sub: 'Sounds of Udo',
+      desc: '섬에서 나는 소리와 사람들의 말',
     },
     voices: {
       title: '우도의 목소리',
@@ -45,6 +54,7 @@ export const archive = {
       lead:
         '우도에서 살아온 분들의 목소리를 그대로 남깁니다. 말투와 억양, 그 말에 담긴 기억까지가 ' +
         '기록입니다. 공개는 본인(또는 유족)의 동의 범위 안에서만 합니다.',
+      siblingNote: '사람의 말이 아닌 섬의 소리는 「소리」에 있습니다.',
     },
     selectedWorks: { title: '주요 작품', sub: '', desc: '' },
     biography: { title: '생애', sub: '', desc: '' },
@@ -86,6 +96,7 @@ export const archive = {
       voicePerson: '목소리',
       session: '인터뷰',
       voiceClip: '녹음',
+      sound: '소리',
     },
     precision: {
       exact: '',
@@ -126,6 +137,41 @@ export const archive = {
       av: '영상·음향',
       other: '기타',
     },
+  },
+
+  /* 소리 아카이브(사운드맵). 목소리(구술)와 나란히 두되 다른 종류의 기록이다. */
+  sound: {
+    title: '우도의 소리',
+    sub: 'Sounds of Udo',
+    lead:
+      '소리는 사진보다 먼저 사라집니다. 뱃고동, 숨비소리, 밭담 사이를 지나는 바람을 ' +
+      '그 자리에서 녹음해 남깁니다. 언제 어디서 녹음했고 그날 날씨가 어땠는지까지 함께 적습니다.',
+    mapTitle: '소리 지도',
+    mapLead: '핀을 누르면 그 자리에서 녹음한 소리가 재생됩니다.',
+    mapPending: '지도는 준비 중입니다. 아래 목록에서 소리를 들으실 수 있습니다.',
+    recordedAt: '녹음',
+    weather: '그날 날씨',
+    temp: '기온',
+    wind: '바람',
+    wave: '파고',
+    duration: '길이',
+    kindsTitle: '소리의 종류',
+    seasonTitle: '계절',
+    timeTitle: '시간대',
+    kinds: {
+      wave: '파도',
+      wind: '바람',
+      boat: '뱃소리',
+      bird: '새',
+      haenyeo: '해녀·숨비소리',
+      village: '마을',
+      rain: '비',
+      night: '밤',
+      work: '일하는 소리',
+      other: '그 밖에',
+    },
+    seasons: { spring: '봄', summer: '여름', autumn: '가을', winter: '겨울' },
+    times: { morning: '아침', day: '낮', evening: '저녁', night: '밤' },
   },
 
   voice: {

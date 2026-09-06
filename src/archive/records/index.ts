@@ -8,6 +8,7 @@ import type {
   OralHistorySession,
   Source,
   VoiceClip,
+  SoundRecording,
   VoicePerson,
   Work,
 } from '../types';
@@ -20,6 +21,7 @@ import { historyEntries } from './history';
 import { sources } from './sources';
 import { voicePeople, sessions, clips } from './voices';
 import { mediaRefs } from './media';
+import { soundRecordings } from './sounds';
 import { devFixtures } from './__dev__/fixtures';
 
 /** 아카이브 원자료 묶음. Phase 2 에서 API 응답이 이 모양으로 들어온다. */
@@ -34,6 +36,7 @@ export type ArchiveDataset = {
   readonly people: readonly VoicePerson[];
   readonly sessions: readonly OralHistorySession[];
   readonly clips: readonly VoiceClip[];
+  readonly sounds: readonly SoundRecording[];
   readonly media: readonly MediaRef[];
 };
 
@@ -48,6 +51,7 @@ const production: ArchiveDataset = {
   people: voicePeople,
   sessions,
   clips,
+  sounds: soundRecordings,
   media: mediaRefs,
 };
 
@@ -69,6 +73,7 @@ function merge(a: ArchiveDataset, b: ArchiveDataset): ArchiveDataset {
     people: [...a.people, ...b.people],
     sessions: [...a.sessions, ...b.sessions],
     clips: [...a.clips, ...b.clips],
+    sounds: [...a.sounds, ...b.sounds],
     media: [...a.media, ...b.media],
   };
 }

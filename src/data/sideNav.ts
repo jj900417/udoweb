@@ -22,11 +22,18 @@ export const sideNav = {
           { path: '/archive/works', label: '작품', count: 'work' },
           { path: '/archive/collections', label: '컬렉션', count: 'collection' },
           { path: '/archive/exhibitions', label: '기획전', count: 'exhibition' },
-          { path: '/archive/library', label: '서재', count: 'library' },
+          { path: '/history', label: '시간', count: 'history' },
         ],
       },
-      { path: '/history', label: '우도의 시간', count: 'history', items: [] },
-      { path: '/voices', label: '우도의 목소리', count: 'voicePerson', items: [] },
+      {
+        path: '/sounds',
+        label: '우도의 소리',
+        count: '',
+        items: [
+          { path: '/voices', label: '목소리', count: 'voicePerson' },
+          { path: '/sounds', label: '소리', count: 'sound' },
+        ],
+      },
     ],
   },
   now: {

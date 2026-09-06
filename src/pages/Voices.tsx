@@ -4,6 +4,7 @@ import ArchiveSection from '../components/archive/ArchiveSection';
 import VoicePersonCard from '../components/archive/VoicePersonCard';
 import VoiceQuote from '../components/archive/VoiceQuote';
 import EmptyArchiveState from '../components/archive/EmptyArchiveState';
+import { Link } from 'react-router-dom';
 import { useArchive, useVoiceClipList, useVoicePeople } from '../archive';
 
 /*
@@ -32,6 +33,12 @@ export default function Voices() {
           {archive.sections.voices.title}
         </h1>
         <p className="prose-archive mt-4">{archive.sections.voices.lead}</p>
+        <p className="caption mt-3">
+          {archive.sections.voices.siblingNote}{' '}
+          <Link to="/sounds" className="font-semibold text-link hover:text-cta-strong">
+            {archive.sound.title} →
+          </Link>
+        </p>
       </header>
 
       {clips.length > 0 && (

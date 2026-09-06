@@ -33,6 +33,7 @@ import type {
   LibraryItem,
   LibraryItemType,
   OralHistorySession,
+  SoundRecording,
   Source,
   VoiceClip,
   VoicePerson,
@@ -171,6 +172,19 @@ export function useVoiceClipList(opts?: ListOptions<VoiceClip>): ArchiveState<re
   const archive = useArchive();
   const key = optionsKey(opts);
   return ready(useMemo(() => archive.listVoiceClips(opts), [archive, key])); // eslint-disable-line react-hooks/exhaustive-deps
+}
+
+export function useSoundList(
+  opts?: ListOptions<SoundRecording> & { kind?: string },
+): ArchiveState<readonly SoundRecording[]> {
+  const archive = useArchive();
+  const key = optionsKey(opts);
+  return ready(useMemo(() => archive.listSounds(opts), [archive, key])); // eslint-disable-line react-hooks/exhaustive-deps
+}
+
+export function useSound(slug: string | undefined): ArchiveState<SoundRecording | null> {
+  const archive = useArchive();
+  return ready(useMemo(() => archive.getSoundBySlug(slug), [archive, slug]));
 }
 
 export function useRelated(entity: ArchiveEntity | null): ArchiveState<readonly RelatedGroup[]> {

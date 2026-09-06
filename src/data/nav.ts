@@ -16,7 +16,7 @@ export const nav = [
   {
     path: '/archive',
     label: '우도',
-    match: ['/archive', '/history', '/voices', '/about'],
+    match: ['/archive', '/history', '/voices', '/sounds', '/about'],
   },
   {
     path: '/now',

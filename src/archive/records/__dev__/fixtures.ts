@@ -401,5 +401,6 @@ export const devFixtures: ArchiveDataset = {
   people: voicePeople,
   sessions,
   clips,
+  sounds: [],
   media,
 };

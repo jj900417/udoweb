@@ -17,6 +17,7 @@ export type SourceId = `source-${string}`;
 export type VoicePersonId = `person-${string}`;
 export type SessionId = `session-${string}`;
 export type VoiceClipId = `clip-${string}`;
+export type SoundId = `sound-${string}`;
 export type MediaId = `media-${string}`;
 export type PlaceRefId = `place-${string}`;
 
@@ -31,7 +32,8 @@ export type ArchiveId =
   | SourceId
   | VoicePersonId
   | SessionId
-  | VoiceClipId;
+  | VoiceClipId
+  | SoundId;
 
 export type EntityKind =
   | 'artist'
@@ -43,7 +45,8 @@ export type EntityKind =
   | 'source'
   | 'voicePerson'
   | 'session'
-  | 'voiceClip';
+  | 'voiceClip'
+  | 'sound';
 
 /** ID 접두사 → 종류. 새 종류를 추가하면 여기와 KIND_PATH 를 같이 늘린다. */
 const PREFIX_TO_KIND: ReadonlyArray<readonly [string, EntityKind]> = [
@@ -57,6 +60,7 @@ const PREFIX_TO_KIND: ReadonlyArray<readonly [string, EntityKind]> = [
   ['person-', 'voicePerson'],
   ['session-', 'session'],
   ['clip-', 'voiceClip'],
+  ['sound-', 'sound'],
 ];
 
 /** 'work-0001' → 'work'. 알 수 없는 문자열이면 null (절대 throw 하지 않는다). */
@@ -79,6 +83,7 @@ export const KIND_PATH: Readonly<Record<EntityKind, string>> = {
   voicePerson: '/voices',
   session: '/voices',
   voiceClip: '/voices',
+  sound: '/sounds',
 };
 
 /** 상세 페이지 경로. 상세 라우트가 없는 종류(source·session·clip)는 목록 경로를 준다. */

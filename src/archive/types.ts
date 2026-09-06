@@ -21,6 +21,7 @@ import type {
   MediaId,
   PlaceRefId,
   SessionId,
+  SoundId,
   SourceId,
   VoiceClipId,
   VoicePersonId,
@@ -316,6 +317,53 @@ export type VoiceClip = EntityBase<VoiceClipId, 'voiceClip'> & {
   readonly relatedIds: readonly ArchiveId[];
 };
 
+/* ─── 소리 (사운드맵·ASMR) ──────────────────────────────────────────── */
+
+/*
+ * 소리는 사진보다 먼저 사라진다 — 뱃고동, 숨비소리, 밭담 사이 바람.
+ * 목소리(구술)와 나란히 두되 별개의 기록으로 다룬다: 사람의 말이 아니라 장소의 소리다.
+ *
+ * 좌표를 엔티티에 직접 두는 이유: 구술·작품은 '어느 장소에 관한' 기록이지만,
+ * 소리는 **정확히 그 지점에서** 녹음된 것이라 장소 링크(대략)로는 부족하다.
+ */
+export type SoundKind =
+  | 'wave'
+  | 'wind'
+  | 'boat'
+  | 'bird'
+  | 'haenyeo'
+  | 'village'
+  | 'rain'
+  | 'night'
+  | 'work'
+  | 'other';
+
+export type Season = 'spring' | 'summer' | 'autumn' | 'winter';
+export type TimeOfDay = 'morning' | 'day' | 'evening' | 'night';
+
+/** 녹음 당시의 관측값. 나중에 지어내지 않는다 — 모르면 필드를 비운다. */
+export type WeatherSnapshot = {
+  readonly tempC?: number;
+  readonly windMs?: number;
+  readonly waveM?: number;
+  /** '맑음'·'흐림'·'비' 등. 번역 대상. */
+  readonly sky?: string;
+};
+
+export type SoundRecording = EntityBase<SoundId, 'sound'> & {
+  readonly recordedAt: ArchiveDate;
+  /** 녹음 지점(도 단위). 지도 핀이 여기 찍힌다. */
+  readonly lat?: number;
+  readonly lon?: number;
+  readonly kinds: readonly SoundKind[];
+  readonly season?: Season;
+  readonly timeOfDay?: TimeOfDay;
+  readonly weather?: WeatherSnapshot;
+  readonly durationSec?: number;
+  readonly audioMediaId?: MediaId;
+  readonly relatedIds: readonly ArchiveId[];
+};
+
 /* ─── 합집합 + 타입가드 ─────────────────────────────────────────────── */
 
 export type ArchiveEntity =
@@ -328,7 +376,8 @@ export type ArchiveEntity =
   | Source
   | VoicePerson
   | OralHistorySession
-  | VoiceClip;
+  | VoiceClip
+  | SoundRecording;
 
 export const isArtist = (e: ArchiveEntity): e is Artist => e.kind === 'artist';
 export const isWork = (e: ArchiveEntity): e is Work => e.kind === 'work';
@@ -340,3 +389,4 @@ export const isSource = (e: ArchiveEntity): e is Source => e.kind === 'source';
 export const isVoicePerson = (e: ArchiveEntity): e is VoicePerson => e.kind === 'voicePerson';
 export const isSession = (e: ArchiveEntity): e is OralHistorySession => e.kind === 'session';
 export const isVoiceClip = (e: ArchiveEntity): e is VoiceClip => e.kind === 'voiceClip';
+export const isSound = (e: ArchiveEntity): e is SoundRecording => e.kind === 'sound';

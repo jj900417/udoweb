@@ -14,6 +14,7 @@ import NowHub from './pages/NowHub';
 import History from './pages/History';
 import HistoryDetail from './pages/HistoryDetail';
 import Voices from './pages/Voices';
+import Sounds from './pages/Sounds';
 import VoicePersonDetail from './pages/VoicePersonDetail';
 import ArchiveHome from './pages/archive/ArchiveHome';
 import SideNavLayout from './components/SideNavLayout';
@@ -64,6 +65,7 @@ export default function App() {
           <Route path="history/:slug" element={<HistoryDetail />} />
           <Route path="voices" element={<Voices />} />
           <Route path="voices/:slug" element={<VoicePersonDetail />} />
+          <Route path="sounds" element={<Sounds />} />
         </Route>
 
         {/* '지금 우도' 탭 — 실시간 정보와 여행 정보를 같은 허브 안에. */}
