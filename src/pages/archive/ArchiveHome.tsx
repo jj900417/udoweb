@@ -37,8 +37,7 @@ export default function ArchiveHome() {
         </h1>
         <p className="mt-5 leading-relaxed text-ink-soft">{archive.hub.lead}</p>
         <p className="mt-6 border-l-2 border-brand pl-4 text-sm leading-relaxed text-ink-soft">
-          <span className="display block text-base text-ink">{archive.philosophy.line}</span>
-          <span className="mt-2 block">{archive.philosophy.body}</span>
+          {archive.philosophy.body}
         </p>
       </header>
 
