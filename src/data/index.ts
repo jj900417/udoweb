@@ -5,6 +5,7 @@
  */
 import { site } from './site';
 import { nav } from './nav';
+import { sideNav } from './sideNav';
 import { home } from './home';
 import { about } from './about';
 import { eightViews, places, spotsPage } from './spots';
@@ -19,6 +20,7 @@ import { hubs } from './hubs';
 export const content = {
   site,
   nav,
+  sideNav,
   home,
   about,
   eightViews,

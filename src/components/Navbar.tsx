@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useContent } from '../i18n';
 import LocaleSelect from './LocaleSelect';
 import ThemeToggle from './ThemeToggle';
@@ -7,11 +7,20 @@ import ThemeToggle from './ThemeToggle';
 export default function Navbar() {
   const { nav, ui } = useContent();
   const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
 
-  const linkClass = ({ isActive }: { isActive: boolean }) =>
+  /*
+   * 탭은 자기 영역 어디에 있어도 켜져 있어야 한다 — /history 나 /spots 에서도
+   * 각각 '우도'·'지금 우도'가 켜진다. NavLink 의 기본 매칭으로는 안 되므로
+   * nav 데이터의 match 목록으로 직접 판정한다.
+   */
+  const isActive = (paths: readonly string[]) =>
+    paths.some((p) => (p === '/' ? pathname === '/' : pathname === p || pathname.startsWith(`${p}/`)));
+
+  const linkClass = (active: boolean) =>
     [
-      'rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors',
-      isActive ? 'bg-brand-soft text-link' : 'text-ink-soft hover:text-link',
+      'rounded-lg px-2.5 py-1.5 t-meta font-medium transition-colors',
+      active ? 'bg-brand-soft text-link' : 'text-ink-soft hover:text-link',
     ].join(' ');
 
   return (
@@ -26,10 +35,9 @@ export default function Navbar() {
 
         <nav className="ml-auto hidden items-center gap-0.5 lg:flex">
           {nav.map((item) => (
-            /* end 를 쓰지 않는다 — /archive/artists 에서도 '기록'이 활성 표시되어야 한다. */
-            <NavLink key={item.path} to={item.path} className={linkClass}>
+            <Link key={item.path} to={item.path} className={linkClass(isActive(item.match))}>
               {item.label}
-            </NavLink>
+            </Link>
           ))}
         </nav>
 
@@ -52,13 +60,13 @@ export default function Navbar() {
           <ul className="grid grid-cols-2 gap-1">
             {nav.map((item) => (
               <li key={item.path}>
-                <NavLink
+                <Link
                   to={item.path}
-                  className={linkClass}
+                  className={linkClass(isActive(item.match))}
                   onClick={() => setOpen(false)}
                 >
                   {item.label}
-                </NavLink>
+                </Link>
               </li>
             ))}
           </ul>

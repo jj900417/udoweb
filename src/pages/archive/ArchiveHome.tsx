@@ -109,6 +109,7 @@ export default function ArchiveHome() {
       <ArchiveSection title={archive.sections.more.title} sub={archive.sections.more.sub}>
         <div className="grid gap-4 sm:grid-cols-3">
           {[
+            { to: '/about', s: { sub: 'About', title: archive.hub.about.title, desc: archive.hub.about.desc }, n: 0 },
             { to: '/history', s: archive.sections.history, n: counts.history },
             { to: '/voices', s: archive.sections.voices, n: counts.voiceClip },
             { to: '/archive/library', s: archive.sections.library, n: counts.library },

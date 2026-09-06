@@ -16,7 +16,7 @@ import HistoryDetail from './pages/HistoryDetail';
 import Voices from './pages/Voices';
 import VoicePersonDetail from './pages/VoicePersonDetail';
 import ArchiveHome from './pages/archive/ArchiveHome';
-import ArchiveLayout from './pages/archive/ArchiveLayout';
+import SideNavLayout from './components/SideNavLayout';
 import ArtistIndex from './pages/archive/ArtistIndex';
 import WorkIndex from './pages/archive/WorkIndex';
 import CollectionIndex from './pages/archive/CollectionIndex';
@@ -43,45 +43,41 @@ export default function App() {
       <Route element={<Layout />}>
         <Route index element={<Home />} />
 
-        {/* 섬 소개 */}
-        <Route path="about" element={<About />} />
-
-        {/* 기록 — 아카이브 */}
-        {/* 랜딩은 '입구'라 2차 내비 없이, 나머지 아카이브 화면은 ArchiveLayout 아래로. */}
-        <Route path="archive" element={<ArchiveHome />} />
-        <Route path="archive" element={<ArchiveLayout />}>
-          <Route path="artists" element={<ArtistIndex />} />
-          <Route path="artists/:slug" element={<ArtistDetail />} />
-          <Route path="works" element={<WorkIndex />} />
-          <Route path="works/:slug" element={<WorkDetail />} />
-          <Route path="collections" element={<CollectionIndex />} />
-          <Route path="collections/:slug" element={<CollectionDetail />} />
-          <Route path="exhibitions" element={<ExhibitionIndex />} />
-          <Route path="exhibitions/:slug" element={<ExhibitionDetail />} />
-          <Route path="library" element={<LibraryIndex />} />
-          <Route path="*" element={<ArchiveNotFound />} />
+        {/*
+          * '우도' 탭 — 섬에 관한 것 전부(소개·기록·역사·목소리)가 한 허브 안에 있고,
+          * 갈래는 왼쪽 세로 메뉴에서 고른다. URL 은 예전 그대로다.
+          */}
+        <Route element={<SideNavLayout menu="udo" />}>
+          <Route path="about" element={<About />} />
+          <Route path="archive" element={<ArchiveHome />} />
+          <Route path="archive/artists" element={<ArtistIndex />} />
+          <Route path="archive/artists/:slug" element={<ArtistDetail />} />
+          <Route path="archive/works" element={<WorkIndex />} />
+          <Route path="archive/works/:slug" element={<WorkDetail />} />
+          <Route path="archive/collections" element={<CollectionIndex />} />
+          <Route path="archive/collections/:slug" element={<CollectionDetail />} />
+          <Route path="archive/exhibitions" element={<ExhibitionIndex />} />
+          <Route path="archive/exhibitions/:slug" element={<ExhibitionDetail />} />
+          <Route path="archive/library" element={<LibraryIndex />} />
+          <Route path="archive/*" element={<ArchiveNotFound />} />
+          <Route path="history" element={<History />} />
+          <Route path="history/:slug" element={<HistoryDetail />} />
+          <Route path="voices" element={<Voices />} />
+          <Route path="voices/:slug" element={<VoicePersonDetail />} />
         </Route>
 
-        {/* 역사 */}
-        <Route path="history" element={<History />} />
-        <Route path="history/:slug" element={<HistoryDetail />} />
-
-        {/* 목소리 */}
-        <Route path="voices" element={<Voices />} />
-        <Route path="voices/:slug" element={<VoicePersonDetail />} />
-
-        {/* 여행 (허브 + 기존 페이지 — URL 유지) */}
-        <Route path="travel" element={<TravelHub />} />
-        <Route path="spots" element={<Spots />} />
-        <Route path="access" element={<Access />} />
-        <Route path="experience" element={<Experience />} />
-        <Route path="food" element={<Food />} />
-        <Route path="tips" element={<Tips />} />
-
-        {/* 지금 우도 (허브 + 기존 페이지 — URL 유지) */}
-        <Route path="now" element={<NowHub />} />
-        <Route path="gallery" element={<Gallery />} />
-        <Route path="app" element={<AppPage />} />
+        {/* '지금 우도' 탭 — 실시간 정보와 여행 정보를 같은 허브 안에. */}
+        <Route element={<SideNavLayout menu="now" />}>
+          <Route path="now" element={<NowHub />} />
+          <Route path="gallery" element={<Gallery />} />
+          <Route path="travel" element={<TravelHub />} />
+          <Route path="spots" element={<Spots />} />
+          <Route path="access" element={<Access />} />
+          <Route path="experience" element={<Experience />} />
+          <Route path="food" element={<Food />} />
+          <Route path="tips" element={<Tips />} />
+          <Route path="app" element={<AppPage />} />
+        </Route>
 
         <Route path="*" element={<NotFound />} />
       </Route>

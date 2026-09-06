@@ -50,14 +50,7 @@ export const en: Overlay = {
     nav: { menu: 'Menu', close: 'Close' },
     theme: { light: 'Light', dark: 'Dark' },
   },
-  nav: [
-    { label: 'Udo' },
-    { label: 'Archive' },
-    { label: 'History' },
-    { label: 'Voices' },
-    { label: 'Travel' },
-    { label: 'Udo Now' },
-  ],
+  nav: [{ label: 'Home' }, { label: 'Udo' }, { label: 'Udo Now' }],
   home: {
     hero: {
       eyebrow: 'Udo, Jeju',
