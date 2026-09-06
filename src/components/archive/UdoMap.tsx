@@ -259,7 +259,7 @@ export default function UdoMap({
     <>
       <div ref={container} style={style} className="w-full overflow-hidden rounded-xl border border-line" />
       {tileError && (
-        <p className="caption mt-2">지도 타일을 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.</p>
+        <p className="caption mt-2">지도 타일을 불러오지 못했어요. 잠시 뒤 새로고침해 주세요.</p>
       )}
     </>
   );

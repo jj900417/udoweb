@@ -95,7 +95,7 @@ export default function Sounds() {
         )}
 
         {sounds.length === 0 ? (
-          <EmptyArchiveState note="녹음을 시작하면 이 자리에 소리가 쌓입니다. 언제 어디서 녹음했는지, 그날 날씨가 어땠는지와 함께 남깁니다." />
+          <EmptyArchiveState note="녹음을 시작하면 이 자리에 소리가 쌓여요. 언제 어디서 녹음했는지, 그날 날씨가 어땠는지와 함께 남겨요." />
         ) : (
           <div>
             {sounds.map((sound) => (

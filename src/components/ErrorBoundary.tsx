@@ -27,9 +27,9 @@ export default class ErrorBoundary extends Component<Props, State> {
 
     return (
       <div className="mx-auto max-w-xl px-4 py-24 text-center">
-        <h1 className="display text-2xl font-bold text-ink">화면을 그리지 못했습니다</h1>
+        <h1 className="display text-2xl font-bold text-ink">화면을 그리지 못했어요</h1>
         <p className="mt-3 text-ink-soft">
-          잠시 문제가 생겼습니다. 새로고침하면 대부분 정상으로 돌아옵니다.
+          잠시 문제가 생겼어요. 새로고침하면 대부분 정상으로 돌아와요.
         </p>
         <div className="mt-6 flex justify-center gap-3">
           <button type="button" onClick={() => window.location.reload()} className="btn-primary">
