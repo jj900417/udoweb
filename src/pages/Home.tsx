@@ -15,13 +15,9 @@ import { useCounts, useWorkList } from '../archive';
 export default function Home() {
   const { home, hubs, site, ui, archive, eightViews } = useContent();
   const featured = useWorkList({ sort: 'dateDesc', limit: 3 }).data ?? [];
-  const counts = useCounts(['artist', 'work', 'history', 'voiceClip']);
-  /* 기록의 세 갈래 — 각 줄에 실제 보유량을 함께 보여준다(없으면 표시하지 않는다). */
-  const records = [
-    { ...home.records.artists, count: counts.artist + counts.work },
-    { ...home.records.history, count: counts.history },
-    { ...home.records.voices, count: counts.voiceClip },
-  ];
+  const counts = useCounts(['artist', 'work']);
+  /* 기록 입구 한 줄 — 실제 보유량을 함께 보여준다(없으면 표시하지 않는다). */
+  const records = [{ ...home.records.artists, count: counts.artist + counts.work }];
 
   return (
     <>

@@ -64,8 +64,6 @@ export const en: Overlay = {
     records: {
       title: 'What we record',
       artists: { title: 'Those who recorded Udo' },
-      history: { title: 'The time of Udo' },
-      voices: { title: 'Voices of Udo' },
     },
     sections: {
       featured: { title: "Today's record", desc: 'One image from the archive' },

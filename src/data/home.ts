@@ -14,12 +14,13 @@ export const home = {
     ctaPrimary: { label: '기록 보기', to: '/archive' },
     ctaSecondary: { label: '여행 정보', to: '/travel' },
   },
-  /* 세 갈래 기록 — 관광 카드가 아니라 editorial 섹션으로 보여준다. */
+  /*
+   * 기록으로 들어가는 입구. 예전에는 기록·역사·목소리 셋을 나열했지만,
+   * 왼쪽 메뉴가 이미 갈래를 보여주므로 홈에서는 하나만 크게 둔다.
+   */
   records: {
     title: '무엇을 기록하나',
     artists: { title: '우도를 기록한 사람들', sub: 'Photography / Artists', to: '/archive' },
-    history: { title: '우도의 시간', sub: 'History', to: '/history' },
-    voices: { title: '우도의 목소리', sub: 'Voices of Udo', to: '/voices' },
   },
   sections: {
     featured: { title: '오늘의 기록', desc: '아카이브에서 꺼내 온 한 장' },
