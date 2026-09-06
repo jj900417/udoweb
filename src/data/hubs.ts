@@ -7,7 +7,8 @@ export const hubs = {
     links: {
       access: { to: '/access', title: '오시는 길', desc: '뱃길·오는 순서·섬 안 이동' },
       tips: { to: '/tips', title: '여행 팁', desc: '자주 묻는 것과 떠나기 전 체크리스트' },
-      food: { to: '/food', title: '먹거리·가게', desc: '땅콩과 소라, 그리고 지금 문 연 곳' },
+      food: { to: '/food', title: '먹거리 · 가게', desc: '땅콩과 소라 등, 그리고 가게 정보까지' },
+      harbor: { to: '/harbor', title: '항구', desc: '천진항·하우목동항 실시간 화면' },
     },
   },
   now: {
@@ -27,4 +28,11 @@ export const hubs = {
       cctv: '항구 CCTV',
     },
   },
+} as const;
+
+/* 항구 화면 문안. */
+export const harbor = {
+  title: '항구',
+  subtitle: '천진항·하우목동항의 지금',
+  note: '영상은 제주특별자치도 제주시가 제공하는 공개 CCTV입니다. 화면이 끊길 때는 잠시 뒤 다시 시도해 주세요.',
 } as const;

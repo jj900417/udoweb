@@ -16,7 +16,7 @@ import { food } from './food';
 import { tips } from './tips';
 import { ui } from './ui';
 import { archive } from './archive';
-import { hubs } from './hubs';
+import { hubs, harbor } from './hubs';
 
 export const content = {
   site,
@@ -35,6 +35,7 @@ export const content = {
   ui,
   archive,
   hubs,
+  harbor,
 };
 
 export type Content = typeof content;

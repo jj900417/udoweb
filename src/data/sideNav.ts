@@ -56,7 +56,8 @@ export const sideNav = {
         items: [
           { path: '/access', label: '오시는 길', count: '' },
           { path: '/tips', label: '여행 팁', count: '' },
-          { path: '/food', label: '먹거리·가게', count: '' },
+          { path: '/food', label: '먹거리 · 가게', count: '' },
+          { path: '/harbor', label: '항구', count: '' },
         ],
       },
       { path: '/app', label: '우도나우', count: '', items: [] },

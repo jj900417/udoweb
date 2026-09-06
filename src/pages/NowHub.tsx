@@ -1,17 +1,17 @@
+import { Link } from 'react-router-dom';
 import { useContent } from '../i18n';
 import PageMeta from '../components/PageMeta';
 import SectionHeader from '../components/SectionHeader';
 import FerryStatusCard from '../components/FerryStatusCard';
 import TimetableCard from '../components/TimetableCard';
 import FestivalList from '../components/FestivalList';
-import CctvList from '../components/CctvList';
 
 /*
  * '지금 우도' — 우도 나우 앱 서버에서 실시간으로 받아오는 것들을 한자리에.
  * 데이터는 이 저장소에 복제하지 않는다(앱 서버가 단일 소스).
  */
 export default function NowHub() {
-  const { hubs, site } = useContent();
+  const { hubs, site, harbor, ui } = useContent();
 
   return (
     <>
@@ -38,7 +38,12 @@ export default function NowHub() {
 
       <div className="mt-12">
         <SectionHeader title={hubs.now.sections.cctv} />
-        <CctvList />
+        {/* 재생은 항구 페이지 한 곳에서만 — 같은 스트림을 두 화면에서 받지 않는다. */}
+        <Link to="/harbor" className="card card-hover block">
+          <h3 className="font-bold text-ink">{harbor.title}</h3>
+          <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{harbor.subtitle}</p>
+          <span className="mt-3 inline-block text-sm font-semibold text-link">{ui.actions.more} →</span>
+        </Link>
       </div>
 
 

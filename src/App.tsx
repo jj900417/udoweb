@@ -7,6 +7,7 @@ import Access from './pages/Access';
 import Experience from './pages/Experience';
 import Food from './pages/Food';
 import Tips from './pages/Tips';
+import Harbor from './pages/Harbor';
 import AppPage from './pages/AppPage';
 import TravelHub from './pages/TravelHub';
 import NowHub from './pages/NowHub';
@@ -80,6 +81,7 @@ export default function App() {
           <Route path="experience" element={<Experience />} />
           <Route path="food" element={<Food />} />
           <Route path="tips" element={<Tips />} />
+          <Route path="harbor" element={<Harbor />} />
           <Route path="app" element={<AppPage />} />
         </Route>
 
