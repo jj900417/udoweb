@@ -1,5 +1,5 @@
 import { udoApi, type Light } from '../api/udo';
-import { statusHeadline, statusReasons } from '../api/ferryText';
+import { lightLabel, outlookLabel, statusHeadline, statusReasons } from '../api/ferryText';
 import { useAsync } from '../api/useAsync';
 import { useContent } from '../i18n';
 import StateBlock from './StateBlock';
@@ -10,10 +10,18 @@ import StateBlock from './StateBlock';
  */
 const LIGHT_STYLE: Record<Light, { dot: string; tint: string; border: string; text: string }> = {
   green: { dot: 'bg-go', tint: 'bg-go/10', border: 'border-go/40', text: 'text-go' },
+  /* 운영 시간 외는 경고가 아니다 — 신호색을 쓰지 않고 중립으로 둔다. */
+  closed: { dot: 'bg-faint', tint: 'bg-surface-soft', border: 'border-line', text: 'text-ink-soft' },
   yellow: { dot: 'bg-caution', tint: 'bg-caution/10', border: 'border-caution/40', text: 'text-caution' },
   red: { dot: 'bg-stop', tint: 'bg-stop/10', border: 'border-stop/40', text: 'text-stop' },
   gray: { dot: 'bg-unknown', tint: 'bg-unknown/10', border: 'border-unknown/40', text: 'text-unknown' },
 };
+
+/** 풍향(도) → 16방위 이름. 337.5° 부터 다시 '북'이 되도록 반올림한다. */
+function compass(deg: number, names: readonly string[]): string {
+  const index = Math.round(((deg % 360) + 360) % 360 / 22.5) % 16;
+  return names[index] ?? '';
+}
 
 function timeLabel(iso: string): string {
   const d = new Date(iso);
@@ -45,7 +53,7 @@ export default function FerryStatusCard() {
       <div className="flex flex-wrap items-center gap-2">
         <span className={`h-3 w-3 rounded-full ${style.dot}`} aria-hidden />
         <span className={`text-sm font-bold ${style.text}`}>
-          {ui.ferry.today} · {ui.ferry.lights[light]}
+          {ui.ferry.today} · {lightLabel(light, data.status.certainty, ui.ferry.lights)}
         </span>
         {data.stale && <span className="chip">stale</span>}
       </div>
@@ -64,7 +72,7 @@ export default function FerryStatusCard() {
           <div className="rounded-lg border border-line bg-surface px-3 py-2.5">
             <p className="text-xs font-semibold text-faint">{ui.ferry.tomorrow}</p>
             <p className="mt-0.5 text-sm font-semibold text-ink">
-              {ui.ferry.lights[(data.tomorrow.level ?? 'gray') as Light]}
+              {outlookLabel(data.tomorrow.level ?? 'gray', ui.ferry.outlook)}
             </p>
             <p className="text-xs text-ink-soft">{data.tomorrow.detail}</p>
           </div>
@@ -73,9 +81,15 @@ export default function FerryStatusCard() {
           <div className="rounded-lg border border-line bg-surface px-3 py-2.5">
             <p className="text-xs font-semibold text-faint">{ui.ferry.weatherNow}</p>
             <p className="mt-0.5 text-sm text-ink-soft">
-              {cur.temp != null && <>{ui.ferry.temp} {cur.temp}℃ · </>}
-              {cur.wsd != null && <>{ui.ferry.wind} {cur.wsd} m/s · </>}
-              {cur.wav != null && <>{ui.ferry.wave} {cur.wav} m</>}
+              {[
+                cur.temp != null ? `${ui.ferry.temp} ${cur.temp}℃` : null,
+                cur.wsd != null ? `${ui.ferry.wind} ${cur.wsd} m/s` : null,
+                cur.vec != null ? `${ui.ferry.windDir} ${compass(cur.vec, ui.ferry.compass)}` : null,
+                cur.reh != null ? `${ui.ferry.humidity} ${cur.reh}%` : null,
+                cur.wav != null ? `${ui.ferry.wave} ${cur.wav} m` : null,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
             </p>
           </div>
         )}
@@ -92,9 +106,8 @@ export default function FerryStatusCard() {
       )}
 
       <p className="mt-4 text-xs text-faint">
-        {ui.states.updatedAt} {timeLabel(data.updated_at)} · {ui.ferry.source}
+        {ui.states.updatedAt} {timeLabel(data.updated_at)}
       </p>
-      <p className="text-xs text-faint">{ui.ferry.disclaimer}</p>
     </div>
   );
 }

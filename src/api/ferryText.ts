@@ -26,7 +26,17 @@ function fill(template: string, params: Params): string {
   });
 }
 
+type LightLabels = {
+  red: { confirmed: string; predicted: string };
+  yellow: { confirmed: string; predicted: string };
+  green: string;
+  closed: string;
+  gray: string;
+};
+
 type FerryChrome = {
+  lights: LightLabels;
+  outlook: Record<string, string>;
   headlines: Record<string, string>;
   reasons: Record<string, string>;
   warningKinds: Record<string, string>;
@@ -55,4 +65,33 @@ export function statusReasons(status: FerryStatus['status'], chrome: FerryChrome
       return typeof params.text === 'string' ? params.text : '';
     })
     .filter((line) => line.length > 0);
+}
+
+/**
+ * 신호등 라벨 — 색 + 확신도. 앱 statusLabel 과 같은 규칙이다.
+ * 확정된 중단('운항 중단')과 예측된 위험('결항 주의')은 다른 사실이므로 구분한다.
+ */
+export function lightLabel(
+  light: string,
+  certainty: string,
+  labels: LightLabels,
+): string {
+  const confirmed = certainty === 'confirmed';
+  switch (light) {
+    case 'red':
+      return confirmed ? labels.red.confirmed : labels.red.predicted;
+    case 'yellow':
+      return confirmed ? labels.yellow.confirmed : labels.yellow.predicted;
+    case 'green':
+      return labels.green;
+    case 'closed':
+      return labels.closed;
+    default:
+      return labels.gray;
+  }
+}
+
+/** 내일 전망 라벨(앱 outlookLabel 과 동일). */
+export function outlookLabel(level: string, labels: Record<string, string>): string {
+  return labels[level] ?? labels.gray;
 }

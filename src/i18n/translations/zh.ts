@@ -9,7 +9,7 @@ export const zh: Overlay = {
       title: '运航状态',
       today: '今天',
       tomorrow: '明天',
-      lights: { green: '正常运航', yellow: '注意', red: '停航', gray: '未确认' },
+
     },
   },
 };

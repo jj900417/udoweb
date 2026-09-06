@@ -19,13 +19,25 @@ export const ui = {
     title: '운항 상태',
     today: '오늘',
     tomorrow: '내일',
-    source: '판정: 우도 나우 (기상청 특보·예보 + 선사 공지)',
-    disclaimer: '최종 확인은 선사 전화가 가장 정확합니다.',
+    /*
+     * 신호등 라벨 — 앱(app/lib/i18n/labels.dart statusLabel)과 같은 규칙.
+     * 같은 색이라도 확신도(confirmed/predicted)에 따라 말이 달라진다:
+     * 확정된 중단과 예측된 위험은 다른 사실이기 때문이다.
+     */
     lights: {
-      green: '정상 운항',
+      red: { confirmed: '운항 중단', predicted: '결항 주의' },
+      yellow: { confirmed: '일시 중단', predicted: '운항 주의' },
+      green: '운항',
+      closed: '운항 종료',
+      gray: '확인 필요',
+    },
+    /* 내일 전망 라벨(앱 outlookLabel 과 동일). */
+    outlook: {
+      green: '좋음',
       yellow: '주의',
-      red: '결항',
-      gray: '미확인',
+      red: '운항 차질 가능성 높음',
+      closed: '운항 없음',
+      gray: '확인 필요',
     },
     weatherNow: '현재 기상',
     /*
@@ -66,7 +78,16 @@ export const ui = {
     },
     temp: '기온',
     wind: '풍속',
+    windDir: '풍향',
+    humidity: '습도',
     wave: '파고',
+    /* 풍향(도)을 사람이 읽는 방위로. 16방위, 북에서 시계방향. */
+    compass: [
+      '북', '북북동', '북동', '동북동',
+      '동', '동남동', '남동', '남남동',
+      '남', '남남서', '남서', '서남서',
+      '서', '서북서', '북서', '북북서',
+    ],
   },
   timetable: { title: '운항 시간표', note: '시간은 계절·기상에 따라 바뀝니다.' },
   shops: { title: '가게', category: '업종', hours: '영업시간' },

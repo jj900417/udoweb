@@ -13,7 +13,11 @@
 
 export const API_BASE = '/api/udo';
 
-export type Light = 'green' | 'yellow' | 'red' | 'gray';
+/**
+ * 신호등 색. 서버 engine/types.py 의 Light 와 1:1.
+ * closed = 운영 시간 외(막배 후·첫배 전) — 경고가 아니라 **중립**이다.
+ */
+export type Light = 'green' | 'yellow' | 'red' | 'closed' | 'gray';
 
 export type StatusReasonItem = {
   code: string;
@@ -23,6 +27,7 @@ export type StatusReasonItem = {
 export type FerryStatus = {
   status: {
     light: Light;
+    /** 'confirmed'(확정) | 'predicted'(예측) — 같은 색이어도 라벨이 달라진다. */
     certainty: string;
     /** 서버가 조립한 한국어 문장. **폴백용**이다 — 화면은 code+params 로 직접 만든다. */
     headline: string;
@@ -44,7 +49,12 @@ export type FerryStatus = {
   } | null;
   current?: {
     temp?: number | null;
+    /** 풍속 m/s */
     wsd?: number | null;
+    /** 풍향(도) — 0=북, 90=동. 사람이 읽는 방위로 바꿔 표시한다. */
+    vec?: number | null;
+    /** 습도 % */
+    reh?: number | null;
     wav?: number | null;
     observed_at?: string;
     stale?: boolean;

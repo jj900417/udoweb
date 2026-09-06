@@ -9,7 +9,7 @@ export const ja: Overlay = {
       title: '運航状況',
       today: '今日',
       tomorrow: '明日',
-      lights: { green: '通常運航', yellow: '注意', red: '欠航', gray: '未確認' },
+
     },
   },
 };

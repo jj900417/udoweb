@@ -26,13 +26,19 @@ export const en: Overlay = {
       title: 'Ferry status',
       today: 'Today',
       tomorrow: 'Tomorrow',
-      source: 'Assessed by Udo Now (KMA alerts/forecast + operator notices)',
-      disclaimer: 'Calling the ferry operator is always the most reliable check.',
       lights: {
+        red: { confirmed: 'Suspended', predicted: 'Cancellation likely' },
+        yellow: { confirmed: 'Temporarily paused', predicted: 'Sailing caution' },
         green: 'Running',
+        closed: 'Service ended',
+        gray: 'Needs checking',
+      },
+      outlook: {
+        green: 'Good',
         yellow: 'Caution',
-        red: 'Suspended',
-        gray: 'Unconfirmed',
+        red: 'High likelihood of service disruption',
+        closed: 'No sailings',
+        gray: 'Needs checking',
       },
       weatherNow: 'Current conditions',
       /* 앱의 app_en.arb 와 같은 문안 — 앱과 웹이 같은 말을 하도록. */
