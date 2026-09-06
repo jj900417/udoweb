@@ -7,22 +7,25 @@ export default function Food() {
 
   return (
     <>
-      <SectionHeader title={food.title} subtitle={food.subtitle} level={1} />
+      <SectionHeader title={food.title} level={1} />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/*
+        * 설명 없이 이름만 — 무엇이 있는지만 알려주고, 자세한 것은 아래 가게 목록이 말한다.
+        * (문안은 src/data/food.ts 에 남아 있어 언제든 되살릴 수 있다.)
+        */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {food.items.map((item) => (
-          <article key={item.title} className="card">
-            <div className="text-2xl" aria-hidden>
+          <article key={item.title} className="card flex flex-col items-center gap-1 py-4 text-center">
+            <span className="text-2xl" aria-hidden>
               {item.icon}
-            </div>
-            <h3 className="mt-2 font-bold text-ink">{item.title}</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{item.desc}</p>
+            </span>
+            <h3 className="t-meta font-bold text-ink">{item.title}</h3>
           </article>
         ))}
       </div>
 
       <div className="mt-14">
-        <SectionHeader title={ui.shops.title} subtitle={food.note} />
+        <SectionHeader title={ui.shops.title} />
         <ShopList />
       </div>
     </>
