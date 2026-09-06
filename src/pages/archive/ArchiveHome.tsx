@@ -24,7 +24,7 @@ export default function ArchiveHome() {
   const exhibitions = useExhibitionList({ sort: 'dateDesc', limit: 4 }).data ?? [];
   const nothingYet = artists.length + works.length + collections.length + exhibitions.length === 0;
   /* 개수는 이 아카이브가 실제로 가진 것의 지도다 — 없으면 없는 대로 보여준다. */
-  const counts = useCounts(['artist', 'work', 'history', 'voiceClip', 'library']);
+  const counts = useCounts(['artist']);
 
   return (
     <>
@@ -110,25 +110,6 @@ export default function ArchiveHome() {
         </ArchiveSection>
       )}
 
-      <ArchiveSection title={archive.sections.more.title} sub={archive.sections.more.sub}>
-        <div className="grid gap-4 sm:grid-cols-3">
-          {[
-            { to: '/about', s: { sub: 'About', title: archive.hub.about.title, desc: archive.hub.about.desc }, n: 0 },
-            { to: '/history', s: archive.sections.history, n: counts.history },
-            { to: '/voices', s: archive.sections.voices, n: counts.voiceClip },
-            { to: '/archive/library', s: archive.sections.library, n: counts.library },
-          ].map((item) => (
-            <Link key={item.to} to={item.to} className="rule pt-4 hover:text-link">
-              <p className="credit">{item.s.sub}</p>
-              <p className="display mt-1 t-meta text-lg text-ink">{item.s.title}</p>
-              <p className="caption mt-1">
-                {item.s.desc}
-                {item.n > 0 ? ` · ${item.n}` : ''}
-              </p>
-            </Link>
-          ))}
-        </div>
-      </ArchiveSection>
 
       {nothingYet && (
         <p className="caption mt-14">{archive.empty.structureOnly}</p>
