@@ -92,16 +92,44 @@ async function proxyMedia(url: URL): Promise<Response> {
   }
 }
 
+/*
+ * http 로 들어온 요청을 https 로 넘긴다.
+ *
+ * 주소창에 'udonow.co.kr' 만 치면 브라우저는 http 로 먼저 붙는다. 그대로 두면
+ * 주소창에 '주의 요함'이 뜨고, 그 상태의 접속은 중간에서 내용을 바꿀 수 있다.
+ * (Cloudflare 대시보드의 'Always Use HTTPS' 와 같은 일을 코드에서 한다 —
+ *  설정이 바뀌어도 저장소에 남아 있도록.)
+ */
+function httpsRedirect(url: URL): Response {
+  const target = new URL(url.toString());
+  target.protocol = 'https:';
+  return Response.redirect(target.toString(), 301);
+}
+
+/** https 응답에 붙이는 최소 보안 헤더. */
+function harden(response: Response): Response {
+  const out = new Response(response.body, response);
+  // 6개월 동안 이 호스트는 https 로만 접속한다. includeSubDomains 는 넣지 않는다 —
+  // 가게 서브도메인(*.udonow.co.kr)은 별도 서버가 맡고 있어 함께 강제하면 안 된다.
+  out.headers.set('strict-transport-security', 'max-age=15552000');
+  out.headers.set('x-content-type-options', 'nosniff');
+  out.headers.set('referrer-policy', 'strict-origin-when-cross-origin');
+  return out;
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
+    if (url.protocol === 'http:') return httpsRedirect(url);
+
     if (url.pathname.startsWith('/api/udo/') || url.pathname.startsWith('/media/')) {
       if (request.method !== 'GET') return json({ error: 'GET only' }, 405);
-      return url.pathname.startsWith('/media/') ? proxyMedia(url) : proxyApi(url);
+      const proxied = url.pathname.startsWith('/media/') ? proxyMedia(url) : proxyApi(url);
+      return harden(await proxied);
     }
     if (url.pathname.startsWith('/api/')) return json({ error: 'not-found' }, 404);
 
-    return env.ASSETS.fetch(request);
+    return harden(await env.ASSETS.fetch(request));
   },
 };

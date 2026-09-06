@@ -16,6 +16,9 @@
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*", "/media/*"]
+    // 모든 요청이 Worker 를 먼저 지나게 한다.
+    // ["/api/*","/media/*"] 로 좁혀 두면 정적 자산(HTML 포함)이 Worker 를 건너뛰어
+    // http→https 리다이렉트와 보안 헤더가 적용되지 않는다(실제로 그랬다).
+    "run_worker_first": true
   }
 }
