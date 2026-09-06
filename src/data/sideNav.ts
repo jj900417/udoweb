@@ -25,7 +25,7 @@ export const sideNav = {
          * 두 URL 과 화면은 그대로 살아 있다 — 여기 한 줄씩 되살리면 다시 나타난다.
          */
         items: [
-          { path: '/archive/artists', label: '사람', count: 'artist' },
+          { path: '/archive/artists', label: '작가', count: 'artist' },
           { path: '/archive/collections', label: '컬렉션', count: 'collection' },
           { path: '/history', label: '시간', count: 'history' },
         ],
