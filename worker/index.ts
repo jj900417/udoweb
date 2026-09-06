@@ -23,7 +23,7 @@ const ENDPOINTS: Record<string, number> = {
   forecast: 600,
   tide: 900,
   'tide/day': 900,
-  cctv: 900,
+  cctv: 300,
   'v1/app/requirements': 3600,
   'v1/destinations/udo/banners': 300,
   'v1/destinations/udo/transport/vessels': 30,
@@ -59,6 +59,21 @@ async function proxyApi(url: URL): Promise<Response> {
   }
 
   try {
+    /*
+     * 캐시 키에 **시간 버킷**을 넣는다(`_t`).
+     *
+     * 앱 서버는 `cache-control: public, max-age=300, s-maxage=300,
+     * stale-while-revalidate=300` 을 준다. 이 헤더 때문에 엣지가 응답을 콜로별로
+     * 들고 있다가, 한 번 굳으면 TTL 이 지나도 계속 같은(원본 fly-request-id 까지 같은)
+     * 오래된 복사본을 되돌려줬다 — 실제로 항구 CCTV 목록이 옛 카메라 1대로 몇 시간씩
+     * 고정됐다. Worker 쪽에서 캐시를 꺼도 콜로에 따라 결과가 갈렸다(HKG 는 옛것, NRT 는 새것).
+     *
+     * TTL 마다 값이 바뀌는 파라미터를 붙이면 키 자체가 회전하므로, 굳은 복사본은
+     * 다음 버킷에서 절대 재사용되지 않는다. 오래됨의 상한이 TTL 로 되돌아온다.
+     * 앱 서버는 모르는 쿼리 파라미터를 무시한다(확인함).
+     */
+    upstream.searchParams.set('_t', String(Math.floor(Date.now() / 1000 / ttl)));
+
     const r = await fetch(upstream.toString(), {
       cf: { cacheTtl: ttl, cacheEverything: true },
     } as RequestInit);
