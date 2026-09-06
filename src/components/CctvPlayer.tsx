@@ -12,7 +12,13 @@ import { useContent } from '../i18n';
  * - iOS 사파리는 HLS 를 자체 재생하므로 hls.js 를 받지 않는다.
  * - hls.js 는 눌렀을 때만 내려받는다(동적 import) — 안 보는 사람은 비용 0.
  */
-export default function CctvPlayer({ streamUrl, poster }: { streamUrl: string; poster?: string }) {
+export default function CctvPlayer({
+  streamUrl,
+  poster,
+}: {
+  streamUrl: string;
+  poster?: string;
+}) {
   const { ui } = useContent();
   const video = useRef<HTMLVideoElement | null>(null);
   const [playing, setPlaying] = useState(false);
@@ -81,7 +87,18 @@ export default function CctvPlayer({ streamUrl, poster }: { streamUrl: string; p
           </button>
         )}
       </div>
-      {failed && <p className="caption mt-2">{ui.cctv.failed}</p>}
+      {/*
+        * 릴레이가 막히면(예: 원본이 비표준 포트라 엣지에서 못 나갈 때) 화면 안 재생을
+        * 포기하고 원본을 새 탭으로 연다 — 아무것도 못 보는 것보다 낫다.
+        */}
+      {failed && (
+        <p className="caption mt-2">
+          {ui.cctv.failed}{' '}
+          <a href={streamUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-link">
+            {ui.cctv.open} ↗
+          </a>
+        </p>
+      )}
     </div>
   );
 }
