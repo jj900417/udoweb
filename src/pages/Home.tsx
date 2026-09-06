@@ -90,7 +90,8 @@ export default function Home() {
             </Link>
           }
         />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* 네 개를 한 줄에 — 좁은 화면에서는 2열, 더 좁으면 1열로 접힌다. */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Object.values(hubs.travel.links).map((link) => (
             <Link key={link.to} to={link.to} className="card card-hover">
               <h3 className="font-bold text-ink">{link.title}</h3>

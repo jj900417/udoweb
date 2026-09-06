@@ -18,7 +18,8 @@ export default function TravelHub() {
 
       <p className="measure prose-body">{hubs.travel.lead}</p>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* 네 개를 한 줄에 — 좁은 화면에서는 2열, 더 좁으면 1열로 접힌다. */}
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {links.map((link) => (
           <Link key={link.to} to={link.to} className="card card-hover">
             <h2 className="font-bold text-ink">{link.title}</h2>
