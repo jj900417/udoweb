@@ -6,7 +6,6 @@ import Spots from './pages/Spots';
 import Access from './pages/Access';
 import Experience from './pages/Experience';
 import Food from './pages/Food';
-import Gallery from './pages/Gallery';
 import Tips from './pages/Tips';
 import AppPage from './pages/AppPage';
 import TravelHub from './pages/TravelHub';
@@ -71,7 +70,10 @@ export default function App() {
         {/* '지금 우도' 탭 — 실시간 정보와 여행 정보를 같은 허브 안에. */}
         <Route element={<SideNavLayout menu="now" />}>
           <Route path="now" element={<NowHub />} />
-          <Route path="gallery" element={<Gallery />} />
+          {/*
+            * '현재의 우도'(방문자 사진 스트림)는 없앴다 — 사진가의 작품을 모으는
+            * 아카이브와 역할이 겹친다. 앱의 사진 기능은 그대로 있고, 웹에서만 뺀 것이다.
+            */}
           <Route path="travel" element={<TravelHub />} />
           <Route path="spots" element={<Spots />} />
           <Route path="access" element={<Access />} />

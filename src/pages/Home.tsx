@@ -3,7 +3,6 @@ import { useContent } from '../i18n';
 import PageMeta from '../components/PageMeta';
 import SectionHeader from '../components/SectionHeader';
 import FerryStatusCard from '../components/FerryStatusCard';
-import GalleryGrid from '../components/GalleryGrid';
 import ArtworkGrid from '../components/archive/ArtworkGrid';
 import { useCounts, useWorkList } from '../archive';
 
@@ -13,7 +12,7 @@ import { useCounts, useWorkList } from '../archive';
  * 아카이브 대표 작품은 **자료가 있을 때만** 나온다(가짜 placeholder 금지).
  */
 export default function Home() {
-  const { home, hubs, site, ui, archive, eightViews } = useContent();
+  const { home, hubs, site, ui, archive } = useContent();
   const featured = useWorkList({ sort: 'dateDesc', limit: 3 }).data ?? [];
   const counts = useCounts(['artist', 'work']);
   /* 기록 입구 한 줄 — 실제 보유량을 함께 보여준다(없으면 표시하지 않는다). */
@@ -89,19 +88,6 @@ export default function Home() {
         <FerryStatusCard />
       </section>
 
-      {/* 현재의 우도 — 방문자·엠버서더 사진(아카이브 작품과 다른 데이터) */}
-      <section className="mt-20">
-        <SectionHeader
-          title={home.sections.gallery.title}
-          subtitle={home.sections.gallery.desc}
-          action={
-            <Link to="/gallery" className="text-sm font-semibold text-link">
-              {ui.actions.viewAll} →
-            </Link>
-          }
-        />
-        <GalleryGrid limit={8} />
-      </section>
 
       {/* 여행 정보 — 뒤로 밀되 없애지 않는다 */}
       <section className="mt-20">
@@ -122,9 +108,6 @@ export default function Home() {
             </Link>
           ))}
         </div>
-        <p className="caption mt-4">
-          우도8경 가운데 첫 풍경은 {eightViews[0].name}({eightViews[0].hanja}) — {eightViews[0].meaning}.
-        </p>
       </section>
 
       <section className="mt-20 rounded-2xl border border-line bg-surface-soft p-6 sm:p-8">

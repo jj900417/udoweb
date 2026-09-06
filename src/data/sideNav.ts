@@ -45,17 +45,18 @@ export const sideNav = {
     title: '지금 우도',
     groups: [
       { path: '/now', label: '오늘의 우도', count: '', items: [] },
-      { path: '/gallery', label: '현재 사진', count: '', items: [] },
       {
         path: '/travel',
         label: '섬을 여행하는 방법',
         count: '',
+        /*
+         * 명소(/spots)·즐길거리(/experience)는 메뉴에서 뺐다 — 화면과 URL 은 그대로 살아 있다.
+         * 방문자가 실제로 찾는 순서(어떻게 가나 → 무엇을 알아야 하나 → 무엇을 먹나)로 둔다.
+         */
         items: [
-          { path: '/spots', label: '우도8경·명소', count: '' },
           { path: '/access', label: '가는 길', count: '' },
-          { path: '/experience', label: '즐길거리', count: '' },
-          { path: '/food', label: '먹거리·가게', count: '' },
           { path: '/tips', label: '여행 팁', count: '' },
+          { path: '/food', label: '먹거리·가게', count: '' },
         ],
       },
       { path: '/app', label: '우도 나우 앱', count: '', items: [] },

@@ -5,7 +5,6 @@ import SectionHeader from '../components/SectionHeader';
 import FerryStatusCard from '../components/FerryStatusCard';
 import TimetableCard from '../components/TimetableCard';
 import FestivalList from '../components/FestivalList';
-import GalleryGrid from '../components/GalleryGrid';
 import CctvList from '../components/CctvList';
 
 /*
@@ -13,7 +12,7 @@ import CctvList from '../components/CctvList';
  * 데이터는 이 저장소에 복제하지 않는다(앱 서버가 단일 소스).
  */
 export default function NowHub() {
-  const { hubs, site, ui } = useContent();
+  const { hubs, site } = useContent();
   const links = Object.values(hubs.now.links);
 
   return (
@@ -38,17 +37,6 @@ export default function NowHub() {
         <FestivalList limit={4} />
       </div>
 
-      <div className="mt-12">
-        <SectionHeader
-          title={hubs.now.sections.photos}
-          action={
-            <Link to="/gallery" className="text-sm font-semibold text-link">
-              {ui.actions.viewAll} →
-            </Link>
-          }
-        />
-        <GalleryGrid limit={8} />
-      </div>
 
       <div className="mt-12">
         <SectionHeader title={hubs.now.sections.cctv} />
