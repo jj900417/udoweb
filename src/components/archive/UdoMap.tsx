@@ -71,6 +71,11 @@ export default function UdoMap({
   const markers = useRef<MapLibreMarker[]>([]);
   const [failed, setFailed] = useState(false);
   /*
+   * 타일 소스가 막혔을 때(예: CORS) maplibre 는 조용히 배경색만 그린다.
+   * 그러면 "지도가 안 나온다"는 사실만 남고 이유가 안 보이므로, 오류를 잡아 알린다.
+   */
+  const [tileError, setTileError] = useState(false);
+  /*
    * 지도는 매니페스트를 받아온 뒤 비동기로 만들어진다. ready 를 state 로 두지 않으면
    * 핀을 붙이는 효과가 지도보다 먼저 지나가 버리고, 다시 실행될 계기가 없어 핀이 영영 안 붙는다.
    */
@@ -105,6 +110,11 @@ export default function UdoMap({
         });
         instance.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: ATTRIBUTION }));
         instance.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+        instance.on('error', (event) => {
+          // 타일·소스 로딩 실패만 본다(라벨 폰트 경고 등은 무시).
+          const message = String((event as unknown as { error?: { message?: string } }).error?.message ?? '');
+          if (/fetch|load|source|tile/i.test(message) && !cancelled) setTileError(true);
+        });
         instance.scrollZoom.disable(); // 페이지 스크롤을 가로채지 않는다(모바일 배려)
         map.current = instance;
         /*
@@ -154,10 +164,17 @@ export default function UdoMap({
   if (failed) return null;
 
   return (
-    <div
-      ref={container}
-      style={{ height }}
-      className="w-full overflow-hidden rounded-xl border border-line"
-    />
+    <>
+      <div
+        ref={container}
+        style={{ height }}
+        className="w-full overflow-hidden rounded-xl border border-line"
+      />
+      {tileError && (
+        <p className="caption mt-2">
+          지도 타일을 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.
+        </p>
+      )}
+    </>
   );
 }
