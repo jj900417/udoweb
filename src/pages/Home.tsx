@@ -14,7 +14,7 @@ import { useCounts, useWorkList } from '../archive';
  * 아카이브 대표 작품은 **자료가 있을 때만** 나온다(가짜 placeholder 금지).
  */
 export default function Home() {
-  const { home, hubs, site, ui, archive } = useContent();
+  const { home, hubs, site, ui } = useContent();
   const featured = useWorkList({ sort: 'dateDesc', limit: 3 }).data ?? [];
   const counts = useCounts(['artist', 'work']);
   /* 기록 입구 한 줄 — 실제 보유량을 함께 보여준다(없으면 표시하지 않는다). */
@@ -55,9 +55,6 @@ export default function Home() {
             </li>
           ))}
         </ul>
-        <p className="measure mt-6 text-sm leading-relaxed text-faint">
-          {archive.philosophy.line}
-        </p>
       </section>
 
       {featured.length > 0 && (
