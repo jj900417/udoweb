@@ -3,6 +3,7 @@ import { udoApi } from '../api/udo';
 import { useAsync } from '../api/useAsync';
 import { useContent } from '../i18n';
 import StateBlock from './StateBlock';
+import CctvPlayer from './CctvPlayer';
 
 /*
  * 항구 CCTV — 항구를 골라 보는 패널.
@@ -48,19 +49,21 @@ export default function CctvList() {
         ))}
       </div>
 
-      <div className="mt-4 rounded-xl border border-line bg-surface-soft p-6">
+      <div className="mt-4 rounded-xl border border-line bg-surface-soft p-4 sm:p-6">
         <p className="t-meta font-semibold text-ink">{current.name}</p>
         {current.desc && <p className="caption mt-1">{current.desc}</p>}
         <p className="caption mt-1">{ui.cctv.note} · {data?.source}</p>
-        <a
-          href={current.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-primary mt-4"
-        >
-          {ui.cctv.open}
-        </a>
-        <p className="caption mt-3">{ui.cctv.whyExternal}</p>
+        {current.url.includes('.m3u8') ? (
+          <div className="mt-4">
+            <CctvPlayer streamUrl={current.url} />
+            <p className="caption mt-2">{ui.cctv.note2}</p>
+          </div>
+        ) : (
+          /* 스트림이 아니라 안내 페이지 링크인 항목(콘솔 설정에 따라 올 수 있다). */
+          <a href={current.url} target="_blank" rel="noopener noreferrer" className="btn-primary mt-4">
+            {ui.cctv.open}
+          </a>
+        )}
       </div>
     </div>
   );

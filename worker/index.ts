@@ -120,11 +120,85 @@ function harden(response: Response): Response {
   return out;
 }
 
+/* ─── 항구 CCTV 릴레이 ──────────────────────────────────────────────── */
+/*
+ * 제주시 월파 CCTV 는 **http 전용**이라(스트림 서버가 https 를 받지 않는다) https 인 이
+ * 사이트 안에서는 브라우저가 재생을 막는다(혼합 콘텐츠). 그래서 이 워커가 https 로
+ * 받아 http 원본에서 가져다 넘긴다.
+ *
+ * 안전장치 — 공개 프록시가 되지 않도록:
+ *  - 원본 host:port 를 **하드코딩 allowlist** 로 고정한다(SSRF 방지). 다른 주소는 400.
+ *  - 경로는 `.m3u8` / `.ts` 만 통과. GET 만.
+ *  - m3u8 은 본문을 다시 써서 세그먼트도 이 릴레이를 타게 한다(상대 경로 → 절대 URL).
+ *  - 세그먼트는 엣지에 캐시한다 → 뷰어가 늘어도 **상류 부하는 카메라 수에 비례**한다.
+ */
+const CCTV_ORIGIN = 'http://211.114.96.121:1935/';
+
+function isAllowedCctvUrl(raw: string): boolean {
+  if (!raw.startsWith(CCTV_ORIGIN)) return false;
+  const path = raw.slice(CCTV_ORIGIN.length);
+  if (path.includes('..') || path.includes('@')) return false;
+  return /\.(m3u8|ts)(\?.*)?$/.test(path);
+}
+
+async function relayCctv(url: URL, request: Request): Promise<Response> {
+  const target = url.searchParams.get('url') ?? '';
+  if (!isAllowedCctvUrl(target)) return json({ error: 'not-allowed' }, 400);
+
+  const isPlaylist = target.includes('.m3u8');
+  const upstream = await fetch(target, {
+    headers: { 'user-agent': request.headers.get('user-agent') ?? 'udonow-web' },
+    cf: isPlaylist
+      ? { cacheTtl: 2, cacheEverything: true }   // 재생목록은 자주 바뀐다
+      : { cacheTtl: 60, cacheEverything: true }, // 세그먼트는 한 번 받으면 그대로
+  } as RequestInit);
+
+  if (!upstream.ok) return json({ error: 'upstream', status: upstream.status }, 502);
+
+  const relayBase = `${url.origin}/api/cctv?url=`;
+  if (!isPlaylist) {
+    return new Response(upstream.body, {
+      status: upstream.status,
+      headers: {
+        'content-type': 'video/mp2t',
+        'cache-control': 'public, max-age=60',
+        'access-control-allow-origin': url.origin,
+      },
+    });
+  }
+
+  /* m3u8 안의 상대 경로를 원본 기준 절대 URL 로 만든 뒤 릴레이 주소로 감싼다. */
+  const text = await upstream.text();
+  const dir = target.slice(0, target.lastIndexOf('/') + 1);
+  const rewritten = text
+    .split('\n')
+    .map((line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return line;
+      const absolute = trimmed.startsWith('http') ? trimmed : dir + trimmed;
+      return relayBase + encodeURIComponent(absolute);
+    })
+    .join('\n');
+
+  return new Response(rewritten, {
+    headers: {
+      'content-type': 'application/vnd.apple.mpegurl',
+      'cache-control': 'no-store',
+      'access-control-allow-origin': url.origin,
+    },
+  });
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
     if (url.protocol === 'http:') return httpsRedirect(url);
+
+    if (url.pathname === '/api/cctv') {
+      if (request.method !== 'GET') return json({ error: 'GET only' }, 405);
+      return harden(await relayCctv(url, request));
+    }
 
     if (url.pathname.startsWith('/api/udo/') || url.pathname.startsWith('/media/')) {
       if (request.method !== 'GET') return json({ error: 'GET only' }, 405);
