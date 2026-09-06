@@ -34,5 +34,4 @@ export const hubs = {
 export const harbor = {
   title: '항구',
   subtitle: '천진항·하우목동항의 지금',
-  note: '영상은 제주특별자치도 제주시가 제공하는 공개 CCTV입니다. 화면이 끊길 때는 잠시 뒤 다시 시도해 주세요.',
 } as const;

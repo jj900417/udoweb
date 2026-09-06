@@ -17,7 +17,6 @@ export default function Harbor() {
       <PageMeta title={harbor.title} description={harbor.subtitle} />
       <SectionHeader title={harbor.title} subtitle={harbor.subtitle} level={1} />
       <CctvList />
-      <p className="caption mt-6">{harbor.note}</p>
     </>
   );
 }

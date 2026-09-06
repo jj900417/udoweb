@@ -94,10 +94,8 @@ export const ui = {
   cctv: {
     title: '항구 CCTV',
     note: '출처: 제주특별자치도 제주시',
-    open: '새 탭에서 열기',
     play: '실시간 영상 보기',
     failed: '영상을 불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요.',
-    note2: '제주시 스트림은 http 전용이라 이 사이트(https)의 서버가 중계해 보여줍니다.',
   },
   footer: {
     madeBy: '우도의 모습을 알리기 위해 만들었습니다.',

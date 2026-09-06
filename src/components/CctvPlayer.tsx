@@ -87,18 +87,7 @@ export default function CctvPlayer({
           </button>
         )}
       </div>
-      {/*
-        * 릴레이가 막히면(예: 원본이 비표준 포트라 엣지에서 못 나갈 때) 화면 안 재생을
-        * 포기하고 원본을 새 탭으로 연다 — 아무것도 못 보는 것보다 낫다.
-        */}
-      {failed && (
-        <p className="caption mt-2">
-          {ui.cctv.failed}{' '}
-          <a href={streamUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-link">
-            {ui.cctv.open} ↗
-          </a>
-        </p>
-      )}
+      {failed && <p className="caption mt-2">{ui.cctv.failed}</p>}
     </div>
   );
 }

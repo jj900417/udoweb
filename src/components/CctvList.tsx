@@ -54,17 +54,9 @@ export default function CctvList() {
         {current.desc && <p className="caption mt-1">{current.desc}</p>}
         {/* 출처는 서버가 주는 값을 쓰고, 없을 때만 기본 문구로 채운다(같은 말을 두 번 쓰지 않게). */}
         <p className="caption mt-1">출처: {data?.source || ui.cctv.note}</p>
-        {current.url.includes('.m3u8') ? (
-          <div className="mt-4">
-            <CctvPlayer streamUrl={current.url} />
-            <p className="caption mt-2">{ui.cctv.note2}</p>
-          </div>
-        ) : (
-          /* 스트림이 아니라 안내 페이지 링크인 항목(콘솔 설정에 따라 올 수 있다). */
-          <a href={current.url} target="_blank" rel="noopener noreferrer" className="btn-primary mt-4">
-            {ui.cctv.open}
-          </a>
-        )}
+        <div className="mt-4">
+          <CctvPlayer streamUrl={current.url} />
+        </div>
       </div>
     </div>
   );
