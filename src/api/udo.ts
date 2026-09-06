@@ -123,6 +123,18 @@ export type AppRequirements = {
   store_url_ios: string;
 };
 
+/**
+ * 홈 배너 — 앱 홈 대시보드의 캐러셀과 **같은 자료**(운영자가 콘솔에서 관리).
+ * link_type: 'none' | 'url' | 'tab'(앱 전용 딥링크 — 웹에서는 링크로 만들지 않는다)
+ */
+export type Banner = {
+  id: number;
+  image: string;
+  caption: string;
+  link_type: string;
+  link_value: string;
+};
+
 export type Cam = {
   id: string;
   name: string;
@@ -147,6 +159,8 @@ export const udoApi = {
     get<{ items: Photo[] }>(`gallery?limit=${limit}`, signal),
   cctv: (signal?: AbortSignal) => get<{ cams: Cam[]; source: string }>('cctv', signal),
   appRequirements: (signal?: AbortSignal) => get<AppRequirements>('v1/app/requirements', signal),
+  banners: (lang: string, signal?: AbortSignal) =>
+    get<{ banners: Banner[] }>(`v1/destinations/udo/banners?lang=${lang}`, signal),
 };
 
 /** 앱 서버가 주는 상대 경로(/media/...)를 이 사이트에서 열 수 있는 URL 로. */

@@ -4,6 +4,7 @@ import PageMeta from '../components/PageMeta';
 import SectionHeader from '../components/SectionHeader';
 import FerryStatusCard from '../components/FerryStatusCard';
 import InstallButton from '../components/InstallButton';
+import BannerStrip from '../components/BannerStrip';
 import ArtworkGrid from '../components/archive/ArtworkGrid';
 import { useCounts, useWorkList } from '../archive';
 
@@ -100,6 +101,11 @@ export default function Home() {
             </Link>
           ))}
         </div>
+      </section>
+
+      {/* 앱 홈과 같은 배너 — 자료가 없으면 아무것도 그리지 않는다. */}
+      <section className="mt-16">
+        <BannerStrip />
       </section>
 
       <section className="mt-20 rounded-2xl border border-line bg-surface-soft p-6 sm:p-8">
