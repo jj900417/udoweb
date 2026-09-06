@@ -21,7 +21,13 @@ import { useLocale } from '../../i18n';
  * 그 규칙을 건 뒤 STYLE 만 매니페스트에서 받아오게 바꾸면 된다.
  */
 const STYLE = 'https://tiles.openfreemap.org/styles/liberty';
-const ATTRIBUTION = '© OpenStreetMap contributors · OpenFreeMap';
+/*
+ * 지도 위 출처 한 줄.
+ * OpenFreeMap 은 **OpenMapTiles 와 OpenStreetMap 표기를 요구**한다(OpenFreeMap 이름은 선택).
+ * 스타일 JSON 안의 소스별 출처를 그대로 두면 같은 말이 두세 번 겹쳐 길어지므로,
+ * 스타일을 받아 소스의 attribution 을 지우고 이 한 줄로 대신한다.
+ */
+const ATTRIBUTION = '© 우도나우 · © OpenMapTiles · © OpenStreetMap contributors';
 
 /** 우도 전역이 한 화면에 들어오는 범위. */
 const UDO_BOUNDS: [number, number, number, number] = [126.936, 33.488, 126.98, 33.522];
@@ -94,45 +100,91 @@ export default function UdoMap({
     const el = container.current;
     if (!el) return;
     let cancelled = false;
+    let instance: MapLibreMap | null = null;
 
-    const instance = new maplibregl.Map({
-      container: el,
-      style: STYLE,
-      bounds: (bounds ?? UDO_BOUNDS) as [number, number, number, number],
-      fitBoundsOptions: { padding: 24 },
-      attributionControl: false,
-    });
-    instance.addControl(
-      new maplibregl.AttributionControl({ compact: true, customAttribution: ATTRIBUTION }),
-    );
-    instance.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
-    instance.scrollZoom.disable(); // 페이지 스크롤을 가로채지 않는다(모바일 배려)
+    /*
+     * 스타일을 받아 **소스별 출처를 지운 뒤** 넘긴다.
+     * 그대로 두면 지도 위 출처 줄에 같은 말이 두세 번 겹쳐 길어진다.
+     * 필수 표기(OpenMapTiles·OpenStreetMap)는 ATTRIBUTION 한 줄로 대신한다.
+     */
+    const loadStyle = async (): Promise<maplibregl.StyleSpecification | string> => {
+      try {
+        const res = await fetch(STYLE);
+        const style = (await res.json()) as {
+          sources?: Record<string, { url?: string; attribution?: string } & Record<string, unknown>>;
+        };
 
-    instance.on('load', () => {
-      if (cancelled) return;
-      localizeLabels(instance, locale);
-    });
-    /* 타일이 막히면 maplibre 는 조용히 배경만 그린다 — 이유가 보이게 잡아둔다. */
-    instance.on('error', (event) => {
-      const message = String((event as unknown as { error?: { message?: string } }).error?.message ?? '');
-      if (/fetch|load|source|tile/i.test(message) && !cancelled) setTileError(true);
-    });
+        /*
+         * 출처 문구는 스타일이 아니라 **타일 메타(TileJSON)** 안에 들어 있다.
+         * 그래서 메타를 우리가 받아 소스에 펼쳐 넣고 attribution 만 뺀다.
+         * (그냥 두면 지도 위에 같은 말이 두세 번 겹쳐 길어진다.)
+         */
+        await Promise.all(
+          Object.values(style.sources ?? {}).map(async (source) => {
+            delete source.attribution;
+            const metaUrl = source.url;
+            if (!metaUrl || !metaUrl.startsWith('http')) return;
+            try {
+              const meta = (await (await fetch(metaUrl)).json()) as Record<string, unknown>;
+              delete meta.attribution;
+              Object.assign(source, meta);
+              delete source.url;
+            } catch {
+              /* 메타를 못 받으면 원래 url 을 그대로 둔다 — 지도는 떠야 한다 */
+            }
+          }),
+        );
 
-    map.current = instance;
-    setReady(true);
-    /* 개발 중 지도 상태를 콘솔에서 들여다보기 위한 손잡이(프로덕션 빌드에서 제거된다). */
-    if (import.meta.env.DEV) {
-      (window as unknown as { __udoMap?: MapLibreMap }).__udoMap = instance;
-    }
+        return style as unknown as maplibregl.StyleSpecification;
+      } catch {
+        return STYLE; // 못 받으면 원본 스타일 그대로 — 지도가 안 뜨는 것보다 낫다
+      }
+    };
+
+    void (async () => {
+      const style = await loadStyle();
+      if (cancelled || !container.current) return;
+
+      instance = new maplibregl.Map({
+        container: el,
+        style,
+        bounds: (bounds ?? UDO_BOUNDS) as [number, number, number, number],
+        fitBoundsOptions: { padding: 24 },
+        attributionControl: false,
+      });
+      instance.addControl(
+        new maplibregl.AttributionControl({ compact: true, customAttribution: ATTRIBUTION }),
+      );
+      instance.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+      instance.scrollZoom.disable(); // 페이지 스크롤을 가로채지 않는다(모바일 배려)
+
+      const created = instance;
+      created.on('load', () => {
+        if (!cancelled) localizeLabels(created, locale);
+      });
+      /* 타일이 막히면 maplibre 는 조용히 배경만 그린다 — 이유가 보이게 잡아둔다. */
+      created.on('error', (event) => {
+        const message = String(
+          (event as unknown as { error?: { message?: string } }).error?.message ?? '',
+        );
+        if (/fetch|load|source|tile/i.test(message) && !cancelled) setTileError(true);
+      });
+
+      map.current = created;
+      setReady(true);
+      if (import.meta.env.DEV) {
+        (window as unknown as { __udoMap?: MapLibreMap }).__udoMap = created;
+      }
+    })();
 
     return () => {
       cancelled = true;
       setReady(false);
-      instance.remove();
+      instance?.remove();
       map.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locale]);
+  }, [locale, bounds]);
 
   /*
    * 항로 — 스타일이 다 로드된 뒤에만 소스·레이어를 붙일 수 있다.

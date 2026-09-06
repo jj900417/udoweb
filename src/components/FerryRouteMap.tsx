@@ -46,13 +46,5 @@ export default function FerryRouteMap() {
 
   if (pins.length === 0) return null;
 
-  return (
-    <div>
-      <UdoMap pins={pins} lines={lines} bounds={bounds} height={380} />
-      <p className="caption mt-2">
-        {access.routeMapNote}
-        {data?.routes?.length ? ` · ${data.routes.map((r) => r.public_name).join(' · ')}` : ''}
-      </p>
-    </div>
-  );
+  return <UdoMap pins={pins} lines={lines} bounds={bounds} height={380} />;
 }
