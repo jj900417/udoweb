@@ -81,7 +81,13 @@ async function proxyApi(url: URL): Promise<Response> {
       status: r.status,
       headers: {
         'content-type': 'application/json; charset=utf-8',
-        'cache-control': `public, max-age=${ttl}`,
+        /*
+         * 브라우저 캐시는 짧게(최대 30초). 엣지 캐시는 위 cacheTtl 로 이미 앱 서버를
+         * 가려주므로, 여기서 길게 잡아 봐야 얻는 것 없이 **사용자 쪽에 옛 응답이 굳는
+         * 창구**만 하나 더 생긴다. 실제로 카메라 목록이 바뀐 뒤에도 브라우저가 15분간
+         * 옛 목록을 들고 있어 "아까는 됐는데 지금은 안 된다"가 됐다.
+         */
+        'cache-control': `public, max-age=${Math.min(ttl, 30)}`,
       },
     });
   } catch {
