@@ -8,6 +8,7 @@ import { nav } from './nav';
 import { sideNav } from './sideNav';
 import { home } from './home';
 import { about } from './about';
+import { appPage } from './appPage';
 import { eightViews, places, spotsPage } from './spots';
 import { access } from './access';
 import { experiences } from './experiences';
@@ -23,6 +24,7 @@ export const content = {
   sideNav,
   home,
   about,
+  appPage,
   eightViews,
   places,
   spotsPage,

@@ -59,7 +59,7 @@ export const sideNav = {
           { path: '/food', label: '먹거리·가게', count: '' },
         ],
       },
-      { path: '/app', label: '우도 나우 앱', count: '', items: [] },
+      { path: '/app', label: '우도나우', count: '', items: [] },
     ],
   },
 } as const;
