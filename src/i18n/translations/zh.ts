@@ -31,7 +31,7 @@ export const zh: Overlay = {
 
   ui: {
     brand: { name: '牛岛', sub: 'UDO' },
-    actions: { more: '查看更多', call: '拨打电话', openMap: '在地图中查看', openLink: '打开', retry: '重试', viewAll: '查看全部' },
+    actions: { more: '查看更多', call: '拨打电话', openMap: '在地图中查看', openLink: '打开', retry: '重试', viewAll: '查看全部', expand: '展开', collapse: '收起' },
     states: { loading: '加载中…', error: '无法加载信息。', empty: '暂无内容。', updatedAt: '更新时间' },
     ferry: {
       title: '运航状态',
@@ -78,7 +78,13 @@ export const zh: Overlay = {
       wave: '浪高',
       compass: ['北', '北北东', '东北', '东北东', '东', '东南东', '东南', '南南东', '南', '南南西', '西南', '西南西', '西', '西北西', '西北', '北北西'],
     },
-    timetable: { title: '运航时刻表', note: '时刻会随季节与天气变化。' },
+    timetable: {
+      title: '运航时刻表',
+      note: '时刻会随季节与天气变化。实际运航时间可能有所不同。',
+      first: '首班',
+      last: '末班',
+      fromNote: '以{port}出发为准',
+    },
     shops: { title: '店铺', category: '类别', hours: '营业时间' },
     cctv: { title: '港口监控', note: '来源：济州市', failed: '无法加载视频，请稍后再试。' },
     app: { about: '关于牛岛 Now', install: '安装', openWeb: '在网页打开', comingSoon: '应用即将发布' },

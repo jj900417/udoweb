@@ -34,7 +34,7 @@ export const ja: Overlay = {
 
   ui: {
     brand: { name: '牛島', sub: 'UDO' },
-    actions: { more: 'もっと見る', call: '電話する', openMap: '地図で見る', openLink: '開く', retry: '再試行', viewAll: 'すべて見る' },
+    actions: { more: 'もっと見る', call: '電話する', openMap: '地図で見る', openLink: '開く', retry: '再試行', viewAll: 'すべて見る', expand: '開く', collapse: '閉じる' },
     states: { loading: '読み込み中…', error: '情報を取得できませんでした。', empty: '表示する内容がまだありません。', updatedAt: '基準時刻' },
     ferry: {
       title: '運航状況',
@@ -81,7 +81,13 @@ export const ja: Overlay = {
       wave: '波高',
       compass: ['北', '北北東', '北東', '東北東', '東', '東南東', '南東', '南南東', '南', '南南西', '南西', '西南西', '西', '西北西', '北西', '北北西'],
     },
-    timetable: { title: '運航時刻表', note: '時刻は季節・天候により変わります。' },
+    timetable: {
+      title: '運航時刻表',
+      note: '時刻は季節・天候により変わります。実際の運航時刻は異なる場合があります。',
+      first: '始発',
+      last: '最終',
+      fromNote: '{port} 発基準',
+    },
     shops: { title: '店', category: '業種', hours: '営業時間' },
     cctv: { title: '港のCCTV', note: '出典: 済州市', failed: '映像を読み込めませんでした。しばらくしてからお試しください。' },
     app: { about: '牛島ナウとは', install: 'インストール', openWeb: 'ウェブで開く', comingSoon: 'アプリ公開準備中' },

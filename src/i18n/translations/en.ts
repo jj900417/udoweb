@@ -66,6 +66,8 @@ export const en: Overlay = {
       openLink: 'Open',
       retry: 'Retry',
       viewAll: 'View all',
+      expand: 'Show',
+      collapse: 'Hide',
     },
     states: {
       loading: 'Loading…',
@@ -134,7 +136,13 @@ export const en: Overlay = {
         'W', 'WNW', 'NW', 'NNW',
       ],
     },
-    timetable: { title: 'Timetable', note: 'Times change with season and weather.' },
+    timetable: {
+      title: 'Timetable',
+      note: 'Times change with season and weather. Actual departures may differ.',
+      first: 'First',
+      last: 'Last',
+      fromNote: 'departing {port}',
+    },
     shops: { title: 'Shops', category: 'Category', hours: 'Hours' },
     cctv: {
       title: 'Harbour CCTV',

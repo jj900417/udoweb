@@ -31,8 +31,10 @@ export default function TimetableCard() {
                 <p className="text-sm font-semibold text-ink">{season.label}</p>
                 {(season.first || season.last) && (
                   <p className="mt-0.5 text-xs text-faint">
-                    첫 배 {season.first} · 막 배 {season.last}
-                    {season.first_from ? ` (${season.first_from} 출발 기준)` : ''}
+                    {ui.timetable.first} {season.first} · {ui.timetable.last} {season.last}
+                    {season.first_from
+                      ? ` (${ui.timetable.fromNote.replace('{port}', season.first_from)})`
+                      : ''}
                   </p>
                 )}
                 <div className="mt-2 space-y-2">
@@ -52,9 +54,11 @@ export default function TimetableCard() {
           </div>
         </div>
       ))}
-      <p className="text-xs text-faint">
-        {data.note} {ui.timetable.note}
-      </p>
+      {/*
+        * 앱 서버가 주는 note 는 쓰지 않는다. 우리 안내문과 같은 말을 한 번 더 하는 데다,
+        * 한국어 문장이라 영어·일본어·중국어 화면에도 그대로 새어 나왔다.
+        */}
+      <p className="text-xs text-faint">{ui.timetable.note}</p>
     </div>
   );
 }

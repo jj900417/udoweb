@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useContent } from '../i18n';
 import PageMeta from '../components/PageMeta';
@@ -12,6 +13,7 @@ import FestivalList from '../components/FestivalList';
  */
 export default function NowHub() {
   const { hubs, harbor, ui } = useContent();
+  const [timetableOpen, setTimetableOpen] = useState(false);
 
   return (
     <>
@@ -26,8 +28,30 @@ export default function NowHub() {
       </div>
 
       <div className="mt-12">
-        <SectionHeader title={hubs.now.sections.timetable} />
-        <TimetableCard />
+        {/*
+          * 시간표는 기본으로 접어 둔다. 이 화면에서 사람들이 먼저 보려는 것은
+          * '오늘 배가 뜨는지'(운항 상태)이고, 시간표는 필요할 때 펼쳐 보는 참고 자료다.
+          * 접혀 있을 때는 아예 그리지 않는다 — 안 보는 표를 앱 서버에서 받아올 이유가 없다.
+          */}
+        <SectionHeader
+          title={hubs.now.sections.timetable}
+          action={
+            <button
+              type="button"
+              onClick={() => setTimetableOpen((open) => !open)}
+              aria-expanded={timetableOpen}
+              aria-controls="now-timetable"
+              className="text-sm font-semibold text-link"
+            >
+              {timetableOpen ? ui.actions.collapse : ui.actions.expand}
+            </button>
+          }
+        />
+        {timetableOpen && (
+          <div id="now-timetable">
+            <TimetableCard />
+          </div>
+        )}
       </div>
 
       <div className="mt-12">

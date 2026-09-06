@@ -8,6 +8,8 @@ export const ui = {
     openLink: '바로가기',
     retry: '다시 시도',
     viewAll: '전체 보기',
+    expand: '펼쳐 보기',
+    collapse: '접기',
   },
   states: {
     loading: '불러오는 중…',
@@ -94,7 +96,17 @@ export const ui = {
       '서', '서북서', '북서', '북북서',
     ],
   },
-  timetable: { title: '운항 시간표', note: '시간은 계절·기상에 따라 바뀌어요.' },
+  /*
+   * 시간표 라벨은 여기 둔다 — 예전에는 '첫 배'·'막 배'·'출발 기준'이 컴포넌트에
+   * 박혀 있어서 언어를 바꿔도 그 줄만 한국어로 남았다(불변식 1 위반).
+   */
+  timetable: {
+    title: '운항 시간표',
+    note: '시간은 계절·기상에 따라 바뀌어요. 실제 운항 시간은 다를 수 있어요.',
+    first: '첫 배',
+    last: '막 배',
+    fromNote: '{port} 출발 기준',
+  },
   shops: { title: '가게', category: '업종', hours: '영업시간' },
   cctv: {
     title: '항구 CCTV',
