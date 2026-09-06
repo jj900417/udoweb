@@ -27,20 +27,6 @@ export default function About() {
         ))}
       </div>
 
-      <div className="mt-14">
-        <SectionHeader title={about.keywordsTitle} />
-        <div className="grid gap-4 sm:grid-cols-2">
-          {about.keywords.map((k) => (
-            <article key={k.title} className="card">
-              <div className="text-2xl" aria-hidden>
-                {k.icon}
-              </div>
-              <h3 className="mt-2 font-bold text-ink">{k.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{k.desc}</p>
-            </article>
-          ))}
-        </div>
-      </div>
     </>
   );
 }

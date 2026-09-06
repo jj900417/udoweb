@@ -27,6 +27,7 @@ export const about = {
     { label: '성산항에서', value: '배로 약 15분', note: '' },
     { label: '가장 높은 곳', value: '우도봉 132 m', note: 'VERIFY' },
   ],
+  /* 화면에서는 잠시 뺐다(나중에 다시 넣기로 함) — 문안은 여기 그대로 둔다. */
   keywordsTitle: '우도를 이해하는 네 가지',
   /* 우도를 이해하는 키워드 */
   keywords: [
