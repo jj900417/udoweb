@@ -75,7 +75,11 @@ export default function ArchiveHome() {
       </ArchiveSection>
 
       {/* 아카이브의 나머지 갈래 — 자료가 없어도 어디로 가는지는 보여준다. */}
-      <ArchiveSection title={archive.sections.collections.title} sub={archive.sections.collections.sub}>
+      <ArchiveSection
+        title={archive.sections.collections.title}
+        sub={archive.sections.collections.sub}
+        desc={archive.sections.collections.desc}
+      >
         {collections.length === 0 ? (
           <EmptyArchiveState />
         ) : (

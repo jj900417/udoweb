@@ -25,9 +25,13 @@ export const archive = {
   },
 
   sections: {
-    artists: { title: '우도를 기록한 사람들', sub: 'Artists', desc: '섬을 오래 찍고 쓰고 그린 이들' },
+    artists: {
+      title: '우도를 기록하는 사람들',
+      sub: 'Artists',
+      desc: '우도를 찍고 그린 분들',
+    },
     works: { title: '사진과 기록', sub: 'Works', desc: '남겨진 작품과 기록물' },
-    collections: { title: '컬렉션', sub: 'Collections', desc: '주제로 묶어 읽는 자료' },
+    collections: { title: '컬렉션', sub: 'Collections', desc: '사진으로 읽는 우도' },
     exhibitions: { title: '기획전', sub: 'Exhibitions', desc: '온라인으로 여는 전시' },
     library: {
       title: '이 시간을 뒷받침하는 자료',

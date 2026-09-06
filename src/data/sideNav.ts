@@ -17,11 +17,16 @@ export const sideNav = {
         path: '/archive',
         label: '우도의 기록',
         count: '',
+        /*
+         * 작품(/archive/works)과 기획전(/archive/exhibitions)은 **일부러 메뉴에서 뺐다.**
+         * - 작품: 사람·컬렉션을 통해 들어가는 것이 자연스럽고, 사진 낱장 목록을 앞세우면
+         *   아카이브가 이미지 창고처럼 보인다.
+         * - 기획전: 실제로 전시를 열 때 켠다. 자료도 없이 메뉴만 있으면 빈 약속이 된다.
+         * 두 URL 과 화면은 그대로 살아 있다 — 여기 한 줄씩 되살리면 다시 나타난다.
+         */
         items: [
           { path: '/archive/artists', label: '사람', count: 'artist' },
-          { path: '/archive/works', label: '작품', count: 'work' },
           { path: '/archive/collections', label: '컬렉션', count: 'collection' },
-          { path: '/archive/exhibitions', label: '기획전', count: 'exhibition' },
           { path: '/history', label: '시간', count: 'history' },
         ],
       },
