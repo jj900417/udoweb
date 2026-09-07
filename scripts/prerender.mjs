@@ -24,7 +24,15 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 
-const { render, contentFor } = await import(join(dist, 'server/entry-server.js'));
+/*
+ * SSR 번들은 `dist/` **밖**에 둬요.
+ *
+ * 안에 두면 Cloudflare 가 `dist/` 를 통째로 공개 자산으로 올려서
+ * `/server/entry-server.js` 로 서빙돼요. 지금 그 안에 비밀은 없지만(클라이언트
+ * 번들에 이미 있는 코드와 같은 문안), 서버 빌드 산출물이 공개 경로에 있는 건
+ * 그 자체로 잘못이고 언젠가 진짜 새는 자리가 돼요.
+ */
+const { render, contentFor } = await import(join(root, '.ssr/entry-server.js'));
 
 const template = await readFile(join(dist, 'index.html'), 'utf8');
 
