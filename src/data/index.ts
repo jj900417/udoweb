@@ -17,9 +17,11 @@ import { tips } from './tips';
 import { ui } from './ui';
 import { archive } from './archive';
 import { hubs, harbor } from './hubs';
+import { seo } from './seo';
 
 export const content = {
   site,
+  seo,
   nav,
   sideNav,
   home,

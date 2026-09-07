@@ -41,7 +41,8 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
 }
 
-function merge<T>(base: T, over: unknown): T {
+/** 빌드 시 prerender 도 같은 병합을 써요 — 화면과 검색 결과가 갈라지지 않게. */
+export function merge<T>(base: T, over: unknown): T {
   if (over === undefined || over === null) return base;
   if (Array.isArray(base)) {
     if (!Array.isArray(over)) return base;
@@ -128,8 +129,21 @@ function resolveLocale(): LocaleCode {
   return readSessionPick() ?? detectLocale() ?? DEFAULT_LOCALE;
 }
 
-export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<LocaleCode>(resolveLocale);
+export function LocaleProvider({
+  children,
+  forced,
+}: {
+  children: ReactNode;
+  /**
+   * 주소가 정한 언어(`/ja/...`). 있으면 이게 이겨요.
+   *
+   * 접두어 없는 주소에서는 예전 그대로 기기 설정이 이겨요 — 규칙이 바뀐 게
+   * 아니라, 사람이 **주소로 언어를 직접 말한 경우**가 새로 생긴 거예요.
+   * 그래야 일본어 페이지에 링크를 걸거나 검색결과에서 들어올 수 있어요.
+   */
+  forced?: LocaleCode;
+}) {
+  const [locale, setLocaleState] = useState<LocaleCode>(() => forced ?? resolveLocale());
 
   const setLocale = useCallback((l: LocaleCode) => {
     setLocaleState(l);
