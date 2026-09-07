@@ -89,6 +89,11 @@ function head({ path, locale, seo, siteName }) {
     `<meta property="og:url" content="${escapeHtml(url)}">`,
     `<meta property="og:site_name" content="${escapeHtml(siteName)}">`,
     `<meta property="og:locale" content="${escapeHtml(locale)}">`,
+    /*
+     * 절대 URL 이어야 해요. 카톡·페북 스크래퍼는 상대 경로를 해석하지 않아서
+     * `/og.png` 라고 쓰면 이미지가 아예 안 떠요.
+     */
+    `<meta property="og:image" content="${SITE_URL}/og.png">`,
     '<meta name="twitter:card" content="summary_large_image">',
   ].join('\n    ');
 }
