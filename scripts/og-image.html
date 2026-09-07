@@ -2,50 +2,54 @@
 <!--
   public/og.png 의 원본.
 
-  카톡·페이스북·트위터로 공유될 때 뜨는 카드 이미지예요. 사진이 아니라 표식이라
-  정직해요 — 우리가 찍지 않은 우도 사진을 쓰거나, 없는 장면을 만들어 넣지 않아요.
-  파비콘과 같은 시각 언어(해·수평선)와 브랜드 시안(--color-brand)을 씁니다.
+  카톡·페이스북·트위터로 공유될 때 뜨는 카드 이미지예요.
 
-  문안이 바뀌면 다시 만들어요. 브라우저를 1200×630 으로 열어 이 파일을 띄우고
-  스크린샷을 찍어 public/og.png 로 저장하면 돼요. 헤드리스로도 같아요:
+  사진이 주인공이고 글자는 아래쪽에만 얹어요 — 하늘과 실루엣을 가리지 않으려고요.
+  scrim(어두운 그라데이션)은 아래 절반에만 걸어서 글자만 읽히게 해요.
 
-    (viewport 1200×630, deviceScaleFactor 1) → screenshot → public/og.png
+  다시 만들려면: 원본 사진 경로를 `.photo` 의 `background-image` 에 맞춘 뒤
+  브라우저를 **1200×630** 으로 열어 스크린샷을 찍어 public/og.png 로 저장해요.
+  (deviceScaleFactor 1)
 
-  ⚠️ 실제 우도 사진이 생기면 그걸로 바꾸는 편이 좋아요. 공유될 때 첫인상이라
-  진짜 섬 사진을 이길 수는 없어요.
+  ⚠️ 사진의 권리는 확인하고 쓸 것. 남의 사진을 공유 카드에 쓰면 사이트 전체가
+  같이 문제가 돼요.
+  ⚠️ 이미 공유된 링크는 캐시 때문에 바로 안 바뀌어요. 페이스북은 Sharing Debugger
+  에서 갱신할 수 있지만 카카오톡은 갱신 도구가 없어요 — 초기에 확정하는 게 좋아요.
 -->
 <html lang="ko"><head><meta charset="utf-8"><style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     width: 1200px; height: 630px; overflow: hidden; position: relative;
-    /* 브랜드 시안(--color-brand #00a5cd)에서 깊은 바다 쪽으로. */
-    background: linear-gradient(170deg, #0a4d63 0%, #00a5cd 55%, #4cc9e8 100%);
     font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-    color: #fff;
+    color: #fff; background: #0a1420;
   }
-  /* 파비콘과 같은 시각 언어 — 해와 수평선. 사진이 아니라 표식이라 정직해요. */
-  .sun {
-    position: absolute; right: 148px; top: 128px;
-    width: 132px; height: 132px; border-radius: 50%;
-    background: #ffd166; box-shadow: 0 0 90px 30px rgba(255, 209, 102, .28);
+  .photo {
+    position: absolute; inset: 0;
+    background-image: url('./og-source.png');
+    background-size: cover; background-position: center 42%;
   }
-  .waves { position: absolute; left: 0; right: 0; bottom: 0; height: 250px; }
-  .content { position: absolute; left: 96px; top: 188px; }
+  /* 아래쪽만 살짝 어둡게 — 사진을 덮지 않고 글자만 읽히게 해요. */
+  .scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(4, 10, 18, .78) 0%, rgba(4, 10, 18, .35) 26%, rgba(4, 10, 18, 0) 52%);
+  }
+  .content { position: absolute; left: 72px; bottom: 66px; }
   .name {
-    font-size: 132px; font-weight: 800; letter-spacing: -.03em; line-height: 1;
-    text-shadow: 0 3px 24px rgba(0, 40, 55, .3);
+    font-size: 96px; font-weight: 800; letter-spacing: -.03em; line-height: 1;
+    text-shadow: 0 2px 28px rgba(0, 0, 0, .55);
   }
-  .tagline { margin-top: 26px; font-size: 40px; font-weight: 500; opacity: .95; letter-spacing: -.01em; }
+  .tagline {
+    margin-top: 18px; font-size: 32px; font-weight: 500; letter-spacing: -.01em;
+    opacity: .94; text-shadow: 0 2px 16px rgba(0, 0, 0, .6);
+  }
   .domain {
-    position: absolute; left: 96px; bottom: 64px;
-    font-size: 27px; font-weight: 600; letter-spacing: .06em; opacity: .82;
+    position: absolute; right: 72px; bottom: 74px;
+    font-size: 24px; font-weight: 600; letter-spacing: .08em; opacity: .8;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, .7);
   }
 </style></head><body>
-  <div class="sun"></div>
-  <svg class="waves" viewBox="0 0 1200 250" preserveAspectRatio="none">
-    <path d="M0 150c100 0 100-40 200-40s100 40 200 40 100-40 200-40 100 40 200 40 100-40 200-40 100 40 200 40v110H0z" fill="#ffffff" opacity=".13"/>
-    <path d="M0 190c100 0 100-36 200-36s100 36 200 36 100-36 200-36 100 36 200 36 100-36 200-36 100 36 200 36v70H0z" fill="#ffffff" opacity=".2"/>
-  </svg>
+  <div class="photo"></div>
+  <div class="scrim"></div>
   <div class="content">
     <div class="name">우도</div>
     <div class="tagline">제주 바다 위의 작은 섬 — 기록과 지금</div>
