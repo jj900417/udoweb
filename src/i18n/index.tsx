@@ -68,23 +68,74 @@ type Ctx = {
 
 const LocaleContext = createContext<Ctx | null>(null);
 
-function readStoredLocale(): LocaleCode {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY) as LocaleCode | null;
-    if (saved && saved in overlays) return saved;
-  } catch {
-    /* storage blocked — fall through to default */
+/*
+ * 브라우저·폰이 알려주는 선호 언어에서 우리가 가진 언어를 고른다.
+ *
+ * navigator.languages 는 사용자가 정한 **우선순위 목록**이다('ja-JP','en-US','ko').
+ * 앞에서부터 보며 처음 맞는 것을 쓴다 — 'ja-JP' 처럼 지역이 붙어 오므로 앞의
+ * 기본 태그만 본다. 중국어는 zh-CN·zh-TW·zh-Hans 가 모두 오지만 우리는 한 벌뿐이라
+ * 전부 zh 로 모은다.
+ *
+ * 하나도 못 맞추면(프랑스어 등 우리가 가진 게 없는 언어) 기본값인 한국어로 둔다.
+ */
+function detectLocale(): LocaleCode | null {
+  const preferred =
+    typeof navigator === 'undefined'
+      ? []
+      : navigator.languages?.length
+        ? navigator.languages
+        : navigator.language
+          ? [navigator.language]
+          : [];
+  if (preferred.length === 0) return null;
+
+  for (const tag of preferred) {
+    const base = tag.toLowerCase().split('-')[0];
+    if (base in overlays) return base as LocaleCode;
   }
-  return DEFAULT_LOCALE;
+  return null;
+}
+
+/*
+ * 언어를 정하는 규칙 — **기기 설정이 항상 이긴다.**
+ *
+ * 들어올 때마다 폰·브라우저의 언어를 다시 읽어 그대로 맞춘다. 폰을 영어로 바꾸면
+ * 영어로, 한국어로 되돌리면 한국어로 나온다. 감지가 안 되면 한국어(DEFAULT_LOCALE).
+ *
+ * 선택기로 직접 고른 언어는 **그 방문 동안만** 유지한다(sessionStorage). 그래서
+ * localStorage 가 아니다 — localStorage 에 넣으면 한 번의 선택이 기기 설정을 영영
+ * 눌러버려서, 나중에 폰 언어를 바꿔도 웹이 따라가지 못한다.
+ */
+function readSessionPick(): LocaleCode | null {
+  try {
+    const pick = sessionStorage.getItem(STORAGE_KEY);
+    return pick && pick in overlays ? (pick as LocaleCode) : null;
+  } catch {
+    return null; /* storage 가 막힌 환경 — 감지만으로 간다 */
+  }
+}
+
+function resolveLocale(): LocaleCode {
+  /*
+   * 예전 버전이 localStorage 에 넣어 둔 선택을 지운다. 남겨 두면 아무 힘도 없으면서
+   * 나중에 저장소를 들여다볼 때 혼란만 준다.
+   */
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
+  return readSessionPick() ?? detectLocale() ?? DEFAULT_LOCALE;
 }
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<LocaleCode>(readStoredLocale);
+  const [locale, setLocaleState] = useState<LocaleCode>(resolveLocale);
 
   const setLocale = useCallback((l: LocaleCode) => {
     setLocaleState(l);
     try {
-      localStorage.setItem(STORAGE_KEY, l);
+      /* 이번 방문 동안만 기억한다 — 다음에 들어오면 다시 기기 언어를 따른다. */
+      sessionStorage.setItem(STORAGE_KEY, l);
     } catch {
       /* ignore */
     }
