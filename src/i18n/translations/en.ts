@@ -18,6 +18,43 @@ export const en: Overlay = {
     },
   },
 
+  /*
+   * What a searcher reads in the results before deciding to click.
+   * Keys are paths, so these merge by key — order does not matter.
+   */
+  seo: {
+    '/': {
+      title: 'Udo — records and the island today',
+      description:
+        'The history, people and landscapes of Udo off Jeju, alongside today\u2019s ferry, bus and shop information.',
+    },
+    '/about': {
+      title: 'About Udo — what kind of island is it',
+      description: 'What Udo, the small island east of Jeju, is like and what there is to see.',
+    },
+    '/now': {
+      title: 'Udo now — ferries, weather, current conditions',
+      description: 'Whether the boats are running, what the weather is doing, how the harbour looks right now.',
+    },
+    '/travel': { title: 'Visiting Udo', description: 'What to know before your first trip — getting there, what to see, what to eat, what to watch for.' },
+    '/access': { title: 'Getting to Udo — ferries and harbours', description: 'Ferries from Seongsan, where the harbours are, sailing times and fares.' },
+    '/spots': { title: 'What to see on Udo — the Eight Views', description: 'Udobong, Geommeolle, Seobinbaeksa and the other places worth the walk.' },
+    '/experience': { title: 'Things to do on Udo', description: 'Ways to spend a day on the island.' },
+    '/food': { title: 'Eating on Udo — peanuts and seafood', description: 'Peanut ice cream, seafood, and what else the island puts on a plate.' },
+    '/tips': { title: 'Udo travel tips — before you go', description: 'Ferry times, getting around the island, what to bring.' },
+    '/harbor': { title: 'Udo harbours — right now', description: 'Cheonjin and Haumokdong harbours as they look today.' },
+    '/app': { title: 'The Udo Now app', description: 'Is the boat running, when is the bus — the things a visitor needs, in one app.' },
+    '/archive': { title: 'The Udo archive', description: 'Keeping a record before it goes. People and works, history and voices.' },
+    '/archive/artists': { title: 'People who recorded Udo', description: 'Those who kept Udo in photographs and paintings.' },
+    '/archive/works': { title: 'Works — the Udo archive', description: 'Photographs and paintings of the island.' },
+    '/archive/collections': { title: 'Collections — the Udo archive', description: 'Records of Udo gathered by theme.' },
+    '/archive/exhibitions': { title: 'Exhibitions about Udo', description: 'A record of exhibitions that have shown the island.' },
+    '/archive/library': { title: 'Udo reading room', description: 'Books, documents and sources about Udo.' },
+    '/history': { title: 'The history of Udo', description: 'From the first people to settle here to the island today.' },
+    '/voices': { title: 'Voices of Udo', description: 'Stories told by the people who have lived here.' },
+    '/sounds': { title: 'The sounds of Udo', description: 'Waves, wind, and what else the island sounds like.' },
+  },
+
   nav: [{ label: 'Home' }, { label: 'Udo' }, { label: 'Udo Now' }],
 
   sideNav: {

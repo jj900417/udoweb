@@ -15,7 +15,23 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "not_found_handling": "single-page-application",
+    /*
+     * 없는 주소는 진짜 404 로 답한다.
+     *
+     * 예전에는 SPA 폴백이라 아무 주소나 홈 HTML 을 200 으로 돌려줬다. 사람에게는
+     * 티가 안 나지만 검색엔진에는 "그 주소에 페이지가 있다"는 뜻이라, 없는 페이지가
+     * 색인되고 크롤 예산이 거기로 샌다(soft 404).
+     *
+     * ⚠️ 이제 **prerender 한 경로만 열린다.** 새 페이지·아카이브 상세를 추가하면
+     * scripts/prerender.mjs 대상에 넣어야 한다 — 안 넣으면 그 주소가 404 가 된다.
+     * (CLAUDE.md '검색엔진에 보이는 방식' 절)
+     */
+    "not_found_handling": "404-page",
+    /*
+     * `/about` 을 그대로 서빙한다. 기본값은 `/about/` 로 307 을 거는데, 그러면
+     * canonical(`/about`)과 실제 주소가 달라져서 검색엔진이 둘을 저울질하게 된다.
+     */
+    "html_handling": "drop-trailing-slash",
     // 모든 요청이 Worker 를 먼저 지나게 한다.
     // ["/api/*","/media/*"] 로 좁혀 두면 정적 자산(HTML 포함)이 Worker 를 건너뛰어
     // http→https 리다이렉트와 보안 헤더가 적용되지 않는다(실제로 그랬다).

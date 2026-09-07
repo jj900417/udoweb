@@ -8,6 +8,33 @@ export const zh: Overlay = {
     app: { name: '牛岛 Now', desc: '今天开船吗、公交何时到、店铺信息 — 牛岛旅行应用' },
   },
 
+  /* 搜索结果中显示的文字。键是路径，因此顺序无关。 */
+  seo: {
+    '/': {
+      title: '牛岛 — 记录与此刻',
+      description: '记录济州牛岛的历史、人与风景，同时提供船班、巴士与店铺的今日信息。',
+    },
+    '/about': { title: '关于牛岛 — 这是一座什么样的岛', description: '济州东侧的小岛牛岛是什么样的地方，有什么可以看。' },
+    '/now': { title: '此刻的牛岛 — 船班・天气・现况', description: '今天船开不开、天气如何、港口现在是什么样子。' },
+    '/travel': { title: '牛岛旅行指南', description: '第一次去要知道的事 — 怎么去、看什么、吃什么、注意什么。' },
+    '/access': { title: '前往牛岛 — 船班与港口', description: '从城山港出发的船班、港口位置、时刻与票价。' },
+    '/spots': { title: '牛岛景点 — 牛岛八景', description: '牛岛峰、黑沙海岸、西滨白沙等值得一走的地方。' },
+    '/experience': { title: '在牛岛可以做的事', description: '在岛上度过一天的方式。' },
+    '/food': { title: '牛岛美食 — 花生与海鲜', description: '从花生冰淇淋到海鲜，岛上能尝到的味道。' },
+    '/tips': { title: '牛岛旅行提示 — 出发前', description: '船班时间、岛内交通、随身物品。' },
+    '/harbor': { title: '牛岛港口 — 此刻', description: '天津港与下牛木洞港现在的样子与船班状况。' },
+    '/app': { title: '牛岛 Now 应用', description: '船开不开、巴士何时来 — 旅行所需，集于一处。' },
+    '/archive': { title: '牛岛档案', description: '在消失之前留下的牛岛记录。人与作品，历史与声音。' },
+    '/archive/artists': { title: '记录牛岛的人们', description: '用照片与绘画留下牛岛的人们。' },
+    '/archive/works': { title: '作品 — 牛岛档案', description: '拍摄与描绘牛岛的作品。' },
+    '/archive/collections': { title: '专题 — 牛岛档案', description: '按主题整理的牛岛记录。' },
+    '/archive/exhibitions': { title: '牛岛展览记录', description: '以牛岛为题的展览记录。' },
+    '/archive/library': { title: '牛岛资料室', description: '关于牛岛的书籍、文献与资料。' },
+    '/history': { title: '牛岛的历史', description: '从有人定居开始，到今天的岛。' },
+    '/voices': { title: '牛岛人的声音', description: '记录在岛上生活过的人们讲述的故事。' },
+    '/sounds': { title: '牛岛的声音', description: '海浪与风，岛上能听到的声音。' },
+  },
+
   nav: [{ label: '首页' }, { label: '牛岛' }, { label: '此刻的牛岛' }],
 
   sideNav: {

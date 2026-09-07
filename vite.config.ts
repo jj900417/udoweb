@@ -7,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
  * path /api/udo/* (in production the Cloudflare Worker does this — see
  * worker/index.ts). In dev, Vite proxies it so the browser never hits CORS.
  */
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => ({
   plugins: [react(), tailwindcss()],
   build: {
     rollupOptions: {
@@ -15,10 +15,11 @@ export default defineConfig({
         /*
          * 지도 엔진은 크고(≈250KB gz) 거의 바뀌지 않는다. 앱 코드와 분리해 두면
          * 사이트를 배포해도 지도 청크는 브라우저 캐시에 그대로 남는다.
+         *
+         * SSR 빌드에는 적용하지 않는다 — 거기서 maplibre-gl 은 external 이라
+         * 청크로 묶을 대상이 아니고, 묶으려 하면 빌드가 실패한다.
          */
-        manualChunks: {
-          map: ['maplibre-gl'],
-        },
+        manualChunks: isSsrBuild ? undefined : { map: ['maplibre-gl'] },
       },
     },
   },
@@ -37,4 +38,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));

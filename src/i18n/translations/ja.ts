@@ -8,6 +8,33 @@ export const ja: Overlay = {
     app: { name: '牛島ナウ', desc: '船は出るのか、バスはいつ来るのか、店の情報まで — 牛島の旅アプリ' },
   },
 
+  /* 検索結果で読まれる文章。キーはパスなので、順序は関係ありません。 */
+  seo: {
+    '/': {
+      title: '牛島 — 記録と今',
+      description: '済州の牛島の歴史・人・風景を記録し、船便やバス、店の今日の情報もお伝えします。',
+    },
+    '/about': { title: '牛島について — どんな島ですか', description: '済州の東にある小さな島、牛島がどんな場所で何が見られるかをご案内します。' },
+    '/now': { title: '今の牛島 — 船便・天気・現在の様子', description: '今日は船が出るか、天気はどうか、港は今どんな様子かを確認できます。' },
+    '/travel': { title: '牛島の旅案内', description: '初めて行く方へ — 行き方、見どころ、食べ物、気をつけること。' },
+    '/access': { title: '牛島への行き方 — 船便と港', description: '城山港からの船便、港の位置、時刻と運賃をご案内します。' },
+    '/spots': { title: '牛島の見どころ — 牛島八景', description: '牛島峰・黒砂海岸・西浜白沙など、歩く価値のある場所を集めました。' },
+    '/experience': { title: '牛島でできること', description: '島での一日の過ごし方をご紹介します。' },
+    '/food': { title: '牛島の食べ物 — 落花生と海の幸', description: '落花生アイスから海産物まで、島で味わえるもの。' },
+    '/tips': { title: '牛島の旅のヒント — 行く前に', description: '船の時間、島内の移動、持ち物など、知っておくと安心なこと。' },
+    '/harbor': { title: '牛島の港 — 今の様子', description: '天津港・下牛木洞港の今の様子と船便の状況。' },
+    '/app': { title: '牛島ナウ アプリ', description: '船は出るか、バスはいつ来るか — 旅に必要なものをひとつに。' },
+    '/archive': { title: '牛島アーカイブ', description: '消える前に残しておく牛島の記録。人と作品、歴史と声。' },
+    '/archive/artists': { title: '牛島を記録した人たち', description: '写真や絵で牛島を残してきた人たちをご紹介します。' },
+    '/archive/works': { title: '作品 — 牛島アーカイブ', description: '牛島を写した写真と絵。' },
+    '/archive/collections': { title: 'コレクション — 牛島アーカイブ', description: 'テーマごとにまとめた牛島の記録。' },
+    '/archive/exhibitions': { title: '牛島の展示記録', description: '牛島を扱った展示の記録。' },
+    '/archive/library': { title: '牛島資料室', description: '牛島に関する本・文献・資料の一覧。' },
+    '/history': { title: '牛島の歴史', description: '人が住み始めた頃から今まで、島が過ごしてきた時間。' },
+    '/voices': { title: '牛島の人たちの声', description: '島に暮らしてきた人たちが語る話を記録します。' },
+    '/sounds': { title: '牛島の音', description: '波と風、島で聞こえる音を記録します。' },
+  },
+
   nav: [{ label: 'ホーム' }, { label: '牛島' }, { label: '今の牛島' }],
 
   sideNav: {

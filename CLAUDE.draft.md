@@ -55,9 +55,45 @@ Cloudflare Workers 배포(`wrangler.jsonc` + `worker/index.ts`).
 11. **배포는 사람이.** `wrangler deploy` 를 자동 실행하지 않는다. 도메인
    `udonow.co.kr` / `www.udonow.co.kr` 은 `wrangler.jsonc` 의 `routes` 가 잡는다.
 
+## 검색엔진에 보이는 방식 (prerender)
+
+`npm run build` 는 세 단계다: 클라이언트 빌드 → **SSR 빌드** → **prerender**.
+`scripts/prerender.mjs` 가 경로 × 언어마다 HTML 을 미리 그려 `dist/` 에 파일로 쓴다.
+
+```
+dist/index.html            /            (한국어 = canonical, 접두어 없음)
+dist/about/index.html      /about
+dist/ja/about/index.html   /ja/about
+```
+
+예전에는 빈 `<div id="root">` 만 나갔다 — 사람에게는 잘 보이지만 크롤러에게는 빈
+페이지였고, 네이버는 JS 를 사실상 실행하지 않는다. 그래서 글이 아무리 많아도 검색에
+없었다.
+
+⚠️ **바뀌는 정보는 굽지 않는다.** 배 시간·요금·가게는 앱 서버가 단일 소스라(불변식 #4)
+prerender 가 부르지 않는다. 그런 컴포넌트는 빈 상태로 구워지고 브라우저가 채운다.
+굳은 배 시간이 검색 결과에 남으면 마지막 배를 놓치는 사고가 된다(불변식 #8).
+
+⚠️ **새 페이지를 만들면 `src/data/seo.ts` 에도 한 줄 추가한다.** prerender·sitemap 이
+그 목록으로 돈다 — 빠뜨리면 그 페이지만 예전처럼 빈 껍데기로 나간다.
+
+⚠️ **아카이브 레코드를 채우면 상세 경로도 prerender 대상에 넣어야 한다.** 지금은
+레코드가 0개라 `:slug` 인스턴스가 없어서 목록 페이지만 굽는다. 레코드가 생기면
+`scripts/prerender.mjs` 가 `src/archive` 에서 id 를 읽어 경로를 만들도록 넓힌다.
+
+### 언어와 주소
+
+한국어는 접두어 없이(`/about`), 나머지는 `/ja/about` 처럼 간다. 접두어가 있으면 그
+언어로 **고정**되고, 없으면 예전 그대로 기기 설정을 따른다 — 기존 주소와 기존 동작은
+하나도 안 바뀐다. 링크는 고치지 않았다: React Router 의 `basename` 이 `<Link to="/about">`
+을 알아서 `/ja/about` 으로 바꾼다.
+
+`src/i18n/route.ts` 가 그 규칙의 단일 소스다. 화면 코드는 접두어를 몰라도 된다.
+
 ## 페이지·엔드포인트 추가 절차
 
-- 페이지: `src/pages/X.tsx` → `src/App.tsx` 라우트 → (1차 메뉴면) `src/data/nav.ts`.
+- 페이지: `src/pages/X.tsx` → `src/App.tsx` 라우트 → (1차 메뉴면) `src/data/nav.ts`
+  → **`src/data/seo.ts` 에 제목·설명** → 번역 3개 파일의 `seo`.
   `nav` 는 배열 번역이 index 로 붙으므로 항목을 바꾸면 `src/i18n/translations/*.ts` 의
   `nav` 도 같이 고친다. 아카이브 상세 경로는 `entityPath()` 로만 만든다.
 - 앱 서버 엔드포인트: `worker/index.ts` `ENDPOINTS`(+TTL) → `vite.config.ts` 프록시 →
@@ -70,7 +106,11 @@ Cloudflare Workers 배포(`wrangler.jsonc` + `worker/index.ts`).
 ```bash
 npm install
 npm run dev      # 앱 서버 실데이터까지 붙은 상태로 확인 (Vite 프록시)
-npm run build    # tsc --noEmit && vite build — 커밋 전 필수 게이트
+npm run build    # tsc → 클라이언트 빌드 → SSR 빌드 → prerender. 커밋 전 필수 게이트
 ```
+
+`build` 가 끝나면 `dist/` 에 언어 × 경로만큼 `index.html` 이 있고 `sitemap.xml`·
+`robots.txt` 도 같이 생긴다. **prerender 중에 브라우저 API 를 렌더 시점에 부르면 여기서
+깨진다** — `typeof window === 'undefined'` 가드를 쓰거나 `useEffect` 로 미룬다.
 
 `npm run preview` 는 API 프록시가 없다(Worker 가 없으므로) — 실데이터 확인은 `dev` 로.
