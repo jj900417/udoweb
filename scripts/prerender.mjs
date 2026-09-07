@@ -116,6 +116,21 @@ function structuredData({ locale, seo, siteName }) {
   };
 }
 
+const HEAD_START = '<!-- head:start';
+const HEAD_END = '<!-- head:end -->';
+
+/** 마커 사이를 갈아끼워요. 마커가 없으면 조용히 넘어가지 않고 멈춰요. */
+function replaceHead(html, replacement) {
+  const start = html.indexOf(HEAD_START);
+  const end = html.indexOf(HEAD_END);
+  if (start === -1 || end === -1) {
+    throw new Error(
+      'index.html 에서 head 마커를 찾지 못했어요. <!-- head:start --> ~ <!-- head:end --> 가 있어야 해요.',
+    );
+  }
+  return html.slice(0, start) + replacement + html.slice(end + HEAD_END.length);
+}
+
 let written = 0;
 const urls = [];
 
@@ -132,11 +147,15 @@ for (const locale of LOCALES) {
       .replace('<html lang="ko"', `<html lang="${locale}"`)
       .replace('<div id="root"></div>', `<div id="root">${body}</div>`);
 
-    /* 템플릿의 기본 머리말을 이 페이지 것으로 바꿔요. */
-    html = html.replace(
-      /<title>[\s\S]*?<meta name="twitter:card"[^>]*>/,
-      head({ path, locale, seo, siteName }),
-    );
+    /*
+     * 템플릿의 기본 머리말을 이 페이지 것으로 바꿔요.
+     *
+     * 마커 사이만 건드려요. 예전에는 `<title>`부터 `twitter:card`까지를 정규식으로
+     * 잡았는데, 그러면 **주석 안에 우연히 들어간 `<title>` 글자**에도 걸려서 그
+     * 위의 태그를 삼켰어요(실제로 구글 소유권 확인 태그가 그렇게 사라졌어요).
+     * 마커는 그런 사고가 나지 않아요.
+     */
+    html = replaceHead(html, head({ path, locale, seo, siteName }));
 
     if (path === '/') {
       html = html.replace(
@@ -169,12 +188,10 @@ for (const locale of LOCALES) {
     title: `${content.seo['/'].title} — 페이지를 찾을 수 없어요`,
     description: content.seo['/'].description,
   };
-  let html = template
-    .replace('<div id="root"></div>', `<div id="root">${body}</div>`)
-    .replace(
-      /<title>[\s\S]*?<meta name="twitter:card"[^>]*>/,
-      `${head({ path: '/', locale, seo, siteName: content.site?.name ?? '우도' })}\n    <meta name="robots" content="noindex">`,
-    );
+  let html = replaceHead(
+    template.replace('<div id="root"></div>', `<div id="root">${body}</div>`),
+    `${head({ path: '/', locale, seo, siteName: content.site?.name ?? '우도' })}\n    <meta name="robots" content="noindex">`,
+  );
   await writeFile(join(dist, '404.html'), html, 'utf8');
 }
 

@@ -3,7 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      검색엔진 소유권 확인. 아래 head 마커 **바깥**에 둬야 해요 — 마커 안쪽은
+      prerender 가 페이지별 머리말로 통째로 갈아끼워요.
+    -->
+    <meta name="google-site-verification" content="hIZGkGd1ubmjHomMO_c8arQwxsx58z8IEoghLpba0Xo" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- head:start — prerender 가 이 구간을 페이지별 제목·설명으로 바꿔요.
+         마커를 지우거나 이름을 바꾸면 모든 페이지가 홈의 머리말을 달고 나가요. -->
     <title>우도 — 기록과 지금</title>
     <meta
       name="description"
@@ -18,6 +25,7 @@
     <meta property="og:image" content="https://udonow.co.kr/og.png" />
     <meta property="og:url" content="https://udonow.co.kr" />
     <meta name="twitter:card" content="summary_large_image" />
+    <!-- head:end -->
     <script>
       /* Theme applied before first paint (no flash). Mirrors src/theme.tsx. */
       (function () {
