@@ -166,6 +166,12 @@ export const en: Overlay = {
       windDir: 'Direction',
       humidity: 'Humidity',
       wave: 'Waves',
+      terminals: {
+        cheonjin: 'Cheonjin terminal',
+        haumokdong: 'Haumokdong terminal',
+        seongsan: 'Seongsan terminal',
+        jongdal: 'Jongdal terminal',
+      },
       compass: [
         'N', 'NNE', 'NE', 'ENE',
         'E', 'ESE', 'SE', 'SSE',

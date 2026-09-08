@@ -106,6 +106,12 @@ export const ja: Overlay = {
       windDir: '風向',
       humidity: '湿度',
       wave: '波高',
+      terminals: {
+        cheonjin: '天津港 待合室',
+        haumokdong: '下牛木洞港 待合室',
+        seongsan: '城山 待合室',
+        jongdal: '終達 待合室',
+      },
       compass: ['北', '北北東', '北東', '東北東', '東', '東南東', '南東', '南南東', '南', '南南西', '南西', '西南西', '西', '西北西', '北西', '北北西'],
     },
     timetable: {

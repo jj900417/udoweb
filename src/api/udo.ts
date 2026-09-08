@@ -44,7 +44,12 @@ export type FerryStatus = {
   tomorrow?: {
     level: Light;
     label: string;
+    /** 서버가 완성한 한국어 문장 — 화면은 wsd·wav 로 직접 조립하고 이건 폴백으로만 쓴다. */
     detail: string;
+    /** 예보 풍속 m/s */
+    wsd?: number | null;
+    /** 예보 파고 m */
+    wav?: number | null;
     sun?: { rise: string; set: string };
   } | null;
   current?: {

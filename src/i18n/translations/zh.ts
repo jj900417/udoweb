@@ -103,6 +103,12 @@ export const zh: Overlay = {
       windDir: '风向',
       humidity: '湿度',
       wave: '浪高',
+      terminals: {
+        cheonjin: '天津港 候船室',
+        haumokdong: '下牛木洞港 候船室',
+        seongsan: '城山 候船室',
+        jongdal: '终达 候船室',
+      },
       compass: ['北', '北北东', '东北', '东北东', '东', '东南东', '东南', '南南东', '南', '南南西', '西南', '西南西', '西', '西北西', '西北', '北北西'],
     },
     timetable: {

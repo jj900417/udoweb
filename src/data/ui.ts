@@ -88,6 +88,16 @@ export const ui = {
     windDir: '풍향',
     humidity: '습도',
     wave: '파고',
+    /*
+     * 대합실 전화 칩의 이름. 서버(/status)는 한국어 이름만 주므로 여기서 바꿔 끼운다.
+     * 키는 서버 이름에 든 항구 이름으로 찾는다(FerryStatusCard 참고).
+     */
+    terminals: {
+      cheonjin: '천진항 대합실',
+      haumokdong: '하우목동항 대합실',
+      seongsan: '성산 대합실',
+      jongdal: '종달 대합실',
+    },
     /* 풍향(도)을 사람이 읽는 방위로. 16방위, 북에서 시계방향. */
     compass: [
       '북', '북북동', '북동', '동북동',

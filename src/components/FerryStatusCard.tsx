@@ -1,7 +1,8 @@
 import { udoApi, type Light } from '../api/udo';
 import { lightLabel, outlookLabel, statusHeadline, statusReasons } from '../api/ferryText';
 import { useAsync } from '../api/useAsync';
-import { useContent } from '../i18n';
+import { useContent, useLocale } from '../i18n';
+import { intlTag } from '../i18n/locales';
 import StateBlock from './StateBlock';
 
 /*
@@ -23,10 +24,28 @@ function compass(deg: number, names: readonly string[]): string {
   return names[index] ?? '';
 }
 
-function timeLabel(iso: string): string {
+/*
+ * 대합실 이름은 서버가 한국어로만 준다('천진항 대합실'). 항구 이름으로 어느 곳인지
+ * 알아내 화면 언어의 이름으로 바꾼다. 못 알아보면 서버 이름을 그대로 쓴다 —
+ * 새 대합실이 생겨도 칩이 사라지지는 않게.
+ */
+const TERMINAL_KEYS = [
+  ['천진', 'cheonjin'],
+  ['하우목동', 'haumokdong'],
+  ['성산', 'seongsan'],
+  ['종달', 'jongdal'],
+] as const;
+
+function terminalName(serverName: string, names: Record<string, string>): string {
+  const hit = TERMINAL_KEYS.find(([ko]) => serverName.includes(ko));
+  return (hit && names[hit[1]]) || serverName;
+}
+
+/* 기준 시각은 화면 언어로 찍는다 — 한국어 고정이면 '오전/오후' 가 영어 화면에 남는다. */
+function timeLabel(iso: string, intl: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return '';
-  return d.toLocaleString('ko-KR', {
+  return d.toLocaleString(intl, {
     month: 'numeric',
     day: 'numeric',
     hour: '2-digit',
@@ -37,6 +56,7 @@ function timeLabel(iso: string): string {
 
 export default function FerryStatusCard() {
   const { ui } = useContent();
+  const { locale } = useLocale();
   const { data, loading, error } = useAsync((s) => udoApi.status(s));
 
   if (loading || error || !data) return <StateBlock loading={loading} error={error} />;
@@ -47,6 +67,19 @@ export default function FerryStatusCard() {
   /* 서버가 준 완성 문장 대신 code+params 로 조립한다(앱과 같은 문안·같은 규칙). */
   const headline = statusHeadline(data.status, ui.ferry);
   const reasons = statusReasons(data.status, ui.ferry);
+  /*
+   * 내일 전망의 '풍속 · 파고' 도 서버 문장(detail) 대신 숫자로 다시 조립한다 —
+   * 서버 문장은 한국어뿐이라 다른 언어 화면에 그대로 남았다. 숫자가 없을 때만 폴백.
+   */
+  const tomorrow = data.tomorrow;
+  const tomorrowDetail = tomorrow
+    ? [
+        tomorrow.wsd != null ? `${ui.ferry.wind} ${tomorrow.wsd} m/s` : null,
+        tomorrow.wav != null ? `${ui.ferry.wave} ${tomorrow.wav} m` : null,
+      ]
+        .filter(Boolean)
+        .join(' · ') || tomorrow.detail
+    : '';
 
   return (
     <div className={`rounded-xl border ${style.border} ${style.tint} p-5`}>
@@ -68,13 +101,13 @@ export default function FerryStatusCard() {
       )}
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        {data.tomorrow && (
+        {tomorrow && (
           <div className="rounded-lg border border-line bg-surface px-3 py-2.5">
             <p className="text-xs font-semibold text-faint">{ui.ferry.tomorrow}</p>
             <p className="mt-0.5 text-sm font-semibold text-ink">
-              {outlookLabel(data.tomorrow.level ?? 'gray', ui.ferry.outlook)}
+              {outlookLabel(tomorrow.level ?? 'gray', ui.ferry.outlook)}
             </p>
-            <p className="text-xs text-ink-soft">{data.tomorrow.detail}</p>
+            <p className="text-xs text-ink-soft">{tomorrowDetail}</p>
           </div>
         )}
         {cur && (
@@ -99,14 +132,14 @@ export default function FerryStatusCard() {
         <div className="mt-4 flex flex-wrap gap-2">
           {data.terminals.map((t) => (
             <a key={t.name} href={`tel:${t.phone}`} className="chip hover:border-brand hover:text-link">
-              ☎ {t.name} {t.phone}
+              ☎ {terminalName(t.name, ui.ferry.terminals)} {t.phone}
             </a>
           ))}
         </div>
       )}
 
       <p className="mt-4 text-xs text-faint">
-        {ui.states.updatedAt} {timeLabel(data.updated_at)}
+        {ui.states.updatedAt} {timeLabel(data.updated_at, intlTag(locale))}
       </p>
     </div>
   );
