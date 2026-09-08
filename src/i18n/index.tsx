@@ -106,6 +106,10 @@ function detectLocale(): LocaleCode | null {
  * 선택기로 직접 고른 언어는 **그 방문 동안만** 유지한다(sessionStorage). 그래서
  * localStorage 가 아니다 — localStorage 에 넣으면 한 번의 선택이 기기 설정을 영영
  * 눌러버려서, 나중에 폰 언어를 바꿔도 웹이 따라가지 못한다.
+ *
+ * 이 세션 기록이 실제로 힘을 쓰는 곳은 **접두어 없는 주소**, 즉 한국어다.
+ * `/ja/...` 는 주소가 언어를 정하니 기록이 필요 없지만, 한국어는 `/about` 처럼
+ * 주소에 언어가 없어서 이 기록이 없으면 기기 감지로 되돌아간다.
  */
 function readSessionPick(): LocaleCode | null {
   try {

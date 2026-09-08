@@ -12,9 +12,14 @@ import { localizedPath } from '../i18n/route';
  *
  * `window.location` 으로 통째로 이동해요. `navigate()` 는 지금 라우터의
  * basename 안에서만 움직이는데, 우리가 바꾸려는 게 바로 그 basename 이거든요.
+ *
+ * 이동하기 전에 고른 언어를 **세션에 먼저 적어요.** 한국어는 주소 접두어가
+ * 없어서(`/about`), 도착한 페이지가 주소만으로는 언어를 알 수 없어요. 그러면
+ * 기기 언어 감지로 되돌아가는데, 브라우저 언어가 영어인 컴퓨터에서는 한국어를
+ * 골라도 다시 영어가 나왔어요. 세션 기록이 있으면 감지보다 그게 이겨요.
  */
 export default function LocaleSelect() {
-  const { locale } = useLocale();
+  const { locale, setLocale } = useLocale();
   const location = useLocation();
 
   return (
@@ -24,6 +29,7 @@ export default function LocaleSelect() {
         value={locale}
         onChange={(e) => {
           const next = e.target.value as LocaleCode;
+          setLocale(next);
           /* location.pathname 은 basename 이 떼어진 값이라 그대로 다시 붙이면 돼요. */
           window.location.assign(localizedPath(next, location.pathname) + location.search);
         }}
