@@ -186,6 +186,7 @@ export const en: Overlay = {
       last: 'Last',
       fromNote: 'departing {port}',
     },
+    festivals: { dateStatus: { confirmed: 'Confirmed', planned: 'Planned', undecided: 'TBD', cancelled: 'Cancelled' } },
     shops: { title: 'Shops', category: 'Category', hours: 'Hours' },
     cctv: {
       title: 'Harbour CCTV',

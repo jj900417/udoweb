@@ -117,6 +117,13 @@ export const ui = {
     last: '막 배',
     fromNote: '{port} 출발 기준',
   },
+  /*
+   * 축제 날짜 상태 칩. 서버(/festivals)는 lang 을 줘도 이 값만 한국어로 보낸다.
+   * 키는 서버 값 그대로(FestivalList 에서 찾아 바꿔 끼운다). 모르는 값은 그대로 보여준다.
+   */
+  festivals: {
+    dateStatus: { confirmed: '확정', planned: '예정', undecided: '미정', cancelled: '취소' },
+  },
   shops: { title: '가게', category: '업종', hours: '영업시간' },
   cctv: {
     title: '항구 CCTV',

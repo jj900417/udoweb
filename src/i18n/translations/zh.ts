@@ -118,6 +118,7 @@ export const zh: Overlay = {
       last: '末班',
       fromNote: '以{port}出发为准',
     },
+    festivals: { dateStatus: { confirmed: '已确定', planned: '计划中', undecided: '待定', cancelled: '已取消' } },
     shops: { title: '店铺', category: '类别', hours: '营业时间' },
     cctv: { title: '港口监控', note: '来源：济州市', failed: '无法加载视频，请稍后再试。' },
     app: { about: '关于牛岛 Now', install: '安装', openWeb: '在网页打开', comingSoon: '应用即将发布' },

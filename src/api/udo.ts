@@ -193,8 +193,9 @@ async function get<T>(path: string, signal?: AbortSignal): Promise<T> {
 export const udoApi = {
   status: (signal?: AbortSignal) => get<FerryStatus>('status', signal),
   timetable: (signal?: AbortSignal) => get<Timetable>('timetable', signal),
-  festivals: (signal?: AbortSignal) =>
-    get<{ items: Festival[] }>('festivals?region=udo', signal),
+  /* 서버가 lang 으로 이름·장소·소개를 번역해 준다(date_status 는 예외 — 화면에서 바꾼다). */
+  festivals: (lang: string, signal?: AbortSignal) =>
+    get<{ items: Festival[] }>(`festivals?region=udo&lang=${lang}`, signal),
   shops: (signal?: AbortSignal) => get<{ items: Shop[] }>('shops?region=udo', signal),
   gallery: (limit = 12, signal?: AbortSignal) =>
     get<{ items: Photo[] }>(`gallery?limit=${limit}`, signal),

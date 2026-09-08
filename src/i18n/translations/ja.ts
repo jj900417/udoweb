@@ -121,6 +121,7 @@ export const ja: Overlay = {
       last: '最終',
       fromNote: '{port} 発基準',
     },
+    festivals: { dateStatus: { confirmed: '確定', planned: '予定', undecided: '未定', cancelled: '中止' } },
     shops: { title: '店', category: '業種', hours: '営業時間' },
     cctv: { title: '港のCCTV', note: '出典: 済州市', failed: '映像を読み込めませんでした。しばらくしてからお試しください。' },
     app: { about: '牛島ナウとは', install: 'インストール', openWeb: 'ウェブで開く', comingSoon: 'アプリ公開準備中' },
