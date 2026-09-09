@@ -43,7 +43,7 @@ function readText(raw: string | null, max: number): string {
 }
 
 export default function Support() {
-  const { support, site, ui } = useContent();
+  const { support, site } = useContent();
   const { locale } = useLocale();
   const [params] = useSearchParams();
 
@@ -59,6 +59,12 @@ export default function Support() {
   const [hp, setHp] = useState('');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  /* 칸을 고치는 순간 그 칸의 오류 문구를 지운다 — 이미 고쳤는데 빨간 글씨가 남아 있으면
+     무엇이 문제인지 다시 알 수 없다. 남은 칸의 문구는 그대로 둔다. */
+  function clearError(key: string) {
+    setErrors((prev) => (prev[key] ? { ...prev, [key]: '' } : prev));
+  }
   /* 오류가 났을 때·다 보냈을 때 초점을 옮길 자리. 키보드·스크린리더 사용자는
      화면 어딘가에 뜬 문구를 스스로 찾아가지 못한다. */
   const doneRef = useRef<HTMLHeadingElement>(null);
@@ -204,7 +210,10 @@ export default function Support() {
               placeholder={support.titlePlaceholder}
               aria-invalid={errors.title ? true : undefined}
               aria-describedby={errors.title ? 'support-title-error' : undefined}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                clearError('title');
+              }}
             />
             {errors.title && (
               <p className="field-error" id="support-title-error">
@@ -227,7 +236,10 @@ export default function Support() {
               aria-describedby={
                 errors.message ? 'support-message-error support-message-count' : 'support-message-count'
               }
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => {
+                setMessage(e.target.value);
+                clearError('message');
+              }}
             />
             <p className="field-hint" id="support-message-count">
               {support.remaining.replace('{n}', String(MESSAGE_MAX - message.length))}
@@ -255,7 +267,10 @@ export default function Support() {
               aria-describedby={
                 errors.email ? 'support-email-error support-email-hint' : 'support-email-hint'
               }
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                clearError('email');
+              }}
             />
             <p className="field-hint" id="support-email-hint">
               {support.emailHint}
@@ -373,7 +388,10 @@ export default function Support() {
                 checked={consent}
                 aria-invalid={errors.consent ? true : undefined}
                 aria-describedby={errors.consent ? 'support-consent-error' : undefined}
-                onChange={(e) => setConsent(e.target.checked)}
+                onChange={(e) => {
+                  setConsent(e.target.checked);
+                  clearError('consent');
+                }}
               />
               <span>{support.consentLabel}</span>
             </label>
@@ -400,7 +418,7 @@ export default function Support() {
         </p>
         <p className="mt-6">
           <Link className="text-sm font-semibold text-link" to="/app">
-            {site.app.name} {ui.actions.more}
+            {support.appLink}
           </Link>
         </p>
       </div>

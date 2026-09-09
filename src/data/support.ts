@@ -81,4 +81,7 @@ export const support = {
 
   altTitle: '메일로도 보낼 수 있어요',
   altBody: '폼이 잘 안 되면 아래 주소로 바로 보내 주세요.',
+  /* 앱 소개로 돌아가는 링크. 라벨을 두 조각으로 조립하지 않는다 — 언어마다 어순이 달라
+     'Udo Now More' 같은 문장이 된다. */
+  appLink: '우도 나우 앱 소개 보기',
 } as const;

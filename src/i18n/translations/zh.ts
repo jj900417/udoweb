@@ -95,6 +95,7 @@ export const zh: Overlay = {
     },
     altTitle: '也可以通过邮件联系',
     altBody: '如果表单无法使用，请发送到下面的地址。',
+    appLink: '查看牛岛 Now 应用介绍',
   },
   sideNav: {
     udo: {

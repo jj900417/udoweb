@@ -117,6 +117,7 @@ export const en: Overlay = {
     },
     altTitle: 'You can email us instead',
     altBody: 'If the form does not work, write to the address below.',
+    appLink: 'About the Udo Now app',
   },
   sideNav: {
     udo: {

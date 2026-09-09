@@ -95,6 +95,7 @@ export const ja: Overlay = {
     },
     altTitle: 'メールでも送れます',
     altBody: 'フォームがうまく動かない場合は、下のアドレスへお送りください。',
+    appLink: '牛島ナウ アプリの紹介を見る',
   },
   sideNav: {
     udo: {
