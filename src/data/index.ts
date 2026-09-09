@@ -14,6 +14,7 @@ import { access } from './access';
 import { experiences } from './experiences';
 import { food } from './food';
 import { tips } from './tips';
+import { support } from './support';
 import { ui } from './ui';
 import { archive } from './archive';
 import { hubs, harbor } from './hubs';
@@ -34,6 +35,7 @@ export const content = {
   experiences,
   food,
   tips,
+  support,
   ui,
   archive,
   hubs,

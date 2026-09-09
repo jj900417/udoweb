@@ -4,6 +4,8 @@
  * 1) 정적 자산(dist/)을 SPA 폴백으로 서빙 (assets 바인딩; wrangler.jsonc)
  * 2) /api/udo/*  → 우도 나우 앱 서버의 **읽기 전용 공개 엔드포인트** 동일출처 프록시
  * 3) /media/*    → 앱 서버의 사진 파일 프록시
+ * 4) /api/support → 고객지원 문의를 앱 서버 건의사항 창구로 넘기는 **유일한 쓰기 경로**
+ * 5) /privacy·/terms 등 → 앱 서버의 법적 문서를 브랜드 도메인으로 중계
  *
  * 왜 프록시인가: 앱 서버가 CORS 헤더를 주지 않아 브라우저가 직접 못 부른다.
  * (myweb 의 /api/jeju 프록시와 같은 패턴.)
@@ -35,6 +37,35 @@ const ENDPOINTS: Record<string, number> = {
 
 /** upstream 으로 넘겨도 되는 쿼리 파라미터. */
 const ALLOWED_PARAMS = ['region', 'lang', 'category', 'limit', 'date', 'slug'];
+
+/*
+ * 앱 서버의 법적 문서. **고정 집합**이다(사용자 입력이 경로에 들어가지 않는다).
+ * 방침·약관 원문은 앱 서버가 단일 소스이고 버전이 붙는다 — 저장소에 복제하면
+ * 개정될 때 웹만 옛 문서를 들고 있게 된다. 그래서 여기서 그대로 중계한다.
+ * 문서 안의 링크가 서로 이 5개를 가리키므로 하나라도 빠지면 링크가 404 가 된다.
+ */
+const LEGAL_PAGES = [
+  '/privacy',
+  '/terms',
+  '/account-delete',
+  '/legal/privacy/2026-07',
+  '/legal/privacy/2026-08',
+];
+
+/*
+ * 고객지원 문의(/support) → 앱 서버 건의사항 창구.
+ *
+ * 앱 서버가 이미 하는 일: 유형 프리셋 검증·길이 검증·이메일 형식 검증·IP 시간당 제한·
+ * 저장·운영자 콘솔 노출. 그래서 여기서는 **저장소를 새로 만들지 않고** 앞단 방어만 한다.
+ */
+const FEEDBACK_PATH = '/v1/feedback';
+/** 앱 서버 FEEDBACK_CATEGORIES 와 1:1. 다른 값은 앱 서버가 400 으로 거부한다. */
+const SUPPORT_CATEGORIES = ['feature', 'bug', 'info_fix', 'inquiry', 'other'];
+const SUPPORT_PLATFORMS = ['ios', 'android', 'web', 'other'];
+/** 본문 상한 — 제목 100 + 내용 5000 자에 여유를 둔 값. 넘으면 읽지 않고 끊는다. */
+const SUPPORT_MAX_BYTES = 20_000;
+/** 사람이 제목과 내용을 채우는 데 이보다 덜 걸릴 수 없다. 봇 필터. */
+const SUPPORT_MIN_ELAPSED_MS = 2000;
 
 interface Env {
   ASSETS: { fetch: (req: Request) => Promise<Response> };
@@ -109,6 +140,129 @@ async function proxyMedia(url: URL): Promise<Response> {
       headers: {
         'content-type': r.headers.get('content-type') ?? 'application/octet-stream',
         'cache-control': 'public, max-age=86400',
+      },
+    });
+  } catch {
+    return json({ error: 'upstream-unavailable' }, 502);
+  }
+}
+
+/* ─── 고객지원 문의 ────────────────────────────────────────────────── */
+
+/** 문자열 필드 하나 — 문자열이 아니면 빈 값으로 본다(타입 혼동 방어). */
+function str(v: unknown, max: number): string {
+  return typeof v === 'string' ? v.trim().slice(0, max) : '';
+}
+
+/**
+ * 문의 한 건을 앱 서버로 넘긴다.
+ *
+ * 여기서 막는 것(앱 서버가 못 보는 것):
+ *  - 다른 사이트에서 부르는 폼 제출(같은 출처만)
+ *  - 거대한 본문
+ *  - 허니팟에 걸린 자동 제출 — **성공처럼 보이게 돌려준다.** 봇이 실패를 학습하면
+ *    필드를 피해서 다시 온다. 사람에게는 영향이 없다(그 칸은 화면 밖에 있다).
+ *  - 알 수 없는 필드 통과. 앱 서버로는 **아는 키만** 새로 조립해서 보낸다.
+ *
+ * 앱 서버가 계속 맡는 것: 값 재검증, IP 시간당 제한, 저장, 운영자 콘솔.
+ *
+ * ⚠ 본문·이메일을 로그에 남기지 않는다. 남길 일이 생겨도 유형과 길이까지만.
+ */
+async function submitSupport(request: Request, url: URL): Promise<Response> {
+  const origin = request.headers.get('origin');
+  if (origin && origin !== url.origin) return json({ error: 'not-allowed' }, 403);
+
+  const declared = Number(request.headers.get('content-length') ?? '0');
+  if (declared > SUPPORT_MAX_BYTES) return json({ error: 'too-large' }, 413);
+
+  let raw: string;
+  try {
+    raw = await request.text();
+  } catch {
+    return json({ error: 'bad-json' }, 400);
+  }
+  /* content-length 를 안 보내는 요청도 있으므로 실제 길이로 한 번 더 본다. */
+  if (raw.length > SUPPORT_MAX_BYTES) return json({ error: 'too-large' }, 413);
+
+  let payload: Record<string, unknown>;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+      return json({ error: 'bad-json' }, 400);
+    }
+    payload = parsed as Record<string, unknown>;
+  } catch {
+    return json({ error: 'bad-json' }, 400);
+  }
+
+  /* 봇 — 조용히 흡수한다. 앱 서버로는 가지 않는다. */
+  const elapsed = typeof payload.elapsed === 'number' ? payload.elapsed : 0;
+  if (str(payload.hp, 64) !== '' || elapsed < SUPPORT_MIN_ELAPSED_MS) {
+    return json({ ok: true });
+  }
+
+  const category = str(payload.category, 20);
+  const title = str(payload.title, 100);
+  const message = str(payload.message, 5000);
+  const email = str(payload.email, 254);
+  if (!SUPPORT_CATEGORIES.includes(category)) return json({ error: 'invalid' }, 400);
+  if (!title || !message) return json({ error: 'invalid' }, 400);
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: 'invalid' }, 400);
+
+  const platform = str(payload.platform, 16).toLowerCase();
+  const body: Record<string, unknown> = {
+    category,
+    title,
+    message,
+    meta: {
+      /* 앱 서버 Feedback 컬럼 길이에 맞춘 값. 기기 모델은 저장할 칸이 없어 받지 않는다. */
+      platform: SUPPORT_PLATFORMS.includes(platform) ? platform : 'web',
+      app_version: str(payload.app_version, 20),
+      os_version: str(payload.os_version, 40),
+      locale: str(payload.locale, 16),
+      destination_slug: 'udo',
+    },
+  };
+  if (email) body.email = email;
+
+  try {
+    const r = await fetch(`${ORIGIN}${FEEDBACK_PATH}`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        /*
+         * 진짜 방문자 IP 를 넘긴다. 이걸 빼면 앱 서버의 시간당 IP 제한이 **워커의
+         * 나가는 IP 하나**에 걸려, 한 사람이 10건을 보내면 그 뒤로 모든 방문자의
+         * 문의가 막힌다. 이 헤더는 Cloudflare 엣지가 덮어쓰므로 방문자가 위조할 수 없다.
+         */
+        ...(request.headers.get('cf-connecting-ip')
+          ? { 'cf-connecting-ip': request.headers.get('cf-connecting-ip') as string }
+          : {}),
+      },
+      body: JSON.stringify(body),
+    });
+    if (r.ok) return json({ ok: true });
+    if (r.status === 429) return json({ error: 'too-many' }, 429);
+    if (r.status === 400 || r.status === 422) return json({ error: 'invalid' }, 400);
+    return json({ error: 'upstream-unavailable' }, 502);
+  } catch {
+    return json({ error: 'upstream-unavailable' }, 502);
+  }
+}
+
+/* ─── 법적 문서 중계 ───────────────────────────────────────────────── */
+
+/** LEGAL_PAGES 에 있는 경로만. 앱 서버 HTML 을 그대로 돌려준다. */
+async function proxyLegal(pathname: string): Promise<Response> {
+  try {
+    const r = await fetch(`${ORIGIN}${pathname}`, {
+      cf: { cacheTtl: 3600, cacheEverything: true },
+    } as RequestInit);
+    return new Response(r.body, {
+      status: r.status,
+      headers: {
+        'content-type': r.headers.get('content-type') ?? 'text/html; charset=utf-8',
+        'cache-control': 'public, max-age=3600',
       },
     });
   } catch {
@@ -240,12 +394,26 @@ export default {
       return harden(await relayCctv(url, request));
     }
 
+    if (url.pathname === '/api/support') {
+      if (request.method !== 'POST') return harden(json({ error: 'POST only' }, 405));
+      const out = harden(await submitSupport(request, url));
+      /* 문의 응답은 어디에도 남기지 않는다. */
+      out.headers.set('cache-control', 'no-store');
+      return out;
+    }
+
     if (url.pathname.startsWith('/api/udo/') || url.pathname.startsWith('/media/')) {
       if (request.method !== 'GET') return json({ error: 'GET only' }, 405);
       const proxied = url.pathname.startsWith('/media/') ? proxyMedia(url) : proxyApi(url);
       return harden(await proxied);
     }
-    if (url.pathname.startsWith('/api/')) return json({ error: 'not-found' }, 404);
+    if (url.pathname.startsWith('/api/')) return harden(json({ error: 'not-found' }, 404));
+
+    /* 개인정보처리방침·이용약관 — 앱 서버 문서를 이 도메인에서 연다(단일 소스 유지). */
+    if (LEGAL_PAGES.includes(url.pathname)) {
+      if (request.method !== 'GET') return harden(json({ error: 'GET only' }, 405));
+      return harden(await proxyLegal(url.pathname));
+    }
 
     return harden(await env.ASSETS.fetch(request));
   },

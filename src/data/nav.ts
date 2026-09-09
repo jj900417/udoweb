@@ -22,6 +22,16 @@ export const nav = [
   {
     path: '/now',
     label: '지금 우도',
-    match: ['/now', '/app', '/travel', '/spots', '/access', '/experience', '/food', '/tips'],
+    match: [
+      '/now',
+      '/app',
+      '/support',
+      '/travel',
+      '/spots',
+      '/access',
+      '/experience',
+      '/food',
+      '/tips',
+    ],
   },
 ] as const;

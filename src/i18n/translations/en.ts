@@ -44,6 +44,7 @@ export const en: Overlay = {
     '/tips': { title: 'Udo travel tips — before you go', description: 'Ferry times, getting around the island, what to bring.' },
     '/harbor': { title: 'Udo harbours — right now', description: 'Cheonjin and Haumokdong harbours as they look today.' },
     '/app': { title: 'The Udo Now app', description: 'Is the boat running, when is the bus — the things a visitor needs, in one app.' },
+    '/support': { title: 'Support — questions and requests', description: 'Report a problem, a wrong detail, or a request about Udo Now. No sign-in needed.' },
     '/archive': { title: 'The Udo archive', description: 'Keeping a record before it goes. People and works, history and voices.' },
     '/archive/artists': { title: 'People who recorded Udo', description: 'Those who kept Udo in photographs and paintings.' },
     '/archive/works': { title: 'Works — the Udo archive', description: 'Photographs and paintings of the island.' },
@@ -57,6 +58,66 @@ export const en: Overlay = {
 
   nav: [{ label: 'Home' }, { label: 'Udo' }, { label: 'Udo Now' }],
 
+  support: {
+    title: 'Support',
+    subtitle: 'Tell us what went wrong, or what could be better',
+    intro:
+      'If something broke while you were using Udo Now, if a piece of information is wrong, ' +
+      'or if there is something you would like to see, let us know. We read it and use it to ' +
+      'improve the service.',
+    categoryLabel: 'Type',
+    categories: [
+      { label: 'Feature request' },
+      { label: 'Bug report' },
+      { label: 'Info correction' },
+      { label: 'Inquiry' },
+      { label: 'Other' },
+    ],
+    titleLabel: 'Title',
+    titlePlaceholder: 'Sum it up in one line',
+    messageLabel: 'Message',
+    messagePlaceholder:
+      'When, on which screen, and what happened — details help us find it faster',
+    remaining: '{n} characters left',
+    emailLabel: 'Reply email (optional)',
+    emailHint: 'Enter your email if you would like a reply. You can send without one.',
+    envTitle: 'Add your setup',
+    envHint: 'For a bug report this helps us find the cause. Optional.',
+    platformLabel: 'Platform',
+    platforms: [
+      { label: 'Not selected' },
+      { label: 'iOS' },
+      { label: 'Android' },
+      { label: 'Web' },
+      { label: 'Other' },
+    ],
+    appVersionLabel: 'App version',
+    osVersionLabel: 'OS version',
+    privacyTitle: 'How we handle your information',
+    privacyBody:
+      'We collect what you write and your email address so that we can look into your ' +
+      'message and reply to it. We do not use them for anything else.',
+    privacyLink: 'Read the privacy policy',
+    consentLabel: 'I agree to the collection and use of this information (required)',
+    submit: 'Send',
+    submitting: 'Sending…',
+    doneTitle: 'Your message was received',
+    doneBody: 'We use it to look into your report and to improve the service.',
+    doneEmail: 'If your message needs a reply, we will write to the address you left.',
+    doneAgain: 'Send another message',
+    errors: {
+      category: 'Please choose a type.',
+      title: 'Please enter a title.',
+      message: 'Please enter your message.',
+      email: 'That email address does not look right.',
+      consent: 'Please agree to the collection and use of this information.',
+      invalid: 'Please check what you entered.',
+      tooMany: 'Too many messages in a short time. Please try again shortly.',
+      network: 'Something went wrong while sending. Please try again shortly.',
+    },
+    altTitle: 'You can email us instead',
+    altBody: 'If the form does not work, write to the address below.',
+  },
   sideNav: {
     udo: {
       title: 'Udo',
@@ -89,7 +150,7 @@ export const en: Overlay = {
             { label: 'Harbour' },
           ],
         },
-        { label: 'Udo Now app', items: [] },
+        { label: 'Udo Now app', items: [{ label: 'Support' }] },
       ],
     },
   },

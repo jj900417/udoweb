@@ -7,11 +7,15 @@ export const site = {
   tagline: '제주 바다 위의 작은 섬',
   domain: 'udonow.co.kr',
   url: 'https://udonow.co.kr',
-  /* 사이트를 운영하는 주체. VERIFY: 공식 명칭·연락처 확정 필요. */
+  /*
+   * 사이트를 운영하는 주체. VERIFY: 공식 명칭 확정 필요.
+   * email 은 앱 서버의 개인정보처리방침·이용약관에 이미 공개되어 있는 고객지원 주소와
+   * 같은 값이다(앱 서버 settings.support_email 이 단일 소스). 바꾸려면 그쪽을 먼저 바꾼다.
+   */
   operator: {
     name: 'udonow',
     role: '우도 안내 서비스',
-    email: '',
+    email: 'support@junghwanyoon.dev',
     phone: '',
   },
   appFeaturesTitle: '앱에서 되는 것',

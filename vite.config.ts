@@ -36,6 +36,18 @@ export default defineConfig(({ isSsrBuild }) => ({
         target: 'https://udo-info.fly.dev',
         changeOrigin: true,
       },
+      // 고객지원 문의. 프로덕션은 worker/index.ts 의 /api/support 가 허니팟·크기·값
+      // 검증을 거친 뒤 같은 곳으로 넘긴다 — dev 는 앞단 방어 없이 바로 간다.
+      '/api/support': {
+        target: 'https://udo-info.fly.dev',
+        changeOrigin: true,
+        rewrite: () => '/v1/feedback',
+      },
+      // 방침·약관은 앱 서버 문서가 단일 소스다(프로덕션은 워커가 같은 일을 한다).
+      '/privacy': { target: 'https://udo-info.fly.dev', changeOrigin: true },
+      '/terms': { target: 'https://udo-info.fly.dev', changeOrigin: true },
+      '/account-delete': { target: 'https://udo-info.fly.dev', changeOrigin: true },
+      '/legal': { target: 'https://udo-info.fly.dev', changeOrigin: true },
     },
   },
 }));

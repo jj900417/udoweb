@@ -98,6 +98,15 @@ prerender 가 부르지 않는다. 그런 컴포넌트는 빈 상태로 구워�
   `nav` 도 같이 고친다. 아카이브 상세 경로는 `entityPath()` 로만 만든다.
 - 앱 서버 엔드포인트: `worker/index.ts` `ENDPOINTS`(+TTL) → `vite.config.ts` 프록시 →
   `src/api/udo.ts` 타입·함수. (불변식 #4)
+- **쓰기는 `/api/support` 하나뿐이다.** 고객지원 문의(`/support`)를 앱 서버의 건의사항
+  창구(`/v1/feedback`)로 넘긴다. 워커가 앞단에서 같은 출처·본문 크기·허니팟·최소 작성
+  시간·값 allowlist 를 보고, 진짜 방문자 IP(`CF-Connecting-IP`)를 그대로 넘긴다 —
+  이걸 빼면 앱 서버의 시간당 IP 제한이 워커 IP 하나에 걸려 모든 방문자가 막힌다.
+  문의 본문·이메일은 **로그에 남기지 않는다.** 유형을 늘리려면 앱 서버부터 고칠 것
+  (`FEEDBACK_CATEGORIES`).
+- 개인정보처리방침·이용약관은 **저장소에 없다.** 앱 서버의 버전 관리되는 문서가 단일
+  소스이고, 워커의 `LEGAL_PAGES` 가 `/privacy`·`/terms` 등 고정 5개 경로를 중계한다.
+  React 페이지가 아니므로 `seo.ts` 에 넣지 않는다.
 - 번역: `src/i18n/translations/<lang>.ts` 에 **덮어쓸 항목만**. 배열은 canonical 과
   순서를 맞춘다(index-wise 병합). 고유값(전화·URL·좌표·id)은 오버레이에 넣지 않는다.
 

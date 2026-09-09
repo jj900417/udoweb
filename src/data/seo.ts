@@ -62,6 +62,11 @@ export const seo: Record<string, PageSeo> = {
     title: '우도 나우 앱',
     description: '오늘 배가 뜨는지, 버스는 언제 오는지 — 우도 여행에 필요한 것을 모은 앱이에요.',
   },
+  '/support': {
+    title: '고객지원 — 문의와 건의',
+    description:
+      '우도 나우를 쓰다가 생긴 문제, 잘못된 정보, 건의사항을 접수해요. 로그인 없이 보낼 수 있어요.',
+  },
   '/archive': {
     title: '우도 기록 — 아카이브',
     description: '사라지기 전에 남겨 두는 우도의 기록. 사람과 작품, 역사와 목소리를 모아요.',

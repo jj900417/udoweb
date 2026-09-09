@@ -60,7 +60,12 @@ export const sideNav = {
           { path: '/harbor', label: '항구', count: '' },
         ],
       },
-      { path: '/app', label: '우도나우', count: '', items: [] },
+      {
+        path: '/app',
+        label: '우도나우',
+        count: '',
+        items: [{ path: '/support', label: '고객지원', count: '' }],
+      },
     ],
   },
 } as const;

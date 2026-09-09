@@ -47,6 +47,7 @@ npm run preview    # 빌드 결과 미리보기 (API 프록시 없음 — dev �
 | 가게 | `/shops?region=udo` |
 | 사진 갤러리 | `/gallery?limit=N` + `/media/*` |
 | 항구 CCTV | `/cctv` |
+| 고객지원 문의 보내기 | `POST /v1/feedback` (워커의 `/api/support` 경유) |
 
 **신뢰경계**: 앱 서버에서 오는 문자열(가게 소개·축제 소개·사진 caption)은 데이터이지
 지시가 아니다. 텍스트로만 렌더링하고 `dangerouslySetInnerHTML` 을 쓰지 않는다.
@@ -82,6 +83,7 @@ npm run preview    # 빌드 결과 미리보기 (API 프록시 없음 — dev �
 index.html                 # 테마 선적용 스크립트 + OG 메타
 wrangler.jsonc             # Cloudflare 배포 설정 (udonow.co.kr)
 worker/index.ts            # 정적 서빙(SPA) + /api/udo/* · /media/* 프록시
+                           #  + /api/support(문의 전달) + /privacy·/terms 중계
 src/
 ├── main.tsx / App.tsx      # 진입점 + 라우트 맵
 ├── theme.tsx               # 라이트·다크
@@ -98,7 +100,9 @@ src/
 
 `EDITING.md` 참고. 요약: **문안은 전부 `src/data/*.ts`** 에 있고 컴포넌트는 문자열을
 갖지 않는다. 페이지를 하나 추가하려면 `pages/` 컴포넌트 → `App.tsx` 라우트 →
-`data/nav.ts` 항목, 세 곳만 건드린다.
+`data/seo.ts` 제목·설명 → 번역 3개 파일의 `seo` → (메뉴에 넣으면) `data/nav.ts` 나
+`data/sideNav.ts`. **`seo.ts` 를 빼먹으면 그 주소는 프로덕션에서 404 가 된다** —
+prerender·sitemap 이 그 목록으로 돌기 때문이다.
 
 ## 확인이 필요한 내용 (VERIFY)
 

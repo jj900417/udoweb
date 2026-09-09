@@ -9,6 +9,7 @@ import Food from './pages/Food';
 import Tips from './pages/Tips';
 import Harbor from './pages/Harbor';
 import AppPage from './pages/AppPage';
+import Support from './pages/Support';
 import TravelHub from './pages/TravelHub';
 import NowHub from './pages/NowHub';
 import History from './pages/History';
@@ -83,6 +84,9 @@ export default function App() {
           <Route path="tips" element={<Tips />} />
           <Route path="harbor" element={<Harbor />} />
           <Route path="app" element={<AppPage />} />
+          {/* 고객지원은 앱 아래 갈래다(좌측 메뉴: 우도나우 > 고객지원).
+              주소는 App Store Connect 의 Support URL 로 쓰므로 /support 로 짧게 둔다. */}
+          <Route path="support" element={<Support />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

@@ -33,6 +33,12 @@
   --color-on-cta: #ffffff;
   --color-sand: #f3ead8;         /* 서빈백사 — warm accent surface */
   --color-coral: #e8735a;        /* 소라·성게 — secondary accent */
+  /*
+   * 폼 입력 오류 글자. **운항 신호색(--color-stop)과 일부러 다른 값**이다 —
+   * 신호색은 배가 뜨는지를 뜻하는 색이라, 이메일 형식이 틀렸다는 말에 쓰면 뜻이 섞인다.
+   * 소라색 계열을 종이 위 5.8:1 이 나올 때까지 어둡게 잡았다(작은 글자라 AA 필요).
+   */
+  --color-danger: #b23a22;
 
   /* Ferry traffic light — MEANING colors, never used for CTAs (app rule). */
   --color-go: #16a34a;
@@ -75,6 +81,8 @@
   --color-on-cta: #05191f;
   --color-sand: #2a2418;
   --color-coral: #f08a72;
+  /* 어두운 배경 위 7.6:1. */
+  --color-danger: #f08a72;
 }
 
 @layer base {
@@ -123,6 +131,28 @@
   }
   .prose-body {
     @apply leading-relaxed text-ink-soft;
+  }
+
+  /*
+   * 폼 입력 — 고객지원 문의 폼(/support)에서 처음 쓴다. 페이지마다 다른 테두리·라운드가
+   * 생기지 않도록 여기 한 곳에 둔다. 포커스 링은 전역 :focus-visible 이 이미 그린다.
+   * 글자 16px 미만이면 iOS Safari 가 입력할 때 화면을 확대해 버리므로 text-base 로 둔다.
+   */
+  .field {
+    @apply w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-base text-ink
+      transition-colors placeholder:text-faint hover:border-brand focus:border-brand;
+  }
+  .field[aria-invalid='true'] {
+    @apply border-danger;
+  }
+  .field-label {
+    @apply mb-1.5 block text-sm font-semibold text-ink;
+  }
+  .field-hint {
+    @apply mt-1.5 text-[0.8125rem] leading-relaxed text-faint;
+  }
+  .field-error {
+    @apply mt-1.5 text-[0.8125rem] leading-relaxed font-medium text-danger;
   }
 }
 

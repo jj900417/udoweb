@@ -24,6 +24,7 @@ export const zh: Overlay = {
     '/tips': { title: '牛岛旅行提示 — 出发前', description: '船班时间、岛内交通、随身物品。' },
     '/harbor': { title: '牛岛港口 — 此刻', description: '天津港与下牛木洞港现在的样子与船班状况。' },
     '/app': { title: '牛岛 Now 应用', description: '船开不开、巴士何时来 — 旅行所需，集于一处。' },
+    '/support': { title: '客户支持 — 咨询与建议', description: '受理牛岛 Now 的问题、有误信息与建议。无需登录。' },
     '/archive': { title: '牛岛档案', description: '在消失之前留下的牛岛记录。人与作品，历史与声音。' },
     '/archive/artists': { title: '记录牛岛的人们', description: '用照片与绘画留下牛岛的人们。' },
     '/archive/works': { title: '作品 — 牛岛档案', description: '拍摄与描绘牛岛的作品。' },
@@ -37,6 +38,64 @@ export const zh: Overlay = {
 
   nav: [{ label: '首页' }, { label: '牛岛' }, { label: '此刻的牛岛' }],
 
+  support: {
+    title: '客户支持',
+    subtitle: '请告诉我们不便之处或有误的信息',
+    intro:
+      '使用牛岛 Now 时遇到的问题、有误的信息，或希望改进的地方，都可以告诉我们。' +
+      '我们会确认并用于改进服务。',
+    categoryLabel: '类型',
+    categories: [
+      { label: '功能建议' },
+      { label: '错误报告' },
+      { label: '信息更正' },
+      { label: '服务咨询' },
+      { label: '其他' },
+    ],
+    titleLabel: '标题',
+    titlePlaceholder: '用一句话说明',
+    messageLabel: '内容',
+    messagePlaceholder: '写明何时、在哪个页面、发生了什么，能帮助我们更快找到原因',
+    remaining: '还可输入 {n} 字',
+    emailLabel: '回复邮箱（可选）',
+    emailHint: '如需回复请留下邮箱。不填也可以提交。',
+    envTitle: '添加使用环境',
+    envHint: '报告错误时填写有助于查找原因。可选。',
+    platformLabel: '平台',
+    platforms: [
+      { label: '不选择' },
+      { label: 'iOS' },
+      { label: 'Android' },
+      { label: '网页' },
+      { label: '其他' },
+    ],
+    appVersionLabel: '应用版本',
+    osVersionLabel: '系统版本',
+    privacyTitle: '个人信息处理说明',
+    privacyBody:
+      '为确认并回复您的咨询，我们会收集您填写的内容和邮箱地址，' +
+      '不会用于其他目的。',
+    privacyLink: '查看隐私政策',
+    consentLabel: '我同意收集和使用上述个人信息（必填）',
+    submit: '发送',
+    submitting: '发送中…',
+    doneTitle: '已收到您的反馈',
+    doneBody: '您提供的内容将用于确认问题和改进服务。',
+    doneEmail: '需要回复的咨询，我们确认后会发送到您留下的邮箱。',
+    doneAgain: '再发一条',
+    errors: {
+      category: '请选择类型。',
+      title: '请输入标题。',
+      message: '请输入内容。',
+      email: '邮箱格式不正确。',
+      consent: '请同意收集和使用个人信息。',
+      invalid: '请检查填写的内容。',
+      tooMany: '提交过于频繁，请稍后再试。',
+      network: '发送时出现问题，请稍后再试。',
+    },
+    altTitle: '也可以通过邮件联系',
+    altBody: '如果表单无法使用，请发送到下面的地址。',
+  },
   sideNav: {
     udo: {
       title: '牛岛',
@@ -51,7 +110,7 @@ export const zh: Overlay = {
       groups: [
         { label: '今日牛岛', items: [] },
         { label: '海岛游览方式', items: [{ label: '交通方式' }, { label: '旅行提示' }, { label: '美食・店铺' }, { label: '港口' }] },
-        { label: '牛岛 Now', items: [] },
+        { label: '牛岛 Now', items: [{ label: '客户支持' }] },
       ],
     },
   },

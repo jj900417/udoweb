@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import { useContent } from '../i18n';
 import PageMeta from '../components/PageMeta';
 import SectionHeader from '../components/SectionHeader';
@@ -10,7 +12,7 @@ import InstallButton from '../components/InstallButton';
  * 문안은 junghwanyoon.dev/udo-now 와 같은 것을 쓴다(src/data/appPage.ts).
  */
 export default function AppPage() {
-  const { site, appPage } = useContent();
+  const { site, appPage, support } = useContent();
 
   return (
     <>
@@ -22,6 +24,10 @@ export default function AppPage() {
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <InstallButton />
+        {/* 앱을 쓰다 막히면 여기서 바로 갈 수 있게 — 스토어 심사자도 같은 길로 들어온다. */}
+        <Link className="btn-ghost" to="/support">
+          {support.title}
+        </Link>
       </div>
 
       <div className="mt-14">
