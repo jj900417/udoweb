@@ -59,14 +59,12 @@ export const appPage = {
       desc: '섬의 언어, 제주어 배우기 — 배치고사, 여행자·현지인 레벨별 문제, 따라하기 등.',
       soon: false,
     },
-    {
-      icon: '🤿',
-      title: '해녀 미니게임',
-      desc:
-        '"애심이의 하루" — 제주의 해녀가 되어 성게·보말·소라를 캐고, 똥군에서 상군까지 성장해 ' +
-        '설화 속 엔딩까지 가 보세요.',
-      soon: true,
-    },
+    /*
+     * 아직 공개하지 않는 기능 카드 1건이 이 자리에 들어간다 — 공개 준비가 되면
+     * 되살린다. 문안(ko/en/ja/zh)은 비공개 저장소에 보관한다:
+     * udo_game_haenyeo/docs/pending-marketing-copy.md.
+     * 번역 오버레이는 features 배열을 index 로 맞추므로 자리(마지막)를 그대로 둘 것.
+     */
   ],
   soonLabel: '개발 중',
 

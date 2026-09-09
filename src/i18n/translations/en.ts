@@ -628,7 +628,7 @@ export const en: Overlay = {
       { title: 'Sights & photo gallery', desc: 'The island’s classic sights alongside the Udo that locals themselves recommend.' },
       { title: 'Restaurants, cafés & stays', desc: 'Shops on a map with category filters — open or closed today, one-tap phone call, and directions.' },
       { title: 'Jeju language', desc: 'Learn the island’s own dialect: a placement test, questions graded by level, repeat-after-me practice, and more.' },
-      { title: 'Haenyeo mini-game', desc: '“Aesim’s Day” — play as a haenyeo, harvest sea urchins and conch, rise from the lowest rank to master diver, and reach the folk-tale ending.' },
+      /* 미공개 기능 카드 1건 — src/data/appPage.ts 의 같은 자리 참조. */
     ],
     soonLabel: 'In development',
     whyTitle: 'Why I build it',
